@@ -5,9 +5,12 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class GameManager : MonoBehaviour
 {
+    
     public float radius = 0.5f;
     public float sectionRadius = 0.25f;
+    [Range(2, 100)]
     public int numberOfSection = 4;
+    [Range(2, 100)]
     public int pointsPerSection = 4;
 
     public int testPointI = 0;
