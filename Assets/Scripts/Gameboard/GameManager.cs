@@ -31,6 +31,6 @@ public class GameManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(TorusSpaceHelper.IndexToPos(testPointI, testPointJ, numberOfSection, pointsPerSection, radius, sectionRadius), 0.1f);
+        Gizmos.DrawSphere(transform.position + transform.rotation * TorusSpaceHelper.IndexToPos(testPointI, testPointJ, numberOfSection, pointsPerSection, radius, sectionRadius), 0.1f);
     }
 }
