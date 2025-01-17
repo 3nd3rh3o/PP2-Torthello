@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class TorusSpaceHelper
@@ -11,5 +12,15 @@ public class TorusSpaceHelper
         Vector3 p0 = section + Quaternion.Euler(new (0, (360f/maxI)*i, 0)) * Quaternion.Euler(new ((360f/maxJ)*j, 0, 0)) * subSectionVector;
         Vector3 p2 = nextSection + Quaternion.Euler(new (0, (360f/maxI) * (i + 1), 0)) * Quaternion.Euler(new ((360f/maxJ)*(j+1), 0, 0)) * subSectionVector;
         return (p0+p2)*0.5f;
+    }
+    public static Tuple<int, int> GetLookedTile(Vector3 lookDirectionWS, ref Transform transform)
+    {
+        
+
+
+
+
+
+        return new(0, 0);
     }
 }

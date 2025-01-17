@@ -49,6 +49,8 @@ public class TorusMeshGenerator
         mesh.triangles = triangles;
         
         mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+        mesh.RecalculateBounds();
         
         return mesh;
     }
@@ -101,6 +103,8 @@ public class TorusMeshGenerator
         mesh.triangles = triangles;
         
         mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+        mesh.RecalculateBounds();
         
         return mesh;
 
@@ -153,6 +157,8 @@ public class TorusMeshGenerator
         mesh.triangles = triangles;
         
         mesh.RecalculateNormals();
+        mesh.RecalculateTangents();
+        mesh.RecalculateBounds();
         
         return mesh;
     }
