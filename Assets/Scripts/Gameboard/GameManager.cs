@@ -19,13 +19,13 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        GetComponent<MeshFilter>().sharedMesh = TorusMeshGenerator.GenMesh(GetComponent<MeshFilter>().sharedMesh, radius, sectionRadius, numberOfSection, pointsPerSection);
+        GetComponent<MeshFilter>().sharedMesh = TorusMeshGenerator.GenMeshPair(GetComponent<MeshFilter>().sharedMesh, radius, sectionRadius, numberOfSection, pointsPerSection);
     }
 
     // Update is called once per frame
     void Update()
     {
-        GetComponent<MeshFilter>().sharedMesh = TorusMeshGenerator.GenMesh(GetComponent<MeshFilter>().sharedMesh, radius, sectionRadius, numberOfSection, pointsPerSection);
+        GetComponent<MeshFilter>().sharedMesh = TorusMeshGenerator.GenMeshPair(GetComponent<MeshFilter>().sharedMesh, radius, sectionRadius, numberOfSection, pointsPerSection);
         
     }
 
