@@ -31,8 +31,8 @@ public class GameManager : MonoBehaviour
         ci[0].mesh = whiteMesh;
         ci[1].mesh = blackMesh;
 
-        whiteMesh = TorusMeshGenerator.GenMeshPair(whiteMesh, radius, sectionRadius, numberOfSection*2, pointsPerSection*2);
-        blackMesh = TorusMeshGenerator.GenMeshImpair(blackMesh, radius, sectionRadius, numberOfSection*2, pointsPerSection*2);
+        whiteMesh = TorusMeshGenerator.GenMeshPair(whiteMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
+        blackMesh = TorusMeshGenerator.GenMeshImpair(blackMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
 
 
         GetComponent<MeshFilter>().sharedMesh.Clear();
@@ -51,8 +51,8 @@ public class GameManager : MonoBehaviour
             ci[0].mesh = whiteMesh;
             ci[1].mesh = blackMesh;
         }
-        whiteMesh = TorusMeshGenerator.GenMeshPair(whiteMesh, radius, sectionRadius, numberOfSection*2, pointsPerSection*2);
-        blackMesh = TorusMeshGenerator.GenMeshImpair(blackMesh, radius, sectionRadius, numberOfSection*2, pointsPerSection*2);
+        whiteMesh = TorusMeshGenerator.GenMeshPair(whiteMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
+        blackMesh = TorusMeshGenerator.GenMeshImpair(blackMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
 
         GetComponent<MeshFilter>().sharedMesh.Clear();
         GetComponent<MeshFilter>().sharedMesh.CombineMeshes(ci, false, false);
@@ -60,6 +60,17 @@ public class GameManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(transform.position + transform.rotation * Vector3.Scale(transform.localScale, TorusSpaceHelper.IndexToPos(testPointI, testPointJ, numberOfSection*2, pointsPerSection*2, radius, sectionRadius)), 0.1f);
+        Gizmos.DrawSphere(TorusSpaceHelper.OSToWS(transform, TorusSpaceHelper.IndexToPos(testPointI, testPointJ, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius)), 0.1f);
+        for (int i = 0; i < numberOfSection * 2; i++)
+        {
+            for (int j = 0; j < pointsPerSection * 2; j++)
+            {
+                Vector3 centerOfTileOS = TorusSpaceHelper.IndexToPos(i, j, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius);
+                Vector3 normalOfTileOS = TorusSpaceHelper.IndexToTileNormal(i, j, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius);
+                
+                Gizmos.DrawLine(TorusSpaceHelper.OSToWS(transform, centerOfTileOS), TorusSpaceHelper.OSToWS(transform, centerOfTileOS + (normalOfTileOS * 0.2f)));
+            }
+        }
+
     }
 }
