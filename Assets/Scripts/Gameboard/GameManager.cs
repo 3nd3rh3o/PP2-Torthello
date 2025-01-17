@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Gizmos.DrawSphere(TorusSpaceHelper.OSToWS(transform, TorusSpaceHelper.IndexToPos(testPointI, testPointJ, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius)), 0.1f);
+        //Gizmos.DrawSphere(TorusSpaceHelper.OSToWS(transform, TorusSpaceHelper.IndexToPos(testPointI, testPointJ, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius)), 0.1f);
         for (int i = 0; i < numberOfSection * 2; i++)
         {
             for (int j = 0; j < pointsPerSection * 2; j++)
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
                 Vector3 centerOfTileOS = TorusSpaceHelper.IndexToPos(i, j, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius);
                 Vector3 normalOfTileOS = TorusSpaceHelper.IndexToTileNormal(i, j, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius);
                 
-                Gizmos.DrawLine(TorusSpaceHelper.OSToWS(transform, centerOfTileOS), TorusSpaceHelper.OSToWS(transform, centerOfTileOS + (normalOfTileOS * 0.2f)));
+                //Gizmos.DrawLine(TorusSpaceHelper.OSToWS(transform, centerOfTileOS), TorusSpaceHelper.OSToWS(transform, centerOfTileOS + (normalOfTileOS * 0.2f)));
             }
         }
 
