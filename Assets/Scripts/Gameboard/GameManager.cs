@@ -15,8 +15,6 @@ public class GameManager : MonoBehaviour
     [Range(1, 50)]
     public int pointsPerSection = 4;
 
-    public int testPointI = 0;
-    public int testPointJ = 0;
 
     private CombineInstance[] ci;
     private Mesh whiteMesh;
@@ -33,10 +31,10 @@ public class GameManager : MonoBehaviour
 
     public GameObject cursor;
 
-    public Vector2 camAngles;
+    private Vector2 camAngles;
     private Vector3 camPos;
 
-    public int2 tileHovered = new();
+    private int2 tileHovered = new();
 
     public Material[] materials;
 
