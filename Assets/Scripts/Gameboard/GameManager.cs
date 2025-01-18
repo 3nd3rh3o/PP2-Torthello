@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     private Material[] boardMats;
     private Material[] boardMatsWithH;
 
-    public float zoom = 1f;
+    private float zoom = 10f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
