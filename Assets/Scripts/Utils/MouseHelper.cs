@@ -76,8 +76,7 @@ public class MouseHelper
                 }
             }
         }
-
-
+        
         return cand;
     }
 }
