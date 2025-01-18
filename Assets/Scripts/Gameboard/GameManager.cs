@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -31,6 +32,8 @@ public class GameManager : MonoBehaviour
 
     public Vector2 camAngles;
     private Vector3 camPos;
+
+    public int2 tileHovered = new();
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -92,6 +95,10 @@ public class GameManager : MonoBehaviour
         {
             //Mouse mouvement
             Vector2 mouseDelta = playerLook.action.ReadValue<Vector2>();
+            if (!mouseDelta.Equals(Vector2.zero))
+            {
+                tileHovered = MouseHelper.GetTileHovered((Camera.main.transform.position - MouseHelper.GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, transform, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius);
+            }
             mousePos.x = Mathf.Max(-1, Mathf.Min(mousePos.x + mouseDelta.x * mouseSensitivity.x, 1));
             mousePos.y = Mathf.Max(-1, Mathf.Min(mousePos.y + mouseDelta.y * mouseSensitivity.y, 1));
 
