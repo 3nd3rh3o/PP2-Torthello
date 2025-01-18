@@ -13,7 +13,7 @@ public class MouseHelper
     {
         Vector3 t = camera.transform.up * (Mathf.Tan((camera.fieldOfView/2f) * Mathf.Deg2Rad)  * camera.transform.forward * camera.nearClipPlane).magnitude;
         Vector3 l = -camera.transform.right * ((t.magnitude*2f) * camera.aspect)/2f;
-        Vector3 p = camera.transform.position + (camera.transform.forward * (camera.nearClipPlane + 0.01f));
+        Vector3 p = camera.transform.position + (camera.transform.forward * (camera.nearClipPlane));
         return new Vector3[]{p+l+t, p-l+t, p-l-t, p+l-t};
     }
 

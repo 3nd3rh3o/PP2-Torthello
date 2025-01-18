@@ -112,7 +112,7 @@ public class GameManager : MonoBehaviour
 
         }
 
-        cursor.transform.position = MouseHelper.GetLerpedPosOnClipPlaneWS(Camera.main, mousePos) * 0.999f;
+        cursor.transform.position = Camera.main.transform.position - (Camera.main.transform.position - MouseHelper.GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)) * 1.1f;
 
 
     }
