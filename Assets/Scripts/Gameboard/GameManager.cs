@@ -1,6 +1,4 @@
-using torethelloController;
 using Unity.Mathematics;
-using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,13 +11,12 @@ public class GameManager : MonoBehaviour
     public Board.Settings bSettings = new();
     public Board.Manager bManager;
 
-    public Controller controller = new();
 
     public InputActionReference playerLook;
     public InputActionReference rightClick;
     public InputActionReference zoomAction;
 
-    public Vector2 mousePos;
+    private Vector2 mousePos;
 
     public Vector2 mouseSensitivity = new();
     public Vector2 camSensitivity = new();
@@ -28,6 +25,7 @@ public class GameManager : MonoBehaviour
     private Vector2 camAngles;
     private Vector3 camPos;
 
+    [HideInInspector]
     public int2 tileHovered = new(-1, -1);
 
     public Texture2D cursorTex;
@@ -45,8 +43,7 @@ public class GameManager : MonoBehaviour
         bManager.DrawBase();
         bSettings.enableHoverEffect = true;
 
-        //Setup Controller
-        controller.Init(this);
+        
 
         camPos = new(0, 0, -10);
 

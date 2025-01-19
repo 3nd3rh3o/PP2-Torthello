@@ -1,3 +1,9 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:Label text="Torthello" name="title" style="align-items: stretch; -unity-text-align: upper-center; font-size: 152%;" />
+    <Style src="project://database/Assets/UI%20Toolkit/UIThemes.uss?fileID=7433441132597879392&amp;guid=1f8d9ffc6d4660240bd6cb6d70f1b801&amp;type=3#UIThemes" />
+    <engine:Label text="Torethello" style="font-size: 95px; -unity-text-align: middle-center; align-self: stretch; flex-shrink: 1; flex-grow: 1;" />
+    <engine:VisualElement name="OptionGroup" style="flex-grow: 1; align-items: center; align-self: stretch; justify-content: center; margin-top: 0; margin-right: 13%; margin-bottom: 0; margin-left: 13%;">
+        <engine:Button text="Start a new game" enabled="true" name="start" style="display: flex;" />
+        <engine:Button text="Options" name="option" />
+        <engine:Button text="Exit" name="quit" />
+    </engine:VisualElement>
 </engine:UXML>
