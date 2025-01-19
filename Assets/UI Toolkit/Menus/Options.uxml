@@ -1,0 +1,16 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/UIThemes.uss?fileID=7433441132597879392&amp;guid=1f8d9ffc6d4660240bd6cb6d70f1b801&amp;type=3#UIThemes" />
+    <engine:VisualElement style="flex-grow: 1; flex-direction: row; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0;">
+        <engine:VisualElement style="flex-grow: 1; flex-direction: column; max-width: 20%;">
+            <engine:ScrollView style="margin-right: 0; align-self: stretch; align-content: flex-start; justify-content: flex-start; flex-grow: 1; align-items: stretch; max-height: 80%; max-width: none;">
+                <engine:Button text="Button" name="option-graphics" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 16%; padding-right: 16%; padding-bottom: 16%; padding-left: 16%; max-height: 25%;" />
+                <engine:Button text="Button" name="option-controls" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 16%; padding-right: 16%; padding-bottom: 16%; padding-left: 16%; max-height: 25%;" />
+            </engine:ScrollView>
+            <engine:VisualElement style="flex-grow: 1; flex-direction: column-reverse; justify-content: flex-start; align-content: flex-start; margin-top: 40%;">
+                <engine:Button text="Button" name="back" style="flex-direction: column; flex-shrink: 1; flex-grow: 1;" />
+                <engine:Button text="Button" name="apply" style="align-self: auto; justify-content: space-evenly; align-content: flex-start; flex-shrink: 1; flex-grow: 1;" />
+            </engine:VisualElement>
+        </engine:VisualElement>
+        <engine:VisualElement name="SubOptionRoot" style="flex-grow: 1;" />
+    </engine:VisualElement>
+</engine:UXML>

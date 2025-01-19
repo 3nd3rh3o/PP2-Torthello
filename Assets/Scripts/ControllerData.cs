@@ -8,7 +8,7 @@ namespace Torthello
     {
         public GameObject MainMenu;
         public GameObject PauseUI;
-
+        public GameObject OptionsPopup;
         public GameObject Torus;
     }
 

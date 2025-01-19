@@ -21,6 +21,10 @@ namespace Torthello
             //Cursor.SetCursor(null, new(), CursorMode.ForceSoftware);
             Cursor.visible = true;
 
+            
+
+
+
 
             //Show main menu
             activeScenario = new MainMenuControl();
@@ -59,6 +63,18 @@ namespace Torthello
             activeScenario=null;
             Application.Quit();
             Debug.Log("Game closed!");
+        }
+
+
+        public void ApplyGraphicSettings()
+        {
+            //Apply graphic settings
+            if (settings.GraphicSettings.displayMode == GraphicSettings.ScreenMode.Fullscreen)
+            {
+                Screen.fullScreen = true;
+            } else {
+                Screen.fullScreen = false;
+            }
         }
     }
 
