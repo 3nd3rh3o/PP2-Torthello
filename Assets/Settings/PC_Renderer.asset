@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5870bcae04f971248bef59fb6d6c0257, type: 3}
-  m_Name: AtmosphereFullScreenPassRendererFeature
+  m_Name: Skybox
   m_EditorClassIdentifier: 
   m_Active: 1
   injectionPoint: 450

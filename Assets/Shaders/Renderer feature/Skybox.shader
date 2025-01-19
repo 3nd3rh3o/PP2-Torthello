@@ -13,7 +13,7 @@ Shader "Torthello/Skybox"
         Tags { "RenderPipeline" = "UniversalPipeline" }
         Pass
         {
-            Name "Atmosphere drawing"
+            Name "Skybox drawing"
             
             // Render State
             Cull Off
@@ -47,6 +47,7 @@ Shader "Torthello/Skybox"
                 float dstToSurface = length(IN.WorldSpacePosition - _WorldSpaceCameraPos);
                 
                 float3 color;
+
                 if (dstToSurface < 100)
                 {
                     color = SampleSceneColor(IN.ScreenPosition.xy);
@@ -63,6 +64,7 @@ Shader "Torthello/Skybox"
                         color = lerp(_BotColor, _UpColor, (1. + dot(-IN.ray.xyz, float3(0, 1, 0))) * .5);
                     }
                 }
+
                 
 
                 surface.BaseColor = color;

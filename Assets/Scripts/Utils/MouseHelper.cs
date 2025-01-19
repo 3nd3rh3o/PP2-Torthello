@@ -24,6 +24,11 @@ public class MouseHelper
         return (x+y);
     }
 
+    public static Vector2 ConvMousePos(Vector2 initialCursorPos)
+    {
+        return initialCursorPos;
+    }
+
     public static int2 GetTileHovered(Vector3 rayDir, Vector3 rayOrigin, Transform gameBoardTransform, int numCol, int numLine, float radius, float sectionRadius)
     {
         float dist = 1000f;

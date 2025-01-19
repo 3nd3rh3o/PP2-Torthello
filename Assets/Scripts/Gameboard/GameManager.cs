@@ -1,4 +1,6 @@
+using torethelloController;
 using Unity.Mathematics;
+using UnityEditor.SearchService;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,39 +10,27 @@ using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
 
-    public float radius = 0.5f;
-    public float sectionRadius = 0.25f;
-    [Range(1, 50)]
-    public int numberOfSection = 4;
-    [Range(1, 50)]
-    public int pointsPerSection = 4;
+    public Board.Settings bSettings = new();
+    public Board.Manager bManager;
 
+    public Controller controller = new();
 
-    private CombineInstance[] ci;
-    private Mesh whiteMesh;
-    private Mesh blackMesh;
-    private Mesh highLightMesh;
     public InputActionReference playerLook;
     public InputActionReference rightClick;
     public InputActionReference zoomAction;
 
-    private Vector2 mousePos;
+    public Vector2 mousePos;
 
     public Vector2 mouseSensitivity = new();
     public Vector2 camSensitivity = new();
 
-    public GameObject cursor;
 
     private Vector2 camAngles;
     private Vector3 camPos;
 
-    private int2 tileHovered = new();
+    public int2 tileHovered = new(-1, -1);
 
-    public Material[] materials;
-
-
-    private Material[] boardMats;
-    private Material[] boardMatsWithH;
+    public Texture2D cursorTex;
 
     private float zoom = 10f;
 
@@ -48,71 +38,34 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void OnEnable()
     {
+        
+        //Setup boardManager
+        bManager = new(bSettings, this);
+        bManager.Setup();
+        bManager.DrawBase();
+        bSettings.enableHoverEffect = true;
 
-        boardMats = new Material[] { materials[0], materials[1] };
-        boardMatsWithH = materials;
-
-
-
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-        whiteMesh = new();
-        blackMesh = new();
-        highLightMesh = new();
-        ci = new CombineInstance[3];
-        ci[0].mesh = whiteMesh;
-        ci[1].mesh = blackMesh;
-        ci[2].mesh = highLightMesh;
-
-
-        whiteMesh = TorusMeshGenerator.GenMeshPair(whiteMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
-        blackMesh = TorusMeshGenerator.GenMeshImpair(blackMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
-
-        if (GetComponent<MeshFilter>().sharedMesh == null)
-        {
-            GetComponent<MeshFilter>().sharedMesh = new();
-        }
-
-        GetComponent<MeshFilter>().sharedMesh.Clear();
-        GetComponent<MeshFilter>().sharedMesh.CombineMeshes(ci, false, true, false);
+        //Setup Controller
+        controller.Init(this);
 
         camPos = new(0, 0, -10);
 
-        camAngles = new(90, 0);
+        camAngles = new(125, 0);
 
         Camera.main.transform.position = Quaternion.Euler(0, camAngles.y, 0) * Quaternion.Euler(camAngles.x - 90f, 0, 0) * camPos;
         Camera.main.transform.rotation = Quaternion.Euler(0, camAngles.y, 0) * Quaternion.Euler(camAngles.x - 90f, 0, 0);
-
-        cursor.transform.rotation = Camera.main.transform.rotation;
-
-
-        cursor.SetActive(true);
-
-
-
-
     }
 
 
     void OnDisable()
     {
-
+        bManager.Discard();
+        bManager=null;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (whiteMesh == null) whiteMesh = new();
-        if (blackMesh == null) blackMesh = new();
-        if (highLightMesh == null) highLightMesh = new();
-        if (ci == null)
-        {
-            ci = new CombineInstance[3];
-            ci[0].mesh = whiteMesh;
-            ci[1].mesh = blackMesh;
-            ci[2].mesh = highLightMesh;
-        }
-
         if (zoomAction != null)
         {
             float dz = zoomAction.action.ReadValue<Vector2>().y;
@@ -122,14 +75,15 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        
+
         if (playerLook != null)
         {
             //Mouse mouvement
             Vector2 mouseDelta = playerLook.action.ReadValue<Vector2>();
 
-            mousePos.x = Mathf.Max(-1, Mathf.Min(mousePos.x + mouseDelta.x * mouseSensitivity.x, 1));
-            mousePos.y = Mathf.Max(-1, Mathf.Min(mousePos.y + mouseDelta.y * mouseSensitivity.y, 1));
-
+            mousePos.x = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(0, Camera.main.pixelWidth, Input.mousePosition.x));
+            mousePos.y = Mathf.Lerp(1f, -1f, Mathf.InverseLerp(0, Camera.main.pixelHeight, Input.mousePosition.y));
 
 
             if (rightClick != null && rightClick.action.ReadValue<float>() == 1f)
@@ -143,36 +97,18 @@ public class GameManager : MonoBehaviour
             {
                 if (!mouseDelta.Equals(Vector2.zero))
                 {
-                    tileHovered = MouseHelper.GetTileHovered((Camera.main.transform.position - MouseHelper.GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, transform, numberOfSection * 2, pointsPerSection * 2, radius, sectionRadius);
-
-                    if (tileHovered.Equals(new(-1, -1)))
-                    {
-                        highLightMesh.Clear();
-                        GetComponent<MeshRenderer>().sharedMaterials = boardMats;
-                    }
-                    else
-                    {
-                        highLightMesh = TorusMeshGenerator.GenMeshOfTileByIndex(highLightMesh, tileHovered.x, tileHovered.y, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
-                        GetComponent<MeshRenderer>().sharedMaterials = boardMatsWithH;
-                    }
-
-
-                    whiteMesh = TorusMeshGenerator.GenMeshPair(whiteMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
-                    blackMesh = TorusMeshGenerator.GenMeshImpair(blackMesh, radius, sectionRadius, numberOfSection * 2, pointsPerSection * 2);
-
-                    GetComponent<MeshFilter>().sharedMesh.Clear();
-                    GetComponent<MeshFilter>().sharedMesh.CombineMeshes(ci, false, false);
+                    tileHovered = MouseHelper.GetTileHovered((Camera.main.transform.position - MouseHelper.GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, transform, bSettings.numberOfSection * 2, bSettings.pointsPerSection * 2, bSettings.radius, bSettings.sectionRadius);
                 }
             }
 
         }
+        
+        bManager.DrawEffect();
+
+
         camPos = camPos.normalized * zoom;
         Camera.main.transform.position = Quaternion.Euler(0, camAngles.y, 0) * Quaternion.Euler(camAngles.x - 90f, 0, 0) * camPos;
         Camera.main.transform.rotation = Quaternion.Euler(0, camAngles.y, 0) * Quaternion.Euler(camAngles.x - 90f, 0, 0);
-
-        cursor.transform.rotation = Camera.main.transform.rotation;
-        cursor.transform.position = Camera.main.transform.position - (Camera.main.transform.position - MouseHelper.GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)) * 1.1f;
-
 
     }
 }
