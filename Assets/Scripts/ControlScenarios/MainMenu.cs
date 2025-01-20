@@ -39,10 +39,12 @@ namespace Torthello
         }
         public void Update()
         {
+#if !UNITY_EDITOR
             if (actionMap.FindAction("Close/Exit").WasReleasedThisFrame())
             {
                 quitCmd();
             }
+#endif
         }
 
         public void Reset()

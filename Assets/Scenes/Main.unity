@@ -348,13 +348,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.85593617, y: -0.32488683, z: 0.24205892, w: 0.32129323}
+  m_LocalRotation: {x: 0.87381047, y: -0.24019265, z: 0.11794842, w: 0.40601844}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 134.985, y: 343.091, z: 394.522}
+  m_LocalEulerAnglesHint: {x: 129.98401, y: 359.012, z: 390.279}
 --- !u!114 &410087042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -516,6 +516,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1373081577}
   - component: {fileID: 1373081576}
+  - component: {fileID: 1373081578}
   m_Layer: 5
   m_Name: OptionsPOPUP
   m_TagString: Untagged
@@ -537,7 +538,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: 3a1887667f158664fbebd51122e38aa6, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 7481b069e7ce7d84989c1d4f560ecf31, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: 262c497a777f64a4d87937ab028cc409, type: 3}
   m_SortingOrder: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -557,6 +558,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1373081578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1373081575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0585e16c79bd41c44af9d79b6eb4deff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1487057719
 GameObject:
   m_ObjectHideFlags: 0
@@ -656,10 +669,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bSettings:
-    radius: 1
-    sectionRadius: 0.5
-    numberOfSection: 4
-    pointsPerSection: 4
+    radius: 3
+    sectionRadius: 1
+    numberOfSection: 50
+    pointsPerSection: 50
     EvenMat: {fileID: 2100000, guid: 0a2b3083db1e4cf49b156b3920896f7e, type: 2}
     OddMat: {fileID: 2100000, guid: 4f3a11d0fb12ceb4e837827baa485455, type: 2}
     HoverMat: {fileID: 5137829251820351898, guid: 0e4c95255eae1294398da37f98227e0b, type: 3}

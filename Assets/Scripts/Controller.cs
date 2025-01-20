@@ -10,6 +10,7 @@ namespace Torthello
         [Tooltip("Settings of the app and rendering params")]
         public Settings settings;
 
+        private ControlScenario old;
         private ControlScenario activeScenario;
 
         
@@ -29,7 +30,6 @@ namespace Torthello
             //Show main menu
             activeScenario = new MainMenuControl();
             activeScenario.Init(this);
-            
         }
 
         void Update()
@@ -54,7 +54,17 @@ namespace Torthello
 
         public void DrawOptions()
         {
+            old = activeScenario;
+            activeScenario = new Option();
+            activeScenario.Init(this);
+        }
 
+        public void OnExitOption()
+        {
+            activeScenario.Reset();
+            activeScenario = null;
+            activeScenario = old;
+            old = null;
         }
 
         public void CloseGame()

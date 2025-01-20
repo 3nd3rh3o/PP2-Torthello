@@ -32,3 +32,35 @@
 #OptionGroup > .unity-button:hover {
     background-color: rgb(140, 140, 140);
 }
+
+#option-cat .unity-button {
+    background-color: rgba(0, 0, 0, 0.59);
+    color: rgb(255, 255, 255);
+}
+
+#option-cat .unity-button:hover {
+    background-color: rgba(84, 84, 84, 0.59);
+    color: rgb(163, 163, 163);
+}
+
+#option-menu .unity-button {
+    background-color: rgba(0, 0, 0, 0.59);
+    color: rgb(255, 255, 255);
+}
+
+#option-menu .unity-button:hover {
+    background-color: rgba(84, 84, 84, 0.59);
+    color: rgb(163, 163, 163);
+}
+
+#display-mode > .unity-enum-field__input {
+    flex-grow: 1;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 15%;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+}

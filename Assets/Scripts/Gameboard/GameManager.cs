@@ -99,7 +99,9 @@ public class GameManager : MonoBehaviour
             }
 
         }
-        
+    #if UNITY_EDITOR
+        bManager.DrawBase();
+    #endif
         bManager.DrawEffect();
 
 
