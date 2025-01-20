@@ -52,7 +52,8 @@ class GreedyAI:
         simulatedGame.play(i, j)
         flips = count_differences(self.game.getBoard(), simulatedGame.getBoard())
         return flips
-  
+
+# WIP algo mal implémenté (mb j'avais mal compris): à refaire 
 class MinimaxAI: # TODO: improve performance
     def __init__(self, game, depth=3):
         self.game = game
@@ -73,36 +74,33 @@ class MinimaxAI: # TODO: improve performance
 
     def minimax(self, move, depth, maximizing):
         i, j = move
-        original_board = self.game.getBoard().copy()
-        self.game.play(i, j)
-        if depth == 0 or self.game.isOver():
-            score = self.evaluate()
-            self.game.board = original_board
+        gameSimulation = self.game.copy() # Memory overused (new object at each level of recursion --> bad) needs to be refactored
+        gameSimulation.play(i, j) # .play() change de joueur actif
+        if depth == 0 or gameSimulation.isOver():
+            score = gameSimulation.evaluate()
             return score
-        moves = self.game.getNextMoves()
-        if maximizing:
+        moves = gameSimulation.getNextMoves() #
+        if maximizing: # on maximise le coup de l'adversaire
             max_score = -1
             for move in moves:
                 score = self.minimax(move, depth - 1, False)
                 max_score = max(max_score, score)
-            self.game.board = original_board
             return max_score
-        else:
+        else: # 
             min_score = 100000
             for move in moves:
                 score = self.minimax(move, depth - 1, True)
                 min_score = min(min_score, score)
-            self.game.board = original_board
             return min_score
 
-    def evaluate(self):
+    def evaluate(self): # not sure if this is a correct score evaluation
         results = self.game.getResults()
-        if results[0] == 1:
+        if results == 1:
             return 100
-        elif results[0] == 2:
+        elif results == 2:
             return -100
         return 0
-    
+#WIP basé sur minimax donc j'ai fait faux également: à refaire
 class AlphaBetaAI: # TODO: improve performance
     def __init__(self, game, depth=3):
         self.game = game
@@ -161,7 +159,7 @@ class AlphaBetaAI: # TODO: improve performance
         elif results[0] == 2:
             return -100
         return 0
-    
+#WIP faut que je relise la définition de l'algo, il est actuellement non-fonctionnel: à refaire
 class MonteCarloAI: # TODO: improve performance
     def __init__(self, game, iterations=1000):
         self.game = game

@@ -18,7 +18,7 @@ def print_menu(stdscr, selected_row_idx, menu):
             stdscr.addstr(y, x, row)
     stdscr.refresh()
 
-def print_board(stdscr, game, selected_move_idx):
+def print_board(stdscr, game, selected_move_idx = None):
     stdscr.clear()
     h, w = stdscr.getmaxyx()
     board = game.board
@@ -35,7 +35,7 @@ def print_board(stdscr, game, selected_move_idx):
         for j, cell in enumerate(row):
             x = w//2 - len(row)*2 + j*4
             y = h//2 - len(board) + i*2
-            if (i, j) in moves and moves.index((i, j)) == selected_move_idx:
+            if selected_move_idx!= None and (i, j) in moves and moves.index((i, j)) == selected_move_idx:
                 stdscr.attron(curses.color_pair(1))
                 if cell == 1:
                     stdscr.addstr(y, x, ' o ', curses.color_pair(1))
@@ -98,15 +98,18 @@ def show_menu(stdscr, menu):
 
 def playGame(stdscr, game, ai1=None, ai2=None):
     selected_move_idx = 0
+    quit=False
     while True:
-        if game.isOver():
+        if game.isOver() or quit:
+            
             break
         print_board(stdscr, game, selected_move_idx)
-        key = stdscr.getch()
+        
         moves = game.getNextMoves()
         player = game.getPlayer()
         match (ai1,ai2):
             case (None, None):
+                key = stdscr.getch()
                 if key == curses.KEY_LEFT:
                     selected_move_idx = (len(moves)-1 if selected_move_idx == 0 else selected_move_idx - 1)
                 elif key == curses.KEY_RIGHT:
@@ -117,6 +120,7 @@ def playGame(stdscr, game, ai1=None, ai2=None):
                     selected_move_idx = 0
                     #print_board(stdscr, game, selected_move_idx)  # Refresh the board after player's move
                 elif key == 27:  # ESC key to go back to menu
+                    quit=True
                     break
             case (ai1, None):
                 if player == 1:
@@ -125,6 +129,8 @@ def playGame(stdscr, game, ai1=None, ai2=None):
                     #print_board(stdscr, game, selected_move_idx)  # Refresh the board after AI's move
                     show_ai_move_feedback(stdscr, game, move, flipped_positions)
                 else:
+                    if selected_move_idx == None: selected_move_idx = 0 
+                    key = stdscr.getch()
                     if key == curses.KEY_LEFT:
                         selected_move_idx = (len(moves)-1 if selected_move_idx == 0 else selected_move_idx - 1)
                     elif key == curses.KEY_RIGHT:
@@ -135,8 +141,10 @@ def playGame(stdscr, game, ai1=None, ai2=None):
                         selected_move_idx = 0
                         #print_board(stdscr, game, selected_move_idx)  # Refresh the board after player's move
                     elif key == 27:
+                        quit=True
                         break
             case (ai1, ai2):
+                selected_move_idx = None
                 move = ai1.get_move() if player == 1 else ai2.get_move()
                 flipped_positions = game.play(move[0], move[1])
                 #print_board(stdscr, game, selected_move_idx)  # Refresh the board after AI's move
@@ -146,24 +154,32 @@ def main(stdscr, args):
     curses.curs_set(0)
     curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
     current_row = 0
-    menu = ['Test', "Against IA", 'Reset', 'Quit']
+    menu = ['Test', "Against IA", 'IA vs IA', 'Reset', 'Quit']
     menuIA= ['Random',  'Greedy', 'Minimax', 'AlphaBeta', 'MonteCarlo']
     game = Game.Game(args.size if args.size >= 8 else 8)
 
-    current_row = show_menu(stdscr, menu)
     while True:
+        current_row = show_menu(stdscr, menu)
         match current_row:
             case 0:  # Option 'Test'
                 playGame(stdscr, game)
             case 1:  # Option 'Choix IA'
                 current_row = show_menu(stdscr, menuIA)
-                if current_row:
+                if current_row != None:
                     ai = aiPlayers.getIA(menuIA[current_row], game)
                     playGame(stdscr, game, ai)
-            case 2:  # Option 'Reset'
+            case 2: # Option 'IA vs IA'
+                row1 = show_menu(stdscr, menuIA)
+                if row1 != None:
+                    row2 = show_menu(stdscr, menuIA)
+                    if row2 !=None:
+                        ai1 = aiPlayers.getIA(menuIA[row1], game)
+                        ai2 = aiPlayers.getIA(menuIA[row2], game)
+                    
+                        playGame(stdscr, game, ai1, ai2)
+            case 3:  # Option 'Reset'
                 game = Game.Game(args.size)
-                current_row = show_menu(stdscr, menu)
-            case 3: # Option 'Quit'
+            case 4: # Option 'Quit'
                 break
             case None:
                 break

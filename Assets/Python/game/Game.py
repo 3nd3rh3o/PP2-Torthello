@@ -44,7 +44,7 @@ class Game:
     #TODO: voir en faisant en sorte que verifmove renvoie qq chose, pour gagner en performance (play, isValidMove) par ex si isValidMove est appelée à chaque fois que play est appelée on peut ne pas re-check les directions
     def play(self, i, j):  #TODO: voir si on peut simplifier la fonction play
         if not self.isValidMove(i, j):
-            return False
+            raise ValueError("Le coup tenté n'est pas valide ? C'est dommage")
         self.setPawn(i, j, self.player)  # Place the pawn
         flipped_pawns = []  # List of flipped pawns
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]  # Directions for flipping pawns
@@ -113,7 +113,7 @@ class Game:
                     white += 1
                 elif cell == 2:
                     black += 1
-        return [1 if white > black else 2 if black > white else -1, [white, black]]     
+        return [1 if white > black else 2 if black > white else 0]     
     def copy(self):
         game = Game()
         game.board = self.board.copy()
