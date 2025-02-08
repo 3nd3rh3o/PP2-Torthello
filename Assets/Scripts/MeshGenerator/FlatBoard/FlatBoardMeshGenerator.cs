@@ -20,6 +20,11 @@ namespace Tortello
             Mesh mesh = meshFilter.sharedMesh;
             mesh.Clear();
 
+            combines = new CombineInstance[BoardHeight*BoardWidth];
+
+            CreateBoardMesh();
+            
+
         }
 
         public void UpdateMesh(MeshFilter meshFilter)
@@ -35,7 +40,7 @@ namespace Tortello
 
 
 
-        public static void CreateSquareMesh(Vector3 center, float sideLength, Mesh mesh){
+        private static void CreateSquareMesh(Vector3 center, float sideLength, Mesh mesh){
             Vector3[] points = new Vector3[4];
             points[0] = center + new Vector3(0.5f*sideLength,0f,0.5f*sideLength);
             points[1] = center + new Vector3(0.5f*sideLength,0f,-0.5f*sideLength);
@@ -57,5 +62,24 @@ namespace Tortello
             mesh.triangles = f;
             mesh.RecalculateNormals();
         }
+
+        private void CreateBoardMesh(){
+            //Calcul du centre de la premiere case
+            float offsetX = (-sideLength * BoardWidth + sideLength) * 0.5f;
+            float offsetZ = (-sideLength * BoardHeight + sideLength) * 0.5f;
+            Vector3 offset = new(offsetX, 0f, offsetZ);
+
+            //generation des mesh en fonction de l'offset
+            for (int i = 0 ; i < BoardWidth ; i++){
+                for (int j = 0 ; j < BoardHeight ; j++){
+                    Vector3 c = offset + new Vector3(i * sideLength, 0f, j * sideLength);
+                    Mesh mesh = new();
+                    CreateSquareMesh(c,sideLength,mesh);
+                    combines[i * BoardHeight + j].mesh = mesh;
+                }
+            }
+
+        }
+
     }
 }
