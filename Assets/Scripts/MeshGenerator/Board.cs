@@ -25,12 +25,12 @@ namespace Tortello
         /// <summary>
         /// Appelé lorsque le GO ou le script est activé.
         /// </summary>
-        void OnEnable()
+        public void OnEnable()
         {
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
-            MeshGenerator.UpdateMesh(mF);
-            MaterialHandler.UpdateRenderer(mR);
+            MeshGenerator.InitMesh(mF);
+            MaterialHandler.InitMeshRenderer(mR);
         }
 
         /// <summary>
@@ -38,7 +38,10 @@ namespace Tortello
         /// </summary>
         void Update()
         {
-
+            MeshRenderer mR = GetComponent<MeshRenderer>();
+            MeshFilter mF = GetComponent<MeshFilter>();
+            MeshGenerator.UpdateMesh(mF);
+            MaterialHandler.UpdateMeshRenderer(mR);
         }
         
         /// <summary>
@@ -54,7 +57,10 @@ namespace Tortello
         /// </summary>
         void OnDisable()
         {
-            
+            MeshRenderer mR = GetComponent<MeshRenderer>();
+            MeshFilter mF = GetComponent<MeshFilter>();
+            MeshGenerator.Destroy(mF);
+            MaterialHandler.Destroy(mR);
         }
     }
 }

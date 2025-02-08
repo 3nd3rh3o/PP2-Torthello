@@ -11,7 +11,12 @@ namespace Tortello
             throw new System.NotImplementedException();
         }
 
-        public void UpdateRenderer(MeshRenderer renderer)
+        public void InitMeshRenderer(MeshRenderer renderer)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UpdateMeshRenderer(MeshRenderer renderer)
         {
             throw new System.NotImplementedException();
         }
