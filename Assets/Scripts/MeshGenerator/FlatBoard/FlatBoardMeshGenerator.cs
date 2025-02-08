@@ -78,10 +78,7 @@ namespace Tortello
             combines=null;
 
         }
-
-
-
-
+        
         private static void CreateSquareMesh(Vector3 center, float sideLength, Mesh mesh){
             Vector3[] points = new Vector3[4];
             points[0] = center + new Vector3(0.5f*sideLength,0f,0.5f*sideLength);
@@ -112,6 +109,8 @@ namespace Tortello
             mesh.triangles = f;
             mesh.uv = uv;
             mesh.RecalculateNormals();
+            mesh.RecalculateTangents();
+            mesh.RecalculateBounds();
         }
 
         private void CreateBoardMesh(){

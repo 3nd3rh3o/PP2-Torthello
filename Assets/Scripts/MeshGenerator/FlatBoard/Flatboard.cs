@@ -2,7 +2,6 @@ namespace Tortello
 {
     public class FlatBoard : Board
     {
-
         public FlatBoardSettings settings;
         new void OnEnable()
         {
