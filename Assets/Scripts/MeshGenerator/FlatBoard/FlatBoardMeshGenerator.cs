@@ -5,11 +5,19 @@ namespace Tortello
 {
     public class FlatBoardMeshGenerator : MeshGenerator
     {
-        [Range(4, 20)] public int BoardWidth = 8;
-        [Range(4, 20)] public int BoardHeight = 8;
-        [Range(0f,10f)] public float sideLength = 1f;
-        public Vector3 center;
+
+        private FlatBoardSettings settings;
+        private int PreviousWidth;
+
+        private int PreviousHeight;
+
+        private float PreviousLength;
+
         private CombineInstance[] combines;
+
+        public FlatBoardMeshGenerator(FlatBoardSettings settings){
+            this.settings = settings;
+        }
 
         public void InitMesh(MeshFilter meshFilter)
         {
@@ -20,21 +28,55 @@ namespace Tortello
             Mesh mesh = meshFilter.sharedMesh;
             mesh.Clear();
 
-            combines = new CombineInstance[BoardHeight*BoardWidth];
+            PreviousHeight = settings.BoardHeight;
+            PreviousWidth = settings.BoardWidth;
+            PreviousLength = settings.sideLength;
+
+            combines = new CombineInstance[settings.BoardHeight*settings.BoardWidth];
 
             CreateBoardMesh();
-            
+
+            mesh.CombineMeshes(combines,false,false,false);
+
 
         }
 
         public void UpdateMesh(MeshFilter meshFilter)
         {
-            throw new System.NotImplementedException();
+            //on teste si les parametres in changes
+            if(PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength) return;
+
+            Mesh mesh = meshFilter.sharedMesh;
+            mesh.Clear();
+
+            PreviousHeight = settings.BoardHeight;
+            PreviousWidth = settings.BoardWidth;
+            PreviousLength = settings.sideLength;
+
+            #if UNITY_EDITOR
+            combines.ToList().ForEach(c => MonoBehaviour.DestroyImmediate(c.mesh));
+            #else
+            combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
+            #endif
+
+            combines = new CombineInstance[settings.BoardHeight*settings.BoardWidth];
+
+            CreateBoardMesh();
+
+            mesh.CombineMeshes(combines,false,false,false);
         }
 
         public void Destroy(MeshFilter mF)
         {
-            throw new System.NotImplementedException();
+            #if UNITY_EDITOR
+            combines.ToList().ForEach(c => MonoBehaviour.DestroyImmediate(c.mesh));
+            MonoBehaviour.DestroyImmediate(mF.sharedMesh);
+            #else
+            combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
+            MonoBehaviour.Destroy(mF.sharedMesh);
+            #endif
+            combines=null;
+
         }
 
 
@@ -65,17 +107,17 @@ namespace Tortello
 
         private void CreateBoardMesh(){
             //Calcul du centre de la premiere case
-            float offsetX = (-sideLength * BoardWidth + sideLength) * 0.5f;
-            float offsetZ = (-sideLength * BoardHeight + sideLength) * 0.5f;
+            float offsetX = (-settings.sideLength * settings.BoardWidth + settings.sideLength) * 0.5f;
+            float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
             Vector3 offset = new(offsetX, 0f, offsetZ);
 
             //generation des mesh en fonction de l'offset
-            for (int i = 0 ; i < BoardWidth ; i++){
-                for (int j = 0 ; j < BoardHeight ; j++){
-                    Vector3 c = offset + new Vector3(i * sideLength, 0f, j * sideLength);
+            for (int i = 0 ; i < settings.BoardWidth ; i++){
+                for (int j = 0 ; j < settings.BoardHeight ; j++){
+                    Vector3 c = offset + new Vector3(i * settings.sideLength, 0f, j * settings.sideLength);
                     Mesh mesh = new();
-                    CreateSquareMesh(c,sideLength,mesh);
-                    combines[i * BoardHeight + j].mesh = mesh;
+                    CreateSquareMesh(c,settings.sideLength,mesh);
+                    combines[i * settings.BoardHeight + j].mesh = mesh;
                 }
             }
 
