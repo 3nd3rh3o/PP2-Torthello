@@ -9,6 +9,8 @@ namespace Tortello
         [Range(4, 20)] public int BoardHeight = 8;
 
         [Range(0f,10f)] public float sideLength = 1f;
+
+        public Material Tilematerial;
     }
 
 }

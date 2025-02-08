@@ -100,8 +100,17 @@ namespace Tortello
             f[4]=3;
             f[5]=0;
 
+            Vector2[] uv = new Vector2[4];
+
+            uv[0]=new(1,1);
+            uv[1]=new(1,0);
+            uv[2]=new(0,0);
+            uv[3]=new(0,1);
+
+
             mesh.vertices = points;
             mesh.triangles = f;
+            mesh.uv = uv;
             mesh.RecalculateNormals();
         }
 

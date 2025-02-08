@@ -15,3 +15,4 @@ MonoBehaviour:
   BoardWidth: 8
   BoardHeight: 8
   sideLength: 1
+  Tilematerial: {fileID: 2100000, guid: 5ba097f8fe4924446844a565bc9b66fb, type: 2}
