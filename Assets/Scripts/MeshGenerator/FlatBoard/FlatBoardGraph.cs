@@ -13,7 +13,7 @@ namespace Tortello
         }
         public void AddPawn(int idsommets, Couleur couleur)
         {
-            graph.sommets
+
         }
 
         public void DestroyGraph()
@@ -93,6 +93,6 @@ namespace Tortello
         public bool SommetsEstUnBord(int u, int v, int boarwidth, int boarheight){
             return u == 0 || v ==0|| u == boarwidth -1|| v == boarheight -1;
         }
-
+        
     }
 }

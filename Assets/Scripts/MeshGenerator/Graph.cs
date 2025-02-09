@@ -20,11 +20,11 @@ namespace Tortello
         /// <summary>
         /// Ajoute un pion sur le graphe.
         /// </summary>
-        public void AddPawn();
+        public void AddPawn(int idsommet, Couleur couleur);
         /// <summary>
         /// Supprime tout les pions du graphe.
         /// </summary>
-        public void RemoveAllPawns(int idsommet, Couleur couleur);
+        public void RemoveAllPawns();
         /// <summary>
         /// Supprime le graphe, et libère les ressources.
         /// </summary>
