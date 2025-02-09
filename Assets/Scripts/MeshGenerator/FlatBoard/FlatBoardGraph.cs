@@ -25,7 +25,7 @@ namespace Tortello
 
         public void SetPawn(int idsommets, Couleur couleur)
         {
-                // on ajoute un pion
+                // on initialise un pion
                 graph.sommets[idsommets].couleur = couleur;
         }
 
