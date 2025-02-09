@@ -25,6 +25,7 @@ namespace Tortello
 
         public void SetPawn(int idsommets, Couleur couleur)
         {
+                // on ajoute un pion
                 graph.sommets[idsommets].couleur = couleur;
         }
 
@@ -103,13 +104,16 @@ namespace Tortello
             throw new System.NotImplementedException();
         }
 
+        // fonction qui retourne si le sommet est un coin
         public static bool SommetsEstUnCoin(int u, int v, int width, int height){
 
             return(u == 0 && v == 0) || (u == width -1 && v ==0)||(u == 0 && v == height -1)||(u == width-1 && v == height -1);
         }
+        // fonction qui retourne si le sommet est un bord
         public bool SommetsEstUnBord(int u, int v, int boarwidth, int boarheight){
             return u == 0 || v ==0|| u == boarwidth -1|| v == boarheight -1;
         }
+        // fonction qui retourne si le coup est valide
         public bool CoupEstValide(int idsommets, Couleur couleur,List<List<int>> pionsretournes){
             bool CoupValide = false;
             Sommets sommetactuel = graph.sommets[idsommets];
@@ -126,8 +130,6 @@ namespace Tortello
             else{
                  inverse = Couleur.Blanc;
             }
-            // peut aussi l'ecrire couleur inverse en une ligne (cf mickael)  
-            // Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
             List<Arretes> arretes = new List<Arretes>();
             List<List<int>> directions = new List<List<int>>();
             
@@ -158,7 +160,6 @@ namespace Tortello
                             pionsretournes[i].Add(narrete.d);
                         }
                     }
-                    // si on trouve une case de la meme couleur que le joueur on peut jouer
                     else if(graph.sommets[arretes[i].a].couleur == couleur){
                         CoupValide = true;
                         arretes.RemoveAt(i);
