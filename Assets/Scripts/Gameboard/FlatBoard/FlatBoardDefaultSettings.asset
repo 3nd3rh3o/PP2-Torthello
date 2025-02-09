@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d899a48f27c7a54f8b81b91f62c7dcf, type: 3}
   m_Name: FlatBoardDefaultSettings
   m_EditorClassIdentifier: 
-  BoardWidth: 12
-  BoardHeight: 12
-  sideLength: 1
+  BoardWidth: 8
+  BoardHeight: 8
+  sideLength: 0.71
   Tilematerial: {fileID: 2100000, guid: 5ba097f8fe4924446844a565bc9b66fb, type: 2}
