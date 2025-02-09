@@ -6,6 +6,7 @@ namespace Tortello
     /// </summary>
     public interface IGraph
     {
+
         /// <summary>
         /// Construit le graphe selon les paramètres du plateau.<br/>
         /// Doit créer les pions initiaux.
@@ -23,10 +24,32 @@ namespace Tortello
         /// <summary>
         /// Supprime tout les pions du graphe.
         /// </summary>
-        public void RemoveAllPawns();
+        public void RemoveAllPawns(int idsommet, Couleur couleur);
         /// <summary>
         /// Supprime le graphe, et libère les ressources.
         /// </summary>
         public void DestroyGraph();
     }
+    public class Graph
+    {
+        public Sommets[] sommets;
+        
+    }
+    public class Sommets
+    {
+        public Couleur couleur;
+        public Arretes[] arretes;
+    }
+    public class Arretes
+    {
+        public int d;
+        public int a;
+    }
+    public enum Couleur
+    {
+        Vide,
+        Blanc,
+        Noir
+    }
 }
+
