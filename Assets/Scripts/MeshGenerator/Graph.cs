@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Tortello
 {
     /// <summary>
@@ -6,7 +8,6 @@ namespace Tortello
     /// </summary>
     public interface IGraph
     {
-
         /// <summary>
         /// Construit le graphe selon les paramètres du plateau.<br/>
         /// Doit créer les pions initiaux.
@@ -18,9 +19,22 @@ namespace Tortello
         /// </summary>
         public void UpdateGraph();
         /// <summary>
-        /// Ajoute un pion sur le graphe.
+        /// Ajoute un pion sur le graphe.<br/>
         /// </summary>
-        public void AddPawn(int idsommet, Couleur couleur);
+        /// <param name="idSommet"> L'identifiant du sommet où placer le pion. </param>
+        /// <param name="couleur">La couleur du pion à placer.</param>
+        /// <param name="pionsRetournes">La liste des pions retournés par le coup.</param>
+        /// <returns>True si le coup est valide, false sinon.</returns>
+        public bool AddPawn(int idSommet, Couleur couleur, List<List<int>> pionsRetournes);
+
+        /// <summary>
+        /// Place un pion sur le graphe.<br/>
+        /// Ne vérifie pas si le coup est valide.
+        /// </summary>
+        /// <param name="idSommet">L'identifiant du sommet où placer le pion.</param>
+        /// <param name="couleur">La couleur du pion à placer.</param>
+        public void SetPawn(int idSommet, Couleur couleur);
+
         /// <summary>
         /// Supprime tout les pions du graphe.
         /// </summary>
@@ -52,4 +66,3 @@ namespace Tortello
         Noir
     }
 }
-
