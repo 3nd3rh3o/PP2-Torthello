@@ -19,6 +19,7 @@ namespace Tortello
         public void Destroy(MeshRenderer renderer)
         {
             mats=null;
+            renderer.sharedMaterials=new Material[0];
         }
 
         public void InitMeshRenderer(MeshRenderer renderer)
