@@ -1,7 +1,7 @@
 using UnityEngine;
 namespace Tortello
 {
-    public interface MeshGenerator
+    public interface IMeshGenerator
     {
         /// <summary>
         /// Créé le mesh, et initialise toute ressources utiles pour lui.

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Tortello
 {
-    public class FlatBoardMaterialHandler : MaterialHandler
+    public class FlatBoardMaterialHandler : IMaterialHandler
     {
 
         private FlatBoardSettings settings;

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Tortello
 {
-    public interface MaterialHandler
+    public interface IMaterialHandler
     {
         /// <summary>
         /// Appellé pour initialiser le renderer. Effectue la création de ce qui est requis si null.

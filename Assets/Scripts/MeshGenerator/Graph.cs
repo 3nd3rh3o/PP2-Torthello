@@ -4,7 +4,7 @@ namespace Tortello
     /// Le graphe qui contient les pions et les cases du plateau.<br/>
     /// Permet au jeu de stocker l'état du plateau, et de gérer les placements de pions.
     /// </summary>
-    public interface Graph
+    public interface IGraph
     {
         /// <summary>
         /// Construit le graphe selon les paramètres du plateau.<br/>

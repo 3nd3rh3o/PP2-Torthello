@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace Tortello
 {
-    public class FlatBoardMeshGenerator : MeshGenerator
+    public class FlatBoardMeshGenerator : IMeshGenerator
     {
 
         private FlatBoardSettings settings;

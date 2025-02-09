@@ -13,13 +13,13 @@ namespace Tortello
         /// <summary>
         /// Ce qui génère la forme du plateau.
         /// </summary>
-        public MeshGenerator MeshGenerator;
+        public IMeshGenerator MeshGenerator;
 
 
         /// <summary>
         /// Ce qui défini le renderer du plateau.
         /// </summary>
-        public MaterialHandler MaterialHandler;
+        public IMaterialHandler MaterialHandler;
 
 
         /// <summary>
