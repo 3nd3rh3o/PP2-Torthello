@@ -13,13 +13,14 @@ namespace Tortello
         public FlatBoardGraph(FlatBoardSettings settings){
             this.settings = settings;
         }
-        public void AddPawn(int idsommets, Couleur couleur, List<List<int>> pionsretournes)
+        public bool AddPawn(int idsommets, Couleur couleur, List<List<int>> pionsretournes)
         {
             // on ajoute un pion selement si le coup est valide
-            if(!CoupEstValide(idsommets, couleur,pionsretournes)){
+            if(CoupEstValide(idsommets, couleur,pionsretournes)){
                 graph.sommets[idsommets].couleur = couleur;
+                return true;
             }
-            
+            return false;
         }
 
         public void SetPawn(int idsommets, Couleur couleur)
