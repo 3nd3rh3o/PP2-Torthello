@@ -21,6 +21,8 @@ namespace Tortello
         /// </summary>
         public IMaterialHandler MaterialHandler;
 
+        public IGraph Graph;
+
 
         /// <summary>
         /// Appelé lorsque le GO ou le script est activé.
@@ -31,6 +33,7 @@ namespace Tortello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.InitMesh(mF);
             MaterialHandler.InitMeshRenderer(mR);
+            Graph.InitGraph();
         }
 
         /// <summary>

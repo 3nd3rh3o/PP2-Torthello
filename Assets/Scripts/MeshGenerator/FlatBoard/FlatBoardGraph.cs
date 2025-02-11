@@ -8,25 +8,29 @@ namespace Tortello
 
         private Graph graph;
 
+        private int prevWidth;
+
+        private int prevHeight;
+
         private FlatBoardSettings settings;
 
         public FlatBoardGraph(FlatBoardSettings settings){
             this.settings = settings;
         }
-        public bool AddPawn(int idsommets, Couleur couleur, List<List<int>> pionsretournes)
+        public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
         {
             // on ajoute un pion selement si le coup est valide
-            if(CoupEstValide(idsommets, couleur,pionsretournes)){
-                graph.sommets[idsommets].couleur = couleur;
+            if(CoupEstValide(idSommets, couleur,pionsARetournes)){
+                graph.sommets[idSommets].couleur = couleur;
                 return true;
             }
             return false;
         }
 
-        public void SetPawn(int idsommets, Couleur couleur)
+        public void SetPawn(int idSommets, Couleur couleur)
         {
                 // on initialise un pion
-                graph.sommets[idsommets].couleur = couleur;
+                graph.sommets[idSommets].couleur = couleur;
         }
 
         public void DestroyGraph()
@@ -38,11 +42,15 @@ namespace Tortello
         //initialisation du Graph
         public void InitGraph()
         {
-            graph = new Graph();
-            graph.sommets = new Sommets[settings.BoardWidth * settings.BoardHeight];
+            graph = new Graph
+            {
+                sommets = new Sommets[settings.BoardWidth * settings.BoardHeight]
+            };
+            prevHeight= settings.BoardHeight;
+            prevWidth = settings.BoardWidth;
             for (int v = 0; v < settings.BoardHeight; v++){
                 for (int u = 0; u < settings.BoardWidth; u++){
-
+                    graph.sommets[v * settings.BoardWidth + u] = new Sommets();
                     // listes d'arretes du sommet
                     if(SommetsEstUnCoin(u,v, settings.BoardWidth, settings.BoardHeight)){
                         graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[2];
@@ -60,34 +68,50 @@ namespace Tortello
                     int counter = 0;
                     // left ?
                     if(u > 0){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes();
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].d = v * settings.BoardHeight + u;
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].a =v * settings.BoardHeight + u - 1;
+                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                        {
+                            d = v * settings.BoardHeight + u,
+                            a = v * settings.BoardHeight + u - 1
+                        };
                         counter++;
                     }
                     // top ?
                     if(v > 0){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes();
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].d = v * settings.BoardHeight + u;
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].a = (v - 1) * settings.BoardHeight + u;
+                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                        {
+                            d = v * settings.BoardHeight + u,
+                            a = (v - 1) * settings.BoardHeight + u
+                        };
                         counter++;
                     }
                     // right ?
-                    if(v > 0){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes();
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].d = v * settings.BoardHeight + u;
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].a = v * settings.BoardHeight + u + 1;
+                    if(u < settings.BoardWidth - 1){
+                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                        {
+                            d = v * settings.BoardHeight + u,
+                            a = v * settings.BoardHeight + u + 1
+                        };
                         counter++;
                     }
                     // bottom ?
-                    if(v > 0){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes();
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].d = v * settings.BoardHeight + u;
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter].a = (v + 1) * settings.BoardHeight + u;
-                        counter++;
+                    if(v < settings.BoardHeight - 1){
+                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                        {
+                            d = v * settings.BoardHeight + u,
+                            a = (v + 1) * settings.BoardHeight + u
+                        };
                     }
                 }
             }
+
+
+
+
+            //test
+
+            SetPawn(0, Couleur.Noir);
+            SetPawn(1, Couleur.Blanc);
+            AddPawn(2, Couleur.Noir, new List<List<int>>());
         }
 
         public void RemoveAllPawns()
@@ -101,7 +125,11 @@ namespace Tortello
 
         public void UpdateGraph()
         {
-            throw new System.NotImplementedException();
+            if(prevHeight == settings.BoardHeight && prevWidth == settings.BoardWidth){
+                return;
+            }
+            DestroyGraph();
+            InitGraph();
         }
 
         // fonction qui retourne si le sommet est un coin
@@ -114,50 +142,45 @@ namespace Tortello
             return u == 0 || v ==0|| u == boarwidth -1|| v == boarheight -1;
         }
         // fonction qui retourne si le coup est valide
-        public bool CoupEstValide(int idsommets, Couleur couleur,List<List<int>> pionsretournes){
+        public bool CoupEstValide(int idSommets, Couleur couleur,List<List<int>> pionsARetournes){
             bool CoupValide = false;
-            Sommets sommetactuel = graph.sommets[idsommets];
+            Sommets sommetActuel = graph.sommets[idSommets];
 
             // si le sommet (case) est pas vide on ne peut pas jouer
-            if(sommetactuel.couleur != Couleur.Vide){
+            if(sommetActuel.couleur != Couleur.Vide){
                 return false;
             }
 
-            Couleur inverse;
-            if(couleur == Couleur.Blanc){
-                inverse = Couleur.Noir;
-            }
-            else{
-                 inverse = Couleur.Blanc;
-            }
-            List<Arretes> arretes = new List<Arretes>();
-            List<List<int>> directions = new List<List<int>>();
+            Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
             
-            foreach (Arretes arrete in sommetactuel.arretes)
+            List<Arretes> arretes = new List<Arretes>();
+            List<int> directions = new List<int>();
+            
+            foreach (Arretes arrete in sommetActuel.arretes)
             {
                 if(graph.sommets[arrete.a].couleur == inverse){
                     arretes.Add(arrete);
-                    directions.Add(new List<int>{arrete.a, arrete.d});
-                    pionsretournes.Add(new List<int>{arrete.a});
+                    directions.Add(arrete.a - arrete.d);
+                    pionsARetournes.Add(new List<int>());
                 }
             }
             if(arretes.Count == 0){
                 return false;
             }
 
-            while(arretes.Count == 0){
+            while(arretes.Count > 0){
                 for(int i = 0; i < arretes.Count; i++){
                     if(graph.sommets[arretes[i].a].couleur == inverse){
                         Arretes narrete = GetArreteDansMemoDirection(graph.sommets[arretes[i].a], directions[i]);
                         if(narrete == null){
                             arretes.RemoveAt(i);
                             directions.RemoveAt(i);
-                            pionsretournes.RemoveAt(i);
+                            pionsARetournes.RemoveAt(i);
                             i--;
                         }
                         else{
                             arretes[i] = narrete;
-                            pionsretournes[i].Add(narrete.d);
+                            pionsARetournes[i].Add(narrete.d);
                         }
                     }
                     else if(graph.sommets[arretes[i].a].couleur == couleur){
@@ -168,7 +191,7 @@ namespace Tortello
                     else{
                         arretes.RemoveAt(i);
                         directions.RemoveAt(i);
-                        pionsretournes.RemoveAt(i);
+                        pionsARetournes.RemoveAt(i);
                         i--;
                     }
                 }
@@ -176,10 +199,10 @@ namespace Tortello
             return CoupValide;
         }
         // fonction qui retourne l'arrete dans la direction donnée
-        public Arretes GetArreteDansMemoDirection(Sommets sommet, List<int> direction){
+        public Arretes GetArreteDansMemoDirection(Sommets sommet, int direction){
             foreach (Arretes arrete in sommet.arretes)
             {
-                if(arrete.a - arrete.d == direction[1]){
+                if(arrete.a - arrete.d == direction){
                     return arrete;
                 }
             }
