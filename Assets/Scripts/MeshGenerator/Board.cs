@@ -21,6 +21,8 @@ namespace Tortello
         /// </summary>
         public IMaterialHandler MaterialHandler;
 
+        public IBoardInputSystem inputSystem;
+
 
         /// <summary>
         /// Appelé lorsque le GO ou le script est activé.
@@ -31,6 +33,7 @@ namespace Tortello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.InitMesh(mF);
             MaterialHandler.InitMeshRenderer(mR);
+            inputSystem.Init();
         }
 
         /// <summary>
@@ -40,7 +43,8 @@ namespace Tortello
         {
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
-            MeshGenerator.UpdateMesh(mF);
+            MeshGenerator.UpdateMesh(mF);            
+            MaterialHandler.SetHoveredTile(inputSystem.GetTileHoveredID());
             MaterialHandler.UpdateMeshRenderer(mR);
         }
         
@@ -61,6 +65,7 @@ namespace Tortello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.Destroy(mF);
             MaterialHandler.Destroy(mR);
+            inputSystem.Destroy();
         }
     }
 }

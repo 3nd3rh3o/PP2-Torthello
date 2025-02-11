@@ -17,6 +17,12 @@ namespace Tortello
         public void UpdateMeshRenderer(MeshRenderer renderer);
 
         /// <summary>
+        /// Utilisé pour indiqué l'id de la case sur laquelle est la sourie.
+        /// </summary>
+        /// <param name="id">L'identifiant de la case survolée</param>
+        public void SetHoveredTile(int id);
+
+        /// <summary>
         /// Appellé pour nettoyer et detruire toutes ressources utilisées par le renderer.
         /// </summary>
         /// <param name="renderer"></param>
