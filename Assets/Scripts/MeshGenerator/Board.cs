@@ -23,6 +23,8 @@ namespace Tortello
 
         public IBoardInputSystem inputSystem;
 
+        public IGraph Graph;
+
 
         /// <summary>
         /// Appelé lorsque le GO ou le script est activé.
@@ -34,6 +36,7 @@ namespace Tortello
             MeshGenerator.InitMesh(mF);
             MaterialHandler.InitMeshRenderer(mR);
             inputSystem.Init();
+            Graph.InitGraph();
         }
 
         /// <summary>

@@ -7,6 +7,7 @@ namespace Tortello
         {
             MeshGenerator = new FlatBoardMeshGenerator(settings);
             MaterialHandler = new FlatBoardMaterialHandler(settings);
+            Graph = new FlatBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform);
             base.OnEnable();
         }
