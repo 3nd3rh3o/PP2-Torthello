@@ -13,6 +13,15 @@
                     "processors": "Clamp(max=1)",
                     "interactions": "Press(behavior=1)",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "View",
+                    "type": "Button",
+                    "id": "08b7eb50-54a7-459a-b723-a53bc56f5319",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "Press",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -24,6 +33,17 @@
                     "processors": "Clamp(max=1)",
                     "groups": "",
                     "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f79ff44b-1375-417d-a8b4-ebc9dcf67688",
+                    "path": "*/{SecondaryAction}",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "View",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

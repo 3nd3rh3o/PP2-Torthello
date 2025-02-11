@@ -33,6 +33,7 @@ namespace Tortello
         /// </summary>
         public void OnEnable()
         {
+            Cursor.lockState = CursorLockMode.Confined;
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.InitMesh(mF);
@@ -63,6 +64,7 @@ namespace Tortello
                     MaterialHandler.FailedPlacement();
                 }
             }
+
             MaterialHandler.UpdateMeshRenderer(mR);
         }
         
