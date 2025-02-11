@@ -93,23 +93,23 @@ namespace Tortello
 
             Vector2 A = new
             (
-                Camera.main.WorldToViewportPoint(corners[0], Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(corners[0], Camera.MonoOrStereoscopicEye.Mono).y
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[0]), Camera.MonoOrStereoscopicEye.Mono).x,
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[0]), Camera.MonoOrStereoscopicEye.Mono).y
             );
             Vector2 B = new
             (
-                Camera.main.WorldToViewportPoint(corners[1], Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(corners[1], Camera.MonoOrStereoscopicEye.Mono).y
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[1]), Camera.MonoOrStereoscopicEye.Mono).x,
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[1]), Camera.MonoOrStereoscopicEye.Mono).y
             );
             Vector2 C = new
             (
-                Camera.main.WorldToViewportPoint(corners[2], Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(corners[2], Camera.MonoOrStereoscopicEye.Mono).y
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[2]), Camera.MonoOrStereoscopicEye.Mono).x,
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[2]), Camera.MonoOrStereoscopicEye.Mono).y
             );
             Vector2 D = new
             (
-                Camera.main.WorldToViewportPoint(corners[3], Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(corners[3], Camera.MonoOrStereoscopicEye.Mono).y
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[3]), Camera.MonoOrStereoscopicEye.Mono).x,
+                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[3]), Camera.MonoOrStereoscopicEye.Mono).y
             );
             // On verifie si le vecteur de la sourie est entre les vecteurs formant les coins de la case 
             // projetée sur l'écran. (coordonnées de 0 à 1 sur un plan.)
