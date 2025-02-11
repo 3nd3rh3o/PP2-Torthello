@@ -103,15 +103,6 @@ namespace Tortello
                     }
                 }
             }
-
-
-
-
-            //test
-
-            SetPawn(0, Couleur.Noir);
-            SetPawn(1, Couleur.Blanc);
-            AddPawn(2, Couleur.Noir, new List<List<int>>());
         }
 
         public void RemoveAllPawns()
