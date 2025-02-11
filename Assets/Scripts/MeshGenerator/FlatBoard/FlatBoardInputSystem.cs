@@ -14,6 +14,9 @@ namespace Tortello
         private Transform boardTransform;
         private Vector3[][] tileCorners;
         private int previousHoveredTileID;
+        private int previousWidth;
+        private int previousHeight;
+        private float previousSideLength;
 
         public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform)
         {
@@ -23,8 +26,7 @@ namespace Tortello
 
         public void Destroy()
         {
-
-
+            tileCorners = null;
         }
 
 
@@ -48,6 +50,10 @@ namespace Tortello
 
         public void Init()
         {
+            previousWidth = settings.BoardWidth;
+            previousHeight = settings.BoardHeight;
+            previousSideLength = settings.sideLength;
+            previousHoveredTileID = -1;
             float offsetX = (-settings.sideLength * settings.BoardWidth + settings.sideLength) * 0.5f;
             float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
             Vector3 offset = new(offsetX, 0f, offsetZ);
@@ -70,7 +76,10 @@ namespace Tortello
 
         public void Update()
         {
-            
+            if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && previousSideLength == settings.sideLength) return;
+            Destroy();
+            Init();
+            return;
         }
 
         private bool IsTileHovered(int id, Vector2 mousePosition)

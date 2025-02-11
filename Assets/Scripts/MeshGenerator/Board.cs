@@ -44,6 +44,7 @@ namespace Tortello
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);            
+            inputSystem.Update();
             MaterialHandler.SetHoveredTile(inputSystem.GetTileHoveredID());
             MaterialHandler.UpdateMeshRenderer(mR);
         }
