@@ -1,16 +1,10 @@
-
-using Unity.VisualScripting;
-using UnityEditor;
-using UnityEditor.PackageManager.UI;
-using UnityEditor.SearchService;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace Tortello
 {
     public class FlatBoardInputSystem : IBoardInputSystem
     {
-        private FlatBoardSettings settings;
+        private readonly FlatBoardSettings settings;
         private Transform boardTransform;
         private Vector3[][] tileCorners;
         private int previousHoveredTileID;
@@ -106,6 +100,8 @@ namespace Tortello
                 Camera.main.WorldToViewportPoint(corners[3], Camera.MonoOrStereoscopicEye.Mono).x,
                 Camera.main.WorldToViewportPoint(corners[3], Camera.MonoOrStereoscopicEye.Mono).y
             );
+            // On verifie si le vecteur de la sourie est entre les vecteurs formant les coins de la case 
+            // projetée sur l'écran. (coordonnées de 0 à 1 sur un plan.)
             bool BAC = Vector2.Dot((B - A).normalized, (mousePosition - A).normalized) >= 0 && 
                 Vector2.Dot((C - A).normalized, (mousePosition - A).normalized) >= 0;
             bool ABD = Vector2.Dot((A - B).normalized, (mousePosition - B).normalized) >= 0 &&

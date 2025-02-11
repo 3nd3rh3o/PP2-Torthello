@@ -8,7 +8,7 @@ namespace Tortello
     
     [RequireComponent(typeof(MeshRenderer))]
     [RequireComponent(typeof(MeshFilter))]
-    public class Board : MonoBehaviour
+    public abstract class Board : MonoBehaviour
     {
         /// <summary>
         /// Ce qui génère la forme du plateau.
