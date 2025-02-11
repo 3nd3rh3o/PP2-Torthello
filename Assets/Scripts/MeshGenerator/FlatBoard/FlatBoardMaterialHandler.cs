@@ -6,11 +6,14 @@ namespace Tortello
     {
 
         private FlatBoardSettings settings;
-        private int PreviousWidth;
+        private int previousWidth;
 
-        private int PreviousHeight;
+        private int previousHeight;
         private int hoveredTile;
         private bool hoverChanged = false;
+        private bool failedPlacementAnim = false;
+        private int failedPlacementTileID = -1;
+        private float animTime = 0f;
 
         private Material[] mats;
         public FlatBoardMaterialHandler(FlatBoardSettings settings)
@@ -24,10 +27,17 @@ namespace Tortello
             renderer.sharedMaterials = new Material[0];
         }
 
+        public void FailedPlacement()
+        {
+            failedPlacementTileID = hoveredTile;
+            animTime = 0;
+            failedPlacementAnim = true;
+        }
+
         public void InitMeshRenderer(MeshRenderer renderer)
         {
-            PreviousHeight = settings.BoardHeight;
-            PreviousWidth = settings.BoardWidth;
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
 
             mats = new Material[settings.BoardHeight * settings.BoardWidth];
 
@@ -46,10 +56,10 @@ namespace Tortello
 
         public void UpdateMeshRenderer(MeshRenderer renderer)
         {
-            if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && !hoverChanged) return;
+            if (!failedPlacementAnim && previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && !hoverChanged) return;
 
-            PreviousHeight = settings.BoardHeight;
-            PreviousWidth = settings.BoardWidth;
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
 
             mats = new Material[settings.BoardHeight * settings.BoardWidth];
 
@@ -59,11 +69,28 @@ namespace Tortello
             }
             renderer.sharedMaterials = mats;
             Color hoveredColor = Color.white;
+            
             for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
                 MaterialPropertyBlock mpb = new();
-                mpb.SetColor("_BaseColor", i == hoveredTile ? hoveredColor : settings.Tilematerial.color);
+                
+                mpb.SetColor("_BaseColor", failedPlacementAnim && i == failedPlacementTileID ? RedBlinkColor(i == hoveredTile ? hoveredColor : settings.Tilematerial.color) : i == hoveredTile ? hoveredColor : settings.Tilematerial.color);
                 renderer.SetPropertyBlock(mpb, i);
+            }
+            if (failedPlacementAnim) animTime += Time.deltaTime;
+        }
+
+        public Color RedBlinkColor(Color drawnColor)
+        {
+            if (animTime > 1f)
+            {
+                animTime = 0;
+                failedPlacementAnim = false;
+                return drawnColor;
+            }
+            else 
+            {
+                return animTime < 0.5f ? Color.Lerp(drawnColor, Color.red, animTime*2f) : Color.Lerp(Color.red, drawnColor, (animTime - 0.5f) * 2f);
             }
         }
     }

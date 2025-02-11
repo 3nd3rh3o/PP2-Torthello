@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tortello
@@ -24,6 +25,7 @@ namespace Tortello
         public IBoardInputSystem inputSystem;
 
         public IGraph Graph;
+        public Couleur couleur = Couleur.Blanc;
 
 
         /// <summary>
@@ -48,7 +50,19 @@ namespace Tortello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);            
             inputSystem.Update();
-            MaterialHandler.SetHoveredTile(inputSystem.GetTileHoveredID());
+            int hoveredTile = inputSystem.GetTileHoveredID();
+            MaterialHandler.SetHoveredTile(hoveredTile);
+            if (inputSystem.Place()) {
+                List<List<int>> pionRetourne = new();
+                if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                {
+                    // AJOUTER PION + ANIMER RETOURNEMENT
+                }
+                else
+                {
+                    MaterialHandler.FailedPlacement();
+                }
+            }
             MaterialHandler.UpdateMeshRenderer(mR);
         }
         

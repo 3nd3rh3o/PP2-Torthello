@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Tortello
 {
@@ -11,23 +12,26 @@ namespace Tortello
         private int previousWidth;
         private int previousHeight;
         private float previousSideLength;
+        private InputActionAsset actionMap;
 
-        public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform)
+        public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;
+            this.actionMap = actionMap;
         }
 
         public void Destroy()
         {
             tileCorners = null;
+            actionMap.FindActionMap("InGame", false).Disable();
         }
 
 
         //TODO
         public int GetTileHoveredID()
         {
-            if (!Camera.main || !Application.isFocused) return -1;
+            if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
             Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
             // is prev tile still hovered?
             if (previousHoveredTileID != -1 && IsTileHovered(previousHoveredTileID, mousePos)) return previousHoveredTileID;
@@ -39,11 +43,13 @@ namespace Tortello
                     return i;
                 }
             }
+            previousHoveredTileID = -1;
             return -1;
         }
 
         public void Init()
         {
+            actionMap.FindActionMap("InGame", false).Enable();
             previousWidth = settings.BoardWidth;
             previousHeight = settings.BoardHeight;
             previousSideLength = settings.sideLength;
@@ -66,6 +72,11 @@ namespace Tortello
                     };
                 }
             }
+        }
+
+        public bool Place()
+        {
+            return previousHoveredTileID != -1 && actionMap.FindActionMap("InGame", false).FindAction("Place", false).WasReleasedThisFrame();
         }
 
         public void Update()

@@ -475,7 +475,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eff382953590dc64a86637613757c5b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  couleur: 1
   settings: {fileID: 11400000, guid: 757a7ec4bf462ef4e9526c1122411d08, type: 2}
+  actionMap: {fileID: -944628639613478452, guid: b510c0bc50020334a9db12bed2cbf5fc, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

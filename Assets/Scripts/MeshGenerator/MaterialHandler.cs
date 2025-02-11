@@ -23,6 +23,11 @@ namespace Tortello
         public void SetHoveredTile(int id);
 
         /// <summary>
+        /// Appelée si le placement d'un pion à échoué.
+        /// </summary>
+        public void FailedPlacement();
+
+        /// <summary>
         /// Appellé pour nettoyer et detruire toutes ressources utilisées par le renderer.
         /// </summary>
         /// <param name="renderer"></param>

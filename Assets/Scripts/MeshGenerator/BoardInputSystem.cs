@@ -15,6 +15,7 @@ namespace Tortello
         /// </summary>
         /// <returns>L'id de la case survolée par le curseur.(Id du sommet dans le graphe)</returns>
         public int GetTileHoveredID();
+        public bool Place();
         /// <summary>
         /// Appelé à chaque frame. Vérifie si un clic à été fait(Si oui, notifie le Board.), met à jour la position de la caméra si néccéssaire, etc...
         /// </summary>
