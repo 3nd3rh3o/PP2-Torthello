@@ -66,8 +66,8 @@ namespace Tortello
 
         public void StartGame()
         {
-            int u = Mathf.FloorToInt(settings.BoardWidth / 2f);
-            int v = Mathf.FloorToInt(settings.BoardHeight / 2f);
+            int u = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
+            int v = Mathf.FloorToInt(settings.BoardHeight / 2f) - 1;
             SpawnPawn(u + v * settings.BoardWidth, Couleur.Noir);
             SpawnPawn(u + 1 + v * settings.BoardWidth, Couleur.Blanc);
             SpawnPawn(u + (v + 1) * settings.BoardWidth, Couleur.Blanc);
