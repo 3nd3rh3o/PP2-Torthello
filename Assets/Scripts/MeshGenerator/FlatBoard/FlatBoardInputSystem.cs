@@ -13,8 +13,8 @@ namespace Tortello
         private int previousHeight;
         private float previousSideLength;
         private InputActionAsset actionMap;
-        private float yaw = 0f;
-        private float pitch = 15f;
+        private float yaw = 120f;
+        private float pitch = 0f;
 
         public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
         {
@@ -95,10 +95,9 @@ namespace Tortello
                 pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime;
                 pitch %= 360f;
                 yaw = Mathf.Clamp(yaw, 100f, 165f);
-                Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
-                Camera.main.transform.LookAt(boardTransform.position);
             }
-
+            Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
 
             // need to rebuild board map?
             if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && previousSideLength == settings.sideLength) return;

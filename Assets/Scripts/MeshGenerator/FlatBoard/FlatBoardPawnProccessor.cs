@@ -20,13 +20,13 @@ namespace Tortello
         {
 #if UNITY_EDITOR
             pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.DestroyImmediate(p.gameObject); });
-#else
-            pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.Destroy(p.gameObject); });
-#endif
             while (parent.childCount > 0)
             {
                 MonoBehaviour.DestroyImmediate(parent.GetChild(0).gameObject);
             }
+#else
+            pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.Destroy(p.gameObject); });
+#endif
         }
 
         public void FlipAnimSeq(List<List<int>> pawnFlipped)
@@ -55,7 +55,7 @@ namespace Tortello
 #else
             pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.Destroy(p.gameObject); });
 #endif
-           
+
         }
 
         public void SpawnPawn(int TileID, Couleur couleur)
