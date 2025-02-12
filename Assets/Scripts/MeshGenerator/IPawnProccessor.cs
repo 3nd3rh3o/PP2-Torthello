@@ -19,6 +19,11 @@ namespace Tortello
         /// Detruit tout les pions.
         /// </summary>
         public void RemoveAllPawns();
+
+        /// <summary>
+        /// Démarre la partie
+        /// </summary>
+        public void StartGame();
         /// <summary>
         /// Initialise le gestionnaire de pions.<br/>
         /// </summary>

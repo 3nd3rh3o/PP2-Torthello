@@ -4,17 +4,25 @@ namespace Tortello
 {
     public abstract class Pawn : MonoBehaviour
     {
-        void Start()
+        public Couleur couleur;
+        public Vector3 pos;
+        
+        public void Start()
         {
             
         }
 
-        void OnEnable()
+        public void Update()
         {
             
         }
 
-        void OnDisable()
+        public void OnEnable()
+        {
+            
+        }
+
+        public void OnDisable()
         {
             
         }

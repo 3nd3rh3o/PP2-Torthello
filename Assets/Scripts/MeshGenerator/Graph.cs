@@ -36,6 +36,11 @@ namespace Tortello
         public void SetPawn(int idSommet, Couleur couleur);
 
         /// <summary>
+        /// Démarre la partie
+        /// </summary>
+        public void StartGame();
+
+        /// <summary>
         /// Supprime tout les pions du graphe.
         /// </summary>
         public void RemoveAllPawns();

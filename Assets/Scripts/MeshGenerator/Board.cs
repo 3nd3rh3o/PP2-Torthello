@@ -23,7 +23,7 @@ namespace Tortello
         public IMaterialHandler MaterialHandler;
 
         public IBoardInputSystem inputSystem;
-
+        public IPawnProccessor pawnProccessor;
         public IGraph Graph;
         public Couleur couleur = Couleur.Blanc;
 
@@ -40,6 +40,19 @@ namespace Tortello
             MaterialHandler.InitMeshRenderer(mR);
             inputSystem.Init();
             Graph.InitGraph();
+            pawnProccessor.Init();
+
+            StartGame();
+        }
+
+        public void StartGame()
+        {
+            Graph.RemoveAllPawns();
+            pawnProccessor.RemoveAllPawns();
+            couleur = Couleur.Blanc;
+            Graph.StartGame();
+            pawnProccessor.StartGame();
+
         }
 
         /// <summary>
@@ -57,7 +70,9 @@ namespace Tortello
                 List<List<int>> pionRetourne = new();
                 if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
                 {
-                    // AJOUTER PION + ANIMER RETOURNEMENT
+                    pawnProccessor.SpawnPawn(hoveredTile, couleur);
+                    pawnProccessor.FlipAnimSeq(pionRetourne);
+                    couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
                 }
                 else
                 {
@@ -86,6 +101,7 @@ namespace Tortello
             MeshGenerator.Destroy(mF);
             MaterialHandler.Destroy(mR);
             inputSystem.Destroy();
+            pawnProccessor.Destroy();
         }
     }
 }

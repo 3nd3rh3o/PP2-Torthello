@@ -13,6 +13,7 @@ namespace Tortello
             MaterialHandler = new FlatBoardMaterialHandler(settings);
             Graph = new FlatBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
+            pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
             base.OnEnable();
         }
     }

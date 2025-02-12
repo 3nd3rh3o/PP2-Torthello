@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Tortello
 {
@@ -198,6 +199,16 @@ namespace Tortello
                 }
             }
             return null;
+        }
+
+        public void StartGame()
+        {
+            int u = Mathf.FloorToInt(settings.BoardWidth / 2f);
+            int v = Mathf.FloorToInt(settings.BoardHeight / 2f);
+            SetPawn(u + v * settings.BoardWidth, Couleur.Noir);
+            SetPawn(u + 1 + v * settings.BoardWidth, Couleur.Blanc);
+            SetPawn(u + (v + 1) * settings.BoardWidth, Couleur.Blanc);
+            SetPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
         }
     }
 }

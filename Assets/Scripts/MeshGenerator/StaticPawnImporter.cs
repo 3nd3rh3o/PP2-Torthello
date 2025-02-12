@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 namespace Tortello
 {
     /// <summary>
@@ -5,8 +8,19 @@ namespace Tortello
     /// <br/>
     /// 
     /// </summary>
-    public static class StaticPawnImporter
+    [Serializable]
+    public class StaticPawnImporter : MonoBehaviour
     {
-        
+        public Mesh DefaultPawnMesh;
+        public Material[] DefaultPawnMats;
+        internal DefaultPawn SpawnDefaultPawn()
+        {
+            GameObject go = new("Pawn");
+            MeshFilter mF = go.AddComponent<MeshFilter>();
+            mF.sharedMesh = DefaultPawnMesh;
+            MeshRenderer mR = go.AddComponent<MeshRenderer>();
+            mR.sharedMaterials = DefaultPawnMats;
+            return go.AddComponent<DefaultPawn>();
+        }
     }
 }
