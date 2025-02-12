@@ -71,8 +71,8 @@ namespace Tortello
                     if(u > 0){
                         graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
                         {
-                            d = v * settings.BoardHeight + u,
-                            a = v * settings.BoardHeight + u - 1
+                            d = v * settings.BoardWidth + u,
+                            a = v * settings.BoardWidth + u - 1
                         };
                         counter++;
                     }
@@ -80,8 +80,8 @@ namespace Tortello
                     if(v > 0){
                         graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
                         {
-                            d = v * settings.BoardHeight + u,
-                            a = (v - 1) * settings.BoardHeight + u
+                            d = v * settings.BoardWidth + u,
+                            a = (v - 1) * settings.BoardWidth + u
                         };
                         counter++;
                     }
@@ -89,8 +89,8 @@ namespace Tortello
                     if(u < settings.BoardWidth - 1){
                         graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
                         {
-                            d = v * settings.BoardHeight + u,
-                            a = v * settings.BoardHeight + u + 1
+                            d = v * settings.BoardWidth + u,
+                            a = v * settings.BoardWidth + u + 1
                         };
                         counter++;
                     }
@@ -98,8 +98,8 @@ namespace Tortello
                     if(v < settings.BoardHeight - 1){
                         graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
                         {
-                            d = v * settings.BoardHeight + u,
-                            a = (v + 1) * settings.BoardHeight + u
+                            d = v * settings.BoardWidth + u,
+                            a = (v + 1) * settings.BoardWidth + u
                         };
                     }
                 }

@@ -58,6 +58,7 @@ namespace Tortello
                     pawn.pos = TileIDToWP(TileID);
                     pawn.couleur = couleur;
                     pawn.StartSpawnAnim();
+                    pawns[TileID] = pawn;
                     pawn.transform.parent = parent;
                     break;
             }

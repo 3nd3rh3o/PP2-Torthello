@@ -16,6 +16,7 @@ namespace Tortello
         internal DefaultPawn SpawnDefaultPawn()
         {
             GameObject go = new("Pawn");
+            go.SetActive(false);
             MeshFilter mF = go.AddComponent<MeshFilter>();
             mF.sharedMesh = DefaultPawnMesh;
             MeshRenderer mR = go.AddComponent<MeshRenderer>();
