@@ -491,9 +491,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d880a01e7cfd80b44b4843c046ca0a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultPawnMesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  DefaultPawnMesh: {fileID: 2534964839176971238, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
   DefaultPawnMats:
-  - {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
+  - {fileID: -1580535799172915004, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
+  - {fileID: -8848810374240701247, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

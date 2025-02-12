@@ -152,40 +152,41 @@ namespace Tortello
             foreach (Arretes arrete in sommetActuel.arretes)
             {
                 if(graph.sommets[arrete.a].couleur == inverse){
-                    arretes.Add(arrete);
+                    arretes.Add(GetArreteDansMemoDirection(graph.sommets[arrete.a], arrete.a - arrete.d));
                     directions.Add(arrete.a - arrete.d);
-                    pionsARetournes.Add(new List<int>());
+                    pionsARetournes.Add(new List<int>(){arrete.a});
                 }
             }
             if(arretes.Count == 0){
                 return false;
             }
-
-            while(arretes.Count > 0){
-                for(int i = 0; i < arretes.Count; i++){
+            int c = arretes.Count;
+            while(c > 0){
+                for(int i = 0; i < directions.Count; i++){
+                    if (directions[i] == 0) continue;
                     if(graph.sommets[arretes[i].a].couleur == inverse){
                         Arretes narrete = GetArreteDansMemoDirection(graph.sommets[arretes[i].a], directions[i]);
                         if(narrete == null){
-                            arretes.RemoveAt(i);
-                            directions.RemoveAt(i);
-                            pionsARetournes.RemoveAt(i);
-                            i--;
+                            directions[i] = 0;
+                            pionsARetournes[i] = new();
+                            c--;
                         }
-                        else{
+                        else {
                             arretes[i] = narrete;
                             pionsARetournes[i].Add(narrete.d);
                         }
                     }
                     else if(graph.sommets[arretes[i].a].couleur == couleur){
                         CoupValide = true;
-                        arretes.RemoveAt(i);
-                        directions.RemoveAt(i);
+                        arretes[i] = null;
+                        directions[i] = 0;
+                        c--;
                     }
                     else{
-                        arretes.RemoveAt(i);
-                        directions.RemoveAt(i);
-                        pionsARetournes.RemoveAt(i);
-                        i--;
+                        arretes[i] = null;
+                        directions[i] = 0;
+                        pionsARetournes[i] = new();
+                        c--;
                     }
                 }
             }
