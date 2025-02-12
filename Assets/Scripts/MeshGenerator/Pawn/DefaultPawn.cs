@@ -23,6 +23,8 @@ namespace Tortello
         {
             couleur = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
             FlipAnimT = 0f;
+            transform.localPosition = pos + new Vector3(0f, 1f, 0f);
+            transform.localRotation = couleur == Couleur.Blanc ? Quaternion.Euler(180f, 0f, 0f) : Quaternion.Euler(0f, 0f, 0f);
             FlipAnim = true;
         }
 
@@ -46,13 +48,13 @@ namespace Tortello
         {
             if (SpawnAnim)
             {
-                SpawnAnimT += Time.deltaTime * 0.5f;
+                SpawnAnimT += Time.deltaTime * 0.8f;
                 transform.localPosition = Vector3.Lerp(pos + new Vector3(0f, 1f, 0f), pos, SpawnAnimT);
                 if (SpawnAnimT > 1f) EndSpawnAnim();
             }
             else if (FlipAnim)
             {
-                FlipAnimT += Time.deltaTime * 0.8f;
+                FlipAnimT += Time.deltaTime * 0.9f;
                 transform.localRotation = couleur == Couleur.Blanc ? 
                                             (
                                                 FlipAnimT < 0.5f?

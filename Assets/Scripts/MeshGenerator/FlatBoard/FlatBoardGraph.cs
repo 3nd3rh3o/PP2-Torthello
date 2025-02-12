@@ -23,6 +23,7 @@ namespace Tortello
             // on ajoute un pion selement si le coup est valide
             if(CoupEstValide(idSommets, couleur,pionsARetournes)){
                 graph.sommets[idSommets].couleur = couleur;
+                pionsARetournes.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
                 return true;
             }
             return false;
@@ -188,6 +189,7 @@ namespace Tortello
                     }
                 }
             }
+            
             return CoupValide;
         }
         // fonction qui retourne l'arrete dans la direction donnée
