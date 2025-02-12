@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Reset",
+                    "type": "Button",
+                    "id": "f6203b8c-91f5-4dae-97d9-3ddf68026f10",
+                    "expectedControlType": "",
+                    "processors": "Clamp(max=1)",
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "View",
                     "type": "Button",
                     "id": "08b7eb50-54a7-459a-b723-a53bc56f5319",
@@ -33,6 +42,17 @@
                     "processors": "Clamp(max=1)",
                     "groups": "",
                     "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "82a2dbf5-5ffc-464e-b994-ef47c83dbdbb",
+                    "path": "<Keyboard>/r",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "Clamp(max=1)",
+                    "groups": "",
+                    "action": "Reset",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

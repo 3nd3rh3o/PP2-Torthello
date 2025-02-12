@@ -81,6 +81,7 @@ namespace Tortello
             }
 
             MaterialHandler.UpdateMeshRenderer(mR);
+            if (inputSystem.Reset()) StartGame();
         }
         
         /// <summary>

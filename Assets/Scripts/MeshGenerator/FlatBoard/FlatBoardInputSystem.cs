@@ -81,6 +81,11 @@ namespace Tortello
             return previousHoveredTileID != -1 && actionMap.FindActionMap("InGame", false).FindAction("Place", false).WasReleasedThisFrame();
         }
 
+        public bool Reset()
+        {
+            return actionMap.FindActionMap("InGame", false).FindAction("Reset", false).WasReleasedThisFrame();
+        }
+
         public void Update()
         {
             // Camera controls

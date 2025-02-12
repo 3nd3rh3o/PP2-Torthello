@@ -24,5 +24,7 @@ namespace Tortello
         /// Désactive la potentielle couche d'action, libère les ressources.
         /// </summary>
         public void Destroy();
+
+        public bool Reset();
     }
 }

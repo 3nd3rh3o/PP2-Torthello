@@ -19,9 +19,9 @@ namespace Tortello
         public void Destroy()
         {
 #if UNITY_EDITOR
-            pawns.ToList().ForEach(p => {if (p != null ) MonoBehaviour.DestroyImmediate(p.gameObject);});
+            pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.DestroyImmediate(p.gameObject); });
 #else
-            pawns.ToList().ForEach(p => MonoBehaviour.Destroy(p.gameObject));
+            pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.Destroy(p.gameObject); });
 #endif
             while (parent.childCount > 0)
             {
@@ -46,7 +46,16 @@ namespace Tortello
 
         public void RemoveAllPawns()
         {
-
+#if UNITY_EDITOR
+            pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.DestroyImmediate(p.gameObject); });
+            while (parent.childCount > 0)
+            {
+                MonoBehaviour.DestroyImmediate(parent.GetChild(0).gameObject);
+            }
+#else
+            pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.Destroy(p.gameObject); });
+#endif
+           
         }
 
         public void SpawnPawn(int TileID, Couleur couleur)
