@@ -41,6 +41,19 @@ namespace Tortello
         public void StartGame();
 
         /// <summary>
+        /// Score de la partie.
+        /// </summary>
+        public List<int> GetScore();
+
+        /// <summary>
+        /// Vérifie si un joueur peut placer un pion.
+        /// </summary>
+        /// <param name="couleur"></param>
+        /// <returns></returns>
+
+        public bool NoPlacementAvailable(Couleur couleur);
+
+        /// <summary>
         /// Supprime tout les pions du graphe.
         /// </summary>
         public void RemoveAllPawns();
