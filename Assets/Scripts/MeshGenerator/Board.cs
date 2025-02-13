@@ -78,7 +78,6 @@ namespace Tortello
                     {
                         List<int> score = Graph.GetScore();
                         Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
-                        StartGame();
                     }
                 }
                 else
