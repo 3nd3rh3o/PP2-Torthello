@@ -57,14 +57,14 @@ namespace Tortello
                 transform.localRotation = couleur == Couleur.Blanc ?
                                             (
                                                 FlipAnimT < 0.5f ?
-                                                    Quaternion.Lerp(Quaternion.Euler(180f, 0f, 0f), Quaternion.Euler(90f, 0f, 0f), 1f - Mathf.Pow(1f - (FlipAnimT * 2f), 2))
-                                                    : Quaternion.Lerp(Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f), Mathf.Pow(2f*FlipAnimT - 1f, 2))
+                                                    Quaternion.Lerp(Quaternion.Euler(180f, 0f, 0f), Quaternion.Euler(90f, 0f, 0f), FlipAnimT * 2f)
+                                                    : Quaternion.Lerp(Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(0f, 0f, 0f), FlipAnimT * 2f - 1f)
                                             )
                                             :
                                             (
                                                 FlipAnimT < 0.5f ?
-                                                    Quaternion.Lerp(Quaternion.Euler(0f, 0f, 0f), Quaternion.Euler(90f, 0f, 0f), 1f - Mathf.Pow(1f - (FlipAnimT * 2f), 2))
-                                                    : Quaternion.Lerp(Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(180f, 0f, 0f), Mathf.Pow(2f*FlipAnimT - 1f, 2))
+                                                    Quaternion.Lerp(Quaternion.Euler(0f, 0f, 0f), Quaternion.Euler(90f, 0f, 0f), FlipAnimT * 2f)
+                                                    : Quaternion.Lerp(Quaternion.Euler(90f, 0f, 0f), Quaternion.Euler(180f, 0f, 0f), FlipAnimT * 2f - 1f)
                                             );
                 transform.localPosition = FlipAnimT < 0.5f ?
                                                 Vector3.Lerp(pos, pos + new Vector3(0f, 1.5f, 0f), 1f - Mathf.Pow(1f - (FlipAnimT * 2f), 2))
