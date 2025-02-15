@@ -2,106 +2,165 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Tortello{
-public class TorBoardGraph : IGraph
-{
-    private Graph graph;
-    private TorBoardSettings settings;
-
-    private int previousSize;
-    public TorBoardGraph(TorBoardSettings settings)
+    public class TorBoardGraph : IGraph
     {
-        this.settings = settings;
-    }
+        private Graph graph;
+        private TorBoardSettings settings;
 
-    //initialisation du Graph
-    public void InitGraph()
-    {
-        graph = new Graph
+        private int previousSize;
+        public TorBoardGraph(TorBoardSettings settings)
         {
-            sommets = new Sommets[settings.BoardSize * settings.BoardSize]
-        };
+            this.settings = settings;
+        }
 
-        for (int v = 0; v < settings.BoardSize; v++)
+        //initialisation du Graph
+        public void InitGraph()
         {
-            for (int u = 0; u < settings.BoardSize; u++)
+            graph = new Graph
             {
-                graph.sommets[v * settings.BoardSize + u] = new Sommets
+                sommets = new Sommets[settings.BoardSize * settings.BoardSize]
+            };
+
+            for (int v = 0; v < settings.BoardSize; v++)
+            {
+                for (int u = 0; u < settings.BoardSize; u++)
                 {
-                    arretes = new Arretes[4],
-                    couleur = Couleur.Vide
-                };
+                    graph.sommets[v * settings.BoardSize + u] = new Sommets
+                    {
+                        arretes = new Arretes[4],
+                        couleur = Couleur.Vide
+                    };
 
-                // Define edges for toroidal connectivity
-                graph.sommets[v * settings.BoardSize + u].arretes[0] = new Arretes { d = v * settings.BoardSize + u, a = v * settings.BoardSize + (u + 1) % settings.BoardSize };
-                graph.sommets[v * settings.BoardSize + u].arretes[1] = new Arretes { d = v * settings.BoardSize + u, a = v * settings.BoardSize + (u - 1 + settings.BoardSize) % settings.BoardSize };
-                graph.sommets[v * settings.BoardSize + u].arretes[2] = new Arretes { d = v * settings.BoardSize + u, a = ((v + 1) % settings.BoardSize) * settings.BoardSize + u };
-                graph.sommets[v * settings.BoardSize + u].arretes[3] = new Arretes { d = v * settings.BoardSize + u, a = ((v - 1 + settings.BoardSize) % settings.BoardSize) * settings.BoardSize + u };
+                    // Define edges for toroidal connectivity
+                    graph.sommets[v * settings.BoardSize + u].arretes[0] = new Arretes { d = v * settings.BoardSize + u, a = v * settings.BoardSize + (u + 1) % settings.BoardSize };
+                    graph.sommets[v * settings.BoardSize + u].arretes[1] = new Arretes { d = v * settings.BoardSize + u, a = v * settings.BoardSize + (u - 1 + settings.BoardSize) % settings.BoardSize };
+                    graph.sommets[v * settings.BoardSize + u].arretes[2] = new Arretes { d = v * settings.BoardSize + u, a = ((v + 1) % settings.BoardSize) * settings.BoardSize + u };
+                    graph.sommets[v * settings.BoardSize + u].arretes[3] = new Arretes { d = v * settings.BoardSize + u, a = ((v - 1 + settings.BoardSize) % settings.BoardSize) * settings.BoardSize + u };
+                }
             }
         }
-    }
-    
-    //ajout d'un pion et retournement des pions adverses
-    public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
-    {
-        // si un coup est valide, on ajoute un pion et on retourne les pions adverses
-        if(CoupEstValide(idSommets, couleur,pionsARetournes)){
-                graph.sommets[idSommets].couleur = couleur;
-                pionsARetournes.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
-                return true;
-            }
-            return false;
-        return true;
-    }
-
-    public void SetPawn(int idSommets, Couleur couleur)
-    {
-        graph.sommets[idSommets].couleur = couleur;
-    }
-
-    public void DestroyGraph()
-    {
-        graph = null;
-    }
-
-    public void RemoveAllPawns()
-    {
-        foreach (var sommet in graph.sommets)
+        
+        //ajout d'un pion et retournement des pions adverses
+        public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pawnsToFlip)
         {
-            sommet.couleur = Couleur.Vide;
+            // si un coup est valide, on ajoute un pion et on retourne les pions adverses
+            if(IsValidMove(idSommets, couleur,pawnsToFlip)){
+                    graph.sommets[idSommets].couleur = couleur;
+                    pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
+                    return true;
+                }
+            return false;
         }
-    }
 
-    public void UpdateGraph()
-    {
-        // Implementation for updating the graph
-    }
+        public void SetPawn(int idSommets, Couleur couleur)
+        {
+            graph.sommets[idSommets].couleur = couleur;
+        }
 
-    public bool CoupEstValide(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
-    {
-        // Implementation for checking if a move is valid
-        return true;
-    }
-    public void StartGame()
-    {
-        int u = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
-        int v = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
-        SetPawn(u + v * settings.BoardSize, Couleur.Noir);
-        SetPawn(u + 1 + v * settings.BoardSize, Couleur.Blanc);
-        SetPawn(u + (v + 1) * settings.BoardSize, Couleur.Blanc);
-        SetPawn(u + 1 + (v + 1) * settings.BoardSize, Couleur.Noir);
-    }
+        public void DestroyGraph()
+        {
+            graph = null;
+        }
 
-    public List<int> GetScore()
-    {
-        // Implementation for getting the score
-        return new List<int>();
-    }
+        public void RemoveAllPawns()
+        {
+            foreach (var sommet in graph.sommets)
+            {
+                sommet.couleur = Couleur.Vide;
+            }
+        }
 
-    public bool NoPlacementAvailable(Couleur couleur)
-    {
-        // Implementation for checking if a player can place a pawn
-        return false;
-}
-}
+        public void UpdateGraph()
+        {
+            if(previousSize == settings.BoardSize){
+                    return;
+                }
+                DestroyGraph();
+                InitGraph();
+        }
+
+        //vérification de la validité du coup 
+        public bool IsValidMove(int idSommet, Couleur color, List<List<int>> pawnsToFlip)
+        {
+            // Vider la liste des pions à retourner
+            pawnsToFlip.Clear();
+            
+            // Vérifier si la case est déjà occupée
+            if (graph.sommets[idSommet].couleur != Couleur.Vide)
+                return false;
+            
+            bool validMove = false;
+            int[] directionsX = { -1, 0, 1 };
+            int[] directionsY = { -1, 0, 1 };
+            
+            // Parcourir toutes les directions possibles
+            foreach (int dx in directionsX)
+            {
+                foreach (int dy in directionsY)
+                {
+                    // Ignorer la direction (0,0) car elle ne change pas la position
+                    if (dx == 0 && dy == 0)
+                        continue;
+                    
+                    List<int> currentFlip = new List<int>();
+                    int x = idSommet % settings.BoardSize;
+                    int y = idSommet / settings.BoardSize;
+                    int nx = (x + dx + settings.BoardSize) % settings.BoardSize;
+                    int ny = (y + dy + settings.BoardSize) % settings.BoardSize;
+                    bool hasOpponentBetween = false;
+                    int steps = 0;
+                    
+                    // Parcourir dans la direction jusqu'à la taille maximale du plateau
+                    while (steps < settings.BoardSize)
+                    {
+                        int neighborIndex = ny * settings.BoardSize + nx;
+                        
+                        // Si la case est vide, arrêter la recherche dans cette direction
+                        if (graph.sommets[neighborIndex].couleur == Couleur.Vide)
+                            break;
+                        
+                        // Si la case contient un pion de l'adversaire, ajouter à la liste des pions à retourner
+                        if (graph.sommets[neighborIndex].couleur != color)
+                        {
+                            currentFlip.Add(neighborIndex);
+                            hasOpponentBetween = true;
+                        }
+                        else
+                        {
+                            // Si un pion de la même couleur est trouvé après des pions adverses, le coup est valide
+                            if (hasOpponentBetween)
+                            {
+                                pawnsToFlip.Add(currentFlip);
+                                validMove = true;
+                            }
+                            break;
+                        }
+                        
+                        // Passer à la case suivante dans la direction
+                        nx = (nx + dx + settings.BoardSize) % settings.BoardSize;
+                        ny = (ny + dy + settings.BoardSize) % settings.BoardSize;
+                        steps++;
+                    }
+                }
+            }
+            return validMove;
+        }
+        public void StartGame()
+        {
+            int u = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
+            int v = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
+            SetPawn(u + v * settings.BoardSize, Couleur.Noir);
+            SetPawn(u + 1 + v * settings.BoardSize, Couleur.Blanc);
+            SetPawn(u + (v + 1) * settings.BoardSize, Couleur.Blanc);
+            SetPawn(u + 1 + (v + 1) * settings.BoardSize, Couleur.Noir);
+        }
+
+        public List<int> GetScore()
+        {
+            // Implementation for getting the score
+            return new List<int>();
+        }
+
+    }
 }
 
