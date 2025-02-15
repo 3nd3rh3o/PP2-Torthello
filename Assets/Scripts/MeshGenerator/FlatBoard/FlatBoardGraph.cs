@@ -1,5 +1,8 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Tortello
 {
@@ -22,7 +25,8 @@ namespace Tortello
 
         private FlatBoardSettings settings;
 
-        public FlatBoardGraph(FlatBoardSettings settings){
+        public FlatBoardGraph(FlatBoardSettings settings)
+        {
             this.settings = settings;
         }
         public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
@@ -34,7 +38,8 @@ namespace Tortello
                  pawnBlanc++;
             }
             // on ajoute un pion selement si le coup est valide
-            if(CoupEstValide(idSommets, couleur,pionsARetournes)){
+            if (CoupEstValide(idSommets, couleur, pionsARetournes))
+            {
                 graph.sommets[idSommets].couleur = couleur;
 
                 foreach (List<int> pions in pionsARetournes)
@@ -53,30 +58,34 @@ namespace Tortello
                         Debug.Log("Score Blanc: " + pawnBlanc + " Score Noir: " + pawnNoir);
                     }
                 }
-                {
-
-                }
                 if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
 
                 foreach (Arretes arrete in graph.sommets[idSommets].arretes)
                 {
-                    if(graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a)){
+                    if (arrete == null) continue;
+                    if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
+                    {
                         videAdj.Add(arrete.a);
                     }
                 }
 
-                if(couleur == Couleur.Noir){
+                if (couleur == Couleur.Noir)
+                {
                     coupPossibleBlanc = new List<int>();
                 }
-                else{
+                else
+                {
                     coupPossibleNoir = new List<int>();
                 }
 
-                foreach(int s in videAdj){
-                    if(couleur == Couleur.Noir && CoupEstValide(s, Couleur.Blanc, new List<List<int>>())){
+                foreach (int s in videAdj)
+                {
+                    if (couleur == Couleur.Noir && CoupEstValide(s, Couleur.Blanc, new List<List<int>>()))
+                    {
                         coupPossibleBlanc.Add(s);
                     }
-                    else if(couleur == Couleur.Blanc && CoupEstValide(s, Couleur.Noir, new List<List<int>>())){
+                    else if (couleur == Couleur.Blanc && CoupEstValide(s, Couleur.Noir, new List<List<int>>()))
+                    {
                         coupPossibleNoir.Add(s);
                     }
                 }
@@ -87,15 +96,16 @@ namespace Tortello
 
         public void SetPawn(int idSommets, Couleur couleur)
         {
-                // on initialise un pion
-                graph.sommets[idSommets].couleur = couleur;
-                if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
-                foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+            // on initialise un pion
+            graph.sommets[idSommets].couleur = couleur;
+            if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+            foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+            {
+                if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
                 {
-                    if(graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a)){
-                        videAdj.Add(arrete.a);
-                    }
+                    videAdj.Add(arrete.a);
                 }
+            }
         }
 
         public void DestroyGraph()
@@ -111,7 +121,7 @@ namespace Tortello
         public void InitGraph()
         {
             videAdj = new List<int>();
-            coupPossibleNoir = new List<int>(); 
+            coupPossibleNoir = new List<int>();
             coupPossibleBlanc = new List<int>();
 
             graph = new Graph
@@ -119,64 +129,105 @@ namespace Tortello
                 sommets = new Sommets[settings.BoardWidth * settings.BoardHeight]
             };
 
-            prevHeight= settings.BoardHeight;
+            prevHeight = settings.BoardHeight;
             prevWidth = settings.BoardWidth;
 
-            for (int v = 0; v < settings.BoardHeight; v++){
+            for (int v = 0; v < settings.BoardHeight; v++)
+            {
 
-                for (int u = 0; u < settings.BoardWidth; u++){
+                for (int u = 0; u < settings.BoardWidth; u++)
+                {
 
                     graph.sommets[v * settings.BoardWidth + u] = new Sommets();
                     // listes d'arretes du sommet
-                    if(SommetsEstUnCoin(u,v, settings.BoardWidth, settings.BoardHeight)){
-                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[2];
-                    }   
-                    else if(SommetsEstUnBord(u,v, settings.BoardWidth, settings.BoardHeight)){
-                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[3];
-                    }   
-                    else{
-                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[4];
-                    }
+                    graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[8];
                     //le contenu du sommet
                     graph.sommets[v * settings.BoardWidth + u].couleur = Couleur.Vide;
 
-                    // les arretes du sommet
-                    int counter = 0;
-                    // left ?
-                    if(u > 0){
+                    // test des cas particuliers.
+                    int idSommet = v * settings.BoardWidth + u;
 
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
-                        {
-                            d = v * settings.BoardWidth + u,
-                            a = v * settings.BoardWidth + u - 1
-                        };
-                        counter++;
-                    }
-                    // top ?
-                    if(v > 0){
+                    // 0 1 2    C B C
+                    // 7 _ 3 => B _ B
+                    // 6 5 4    C B C
 
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                    // (-1, -1) (0, -1) (+1, -1)
+                    // (-1, 0)  _______  (+1, 0)
+                    // (-1, +1) (0, +1) (+1, +1)
+
+                    // (-1, -1) => 3,4,5,8
+                    // (-1, 0) => 1,2,3,4,5,8
+                    // (-1, +1) => 1,2,3,8
+
+                    // (0, -1) => 3,4,5,6,7,8
+                    // (0, +1) => 0,1,2,3,7,8
+
+                    // (+1, -1) => 5,6,7,8
+                    // (+1, 0) => 0,1,5,6,7,8
+                    // (+1, +1) => 0,1,7,8
+
+                    if (!(u == 0) && !(v == 0))
+                    {
+                        graph.sommets[idSommet].arretes[0] = new Arretes
                         {
-                            d = v * settings.BoardWidth + u,
-                            a = (v - 1) * settings.BoardWidth + u
+                            a = (v - 1) * settings.BoardWidth + u - 1,
+                            d = idSommet
                         };
-                        counter++;
                     }
-                    // right ?
-                    if(u < settings.BoardWidth - 1){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                    if (!(v == 0))
+                    {
+                        graph.sommets[idSommet].arretes[1] = new Arretes
                         {
-                            d = v * settings.BoardWidth + u,
-                            a = v * settings.BoardWidth + u + 1
+                            a = (v - 1) * settings.BoardWidth + u,
+                            d = idSommet
                         };
-                        counter++;
                     }
-                    // bottom ?
-                    if(v < settings.BoardHeight - 1){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
+                    if (!(u == settings.BoardWidth - 1) && !(v == 0))
+                    {
+                        graph.sommets[idSommet].arretes[2] = new Arretes
                         {
-                            d = v * settings.BoardWidth + u,
-                            a = (v + 1) * settings.BoardWidth + u
+                            a = (v - 1) * settings.BoardWidth + u + 1,
+                            d = idSommet
+                        };
+                    }
+                    if (!(u == settings.BoardWidth - 1))
+                    {
+                        graph.sommets[idSommet].arretes[3] = new Arretes
+                        {
+                            a = v * settings.BoardWidth + u + 1,
+                            d = idSommet
+                        };
+                    }
+                    if (!(u == settings.BoardWidth - 1) && !(v == settings.BoardHeight - 1))
+                    {
+                        graph.sommets[idSommet].arretes[4] = new Arretes
+                        {
+                            a = (v + 1) * settings.BoardWidth + u + 1,
+                            d = idSommet
+                        };
+                    }
+                    if (!(v == settings.BoardHeight - 1))
+                    {
+                        graph.sommets[idSommet].arretes[5] = new Arretes
+                        {
+                            a = (v + 1) * settings.BoardWidth + u,
+                            d = idSommet
+                        };
+                    }
+                    if (!(u == 0) && !(v == settings.BoardHeight - 1))
+                    {
+                        graph.sommets[idSommet].arretes[6] = new Arretes
+                        {
+                            a = (v + 1) * settings.BoardWidth + u - 1,
+                            d = idSommet
+                        };
+                    }
+                    if (!(u == 0))
+                    {
+                        graph.sommets[idSommet].arretes[7] = new Arretes
+                        {
+                            a = v * settings.BoardWidth + u - 1,
+                            d = idSommet
                         };
                     }
                 }
@@ -194,90 +245,64 @@ namespace Tortello
 
         public void UpdateGraph()
         {
-            if(prevHeight == settings.BoardHeight && prevWidth == settings.BoardWidth){
+            if (prevHeight == settings.BoardHeight && prevWidth == settings.BoardWidth)
+            {
                 return;
             }
             DestroyGraph();
             InitGraph();
         }
 
-        // fonction qui retourne si le sommet est un coin
-        public static bool SommetsEstUnCoin(int u, int v, int width, int height){
-
-            return(u == 0 && v == 0) || (u == width -1 && v ==0)||(u == 0 && v == height -1)||(u == width-1 && v == height -1);
-        }
-        // fonction qui retourne si le sommet est un bord
-        public bool SommetsEstUnBord(int u, int v, int boarwidth, int boarheight){
-            return u == 0 || v ==0|| u == boarwidth -1|| v == boarheight -1;
-        }
         // fonction qui retourne si le coup est valide
-        public bool CoupEstValide(int idSommets, Couleur couleur,List<List<int>> pionsARetournes){
+        public bool CoupEstValide(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
+        {
             bool CoupValide = false;
             Sommets sommetActuel = graph.sommets[idSommets];
 
             // si le sommet (case) est pas vide on ne peut pas jouer
-            if(sommetActuel.couleur != Couleur.Vide){
+            if (sommetActuel.couleur != Couleur.Vide)
+            {
                 return false;
             }
 
             Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
-            
-            List<Arretes> arretes = new List<Arretes>();
-            List<int> directions = new List<int>();
-            
-            foreach (Arretes arrete in sommetActuel.arretes)
+            // (sommetAVisit, dir, pionsARetournes)
+            List<Tuple<int, int, List<int>>> parcours = new List<Tuple<int, int, List<int>>>();
+            for (int i = 0; i < 8; i++)
             {
-                if(graph.sommets[arrete.a].couleur == inverse){
-                    arretes.Add(GetArreteDansMemoDirection(graph.sommets[arrete.a], arrete.a - arrete.d));
-                    directions.Add(arrete.a - arrete.d);
-                    pionsARetournes.Add(new List<int>(){arrete.a});
+                if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)
+                {
+                    parcours.Add(new Tuple<int, int, List<int>>(sommetActuel.arretes[i].a, i, new List<int>() { sommetActuel.arretes[i].a }));
                 }
             }
-            if(arretes.Count == 0){
-                return false;
-            }
-            int c = arretes.Count;
-            while(c > 0){
-                for(int i = 0; i < directions.Count; i++){
-                    if (directions[i] == 0) continue;
-                    if(graph.sommets[arretes[i].a].couleur == inverse){
-                        Arretes narrete = GetArreteDansMemoDirection(graph.sommets[arretes[i].a], directions[i]);
-                        if(narrete == null){
-                            directions[i] = 0;
-                            pionsARetournes[i] = new();
-                            c--;
-                        }
-                        else {
-                            arretes[i] = narrete;
-                            pionsARetournes[i].Add(narrete.d);
-                        }
-                    }
-                    else if(graph.sommets[arretes[i].a].couleur == couleur){
+            while (parcours.Count > 0)
+            {
+                for (int i = 0; i < parcours.Count; i++)
+                {
+                    Arretes nAr = graph.sommets[parcours[i].Item1].arretes[parcours[i].Item2];
+                    if (nAr == null)
+                    {
+                        parcours.RemoveAt(i);
+                        i--;
+                    } else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
+                    {
+                        parcours.RemoveAt(i);
+                        i--;
+                    } else if (graph.sommets[nAr.a].couleur == couleur)
+                    {
                         CoupValide = true;
-                        arretes[i] = null;
-                        directions[i] = 0;
-                        c--;
-                    }
-                    else{
-                        arretes[i] = null;
-                        directions[i] = 0;
-                        pionsARetournes[i] = new();
-                        c--;
+                        pionsARetournes.Add(parcours[i].Item3);
+                        parcours.RemoveAt(i);
+                        i--;
+                    } else if (graph.sommets[nAr.a].couleur == inverse)
+                    {
+                        parcours[i].Item3.Add(nAr.a);
+                        parcours[i] = new (nAr.a, parcours[i].Item2, parcours[i].Item3);
                     }
                 }
             }
-            
+
             return CoupValide;
-        }
-        // fonction qui retourne l'arrete dans la direction donnée
-        public Arretes GetArreteDansMemoDirection(Sommets sommet, int direction){
-            foreach (Arretes arrete in sommet.arretes)
-            {
-                if(arrete.a - arrete.d == direction){
-                    return arrete;
-                }
-            }
-            return null;
         }
 
         public void StartGame()
@@ -299,7 +324,7 @@ namespace Tortello
 
         public bool NoPlacementAvailable(Couleur couleur)
         {
-          return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
+            return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
         }
     }
 }
