@@ -35,7 +35,7 @@ namespace Tortello
                 pawnNoir++;
             }
             else{
-                 pawnBlanc++;
+                pawnBlanc++;
             }
             // on ajoute un pion selement si le coup est valide
             if (CoupEstValide(idSommets, couleur, pionsARetournes))
@@ -55,7 +55,6 @@ namespace Tortello
                             pawnBlanc++;
                             pawnNoir--;
                         }
-                        Debug.Log("Score Blanc: " + pawnBlanc + " Score Noir: " + pawnNoir);
                     }
                 }
                 if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
