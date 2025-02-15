@@ -17,7 +17,8 @@ namespace Tortello
         private List<int> coupPossibleNoir;
         private List<int> coupPossibleBlanc;
 
-
+        private int pawnBlanc;
+        private int pawnNoir;
 
         private FlatBoardSettings settings;
 
@@ -26,10 +27,35 @@ namespace Tortello
         }
         public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
         {
+            if(couleur == Couleur.Noir){
+                pawnNoir++;
+            }
+            else{
+                 pawnBlanc++;
+            }
             // on ajoute un pion selement si le coup est valide
             if(CoupEstValide(idSommets, couleur,pionsARetournes)){
                 graph.sommets[idSommets].couleur = couleur;
-                pionsARetournes.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
+
+                foreach (List<int> pions in pionsARetournes)
+                {
+                    foreach(int p in pions){
+                        graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+
+                        if(couleur == Couleur.Noir){
+                            pawnNoir++;
+                            pawnBlanc--;
+                        }
+                        else{
+                            pawnBlanc++;
+                            pawnNoir--;
+                        }
+                        Debug.Log("Score Blanc: " + pawnBlanc + " Score Noir: " + pawnNoir);
+                    }
+                }
+                {
+
+                }
                 if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
 
                 foreach (Arretes arrete in graph.sommets[idSommets].arretes)
@@ -262,23 +288,13 @@ namespace Tortello
             SetPawn(u + 1 + v * settings.BoardWidth, Couleur.Blanc);
             SetPawn(u + (v + 1) * settings.BoardWidth, Couleur.Blanc);
             SetPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
+            pawnBlanc = 2;
+            pawnNoir = 2;
         }
 
         public List<int> GetScore()
         {
-            int blanc = 0;
-            int noir = 0;
-            foreach (Sommets sommet in graph.sommets)
-            {
-                if(sommet.couleur == Couleur.Blanc){
-                    blanc++;
-                }
-                else if(sommet.couleur == Couleur.Noir){
-                    noir++;
-                }
-            }
-            return new List<int>(){blanc, noir};
-            
+            return new List<int>(){pawnBlanc,pawnNoir};
         }
 
         public bool NoPlacementAvailable(Couleur couleur)
