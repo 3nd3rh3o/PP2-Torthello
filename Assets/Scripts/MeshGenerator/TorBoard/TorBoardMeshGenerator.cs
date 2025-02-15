@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Linq;
 
-namespace Tortello {
+namespace Torthello {
     public class TorBoardMeshGenerator : IMeshGenerator
     {
         private TorBoardSettings settings;

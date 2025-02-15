@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
     /// <summary>
     /// Doit contenir un générateur de forme, un générateur de materiau, un gestionnaire d'input et un graphe.

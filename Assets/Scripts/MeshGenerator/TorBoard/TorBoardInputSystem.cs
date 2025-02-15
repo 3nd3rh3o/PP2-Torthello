@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace Tortello{
+namespace Torthello
+{
     public class TorBoardInputSystem : IBoardInputSystem
     {
         private readonly TorBoardSettings settings;

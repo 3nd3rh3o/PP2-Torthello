@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Tortello
+namespace Torthello
 {
     public interface IPawnProccessor
     {

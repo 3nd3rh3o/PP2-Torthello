@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tortello{
+namespace Torthello
+{
     public class TorBoardGraph : IGraph
     {
         private Graph graph;

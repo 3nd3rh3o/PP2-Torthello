@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace Tortello
+namespace Torthello
 {
     [CreateAssetMenu(fileName = "FlatBoardSettings", menuName = "Tortello/FlatBoardSettings")]
     public class FlatBoardSettings : ScriptableObject

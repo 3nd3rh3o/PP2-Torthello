@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Tortello
+namespace Torthello
 {
     /// <summary>
     /// Le graphe qui contient les pions et les cases du plateau.<br/>

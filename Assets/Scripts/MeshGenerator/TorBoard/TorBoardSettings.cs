@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Tortello{
+namespace Torthello{
 
     [CreateAssetMenu(fileName = "TorBoardSettings", menuName = "Tortello/TorBoardSettings")]
     public class TorBoardSettings : ScriptableObject
