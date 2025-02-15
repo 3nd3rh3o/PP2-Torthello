@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Tortello
 {
@@ -103,54 +105,101 @@ namespace Tortello
                     graph.sommets[v * settings.BoardWidth + u] = new Sommets();
                     // listes d'arretes du sommet
                     if(SommetsEstUnCoin(u,v, settings.BoardWidth, settings.BoardHeight)){
-                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[2];
-                    }   
-                    else if(SommetsEstUnBord(u,v, settings.BoardWidth, settings.BoardHeight)){
                         graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[3];
                     }   
+                    else if(SommetsEstUnBord(u,v, settings.BoardWidth, settings.BoardHeight)){
+                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[5];
+                    }   
                     else{
-                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[4];
+                        graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[8];
                     }
                     //le contenu du sommet
                     graph.sommets[v * settings.BoardWidth + u].couleur = Couleur.Vide;
 
-                    // les arretes du sommet
+                    // test des cas particuliers.
+                    int idSommet = v * settings.BoardWidth + u;
+
+                    // 0 1 2    C B C
+                    // 7 8 3 => B _ B
+                    // 6 5 4    C B C
+
+                    // (-1, -1) (0, -1) (+1, -1)
+                    // (-1, 0)  _______  (+1, 0)
+                    // (-1, +1) (0, +1) (+1, +1)
+
+                    // (-1, -1) => 3,4,5,8
+                    // (-1, 0) => 1,2,3,4,5,8
+                    // (-1, +1) => 1,2,3,8
+
+                    // (0, -1) => 3,4,5,6,7,8
+                    // (0, +1) => 0,1,2,3,7,8
+
+                    // (+1, -1) => 5,6,7,8
+                    // (+1, 0) => 0,1,5,6,7,8
+                    // (+1, +1) => 0,1,7,8
+                    
                     int counter = 0;
-                    // left ?
-                    if(u > 0){
-
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
-                        {
-                            d = v * settings.BoardWidth + u,
-                            a = v * settings.BoardWidth + u - 1
+                    if (!(u==0) || !(v==0))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = (v - 1) * settings.BoardWidth + u - 1,
+                            d = idSommet
                         };
                         counter++;
                     }
-                    // top ?
-                    if(v > 0){
-
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
-                        {
-                            d = v * settings.BoardWidth + u,
-                            a = (v - 1) * settings.BoardWidth + u
+                    if (!(v==0))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = (v-1) * settings.BoardWidth + u,
+                            d = idSommet
                         };
                         counter++;
                     }
-                    // right ?
-                    if(u < settings.BoardWidth - 1){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
-                        {
-                            d = v * settings.BoardWidth + u,
-                            a = v * settings.BoardWidth + u + 1
+                    if (!(u==settings.BoardWidth-1) || !(v==0))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = (v - 1) * settings.BoardWidth + u + 1,
+                            d = idSommet
                         };
                         counter++;
                     }
-                    // bottom ?
-                    if(v < settings.BoardHeight - 1){
-                        graph.sommets[v * settings.BoardWidth + u].arretes[counter] = new Arretes
-                        {
-                            d = v * settings.BoardWidth + u,
-                            a = (v + 1) * settings.BoardWidth + u
+                    if (!(u==settings.BoardWidth-1))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = v * settings.BoardWidth + u + 1,
+                            d = idSommet
+                        };
+                        counter++;
+                    }
+                    if (!(u==settings.BoardWidth-1) || !(v==settings.BoardHeight-1))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = (v + 1) * settings.BoardWidth + u + 1,
+                            d = idSommet
+                        };
+                        counter++;
+                    }
+                    if (!(v==settings.BoardHeight-1))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = (v + 1) * settings.BoardWidth + u,
+                            d = idSommet
+                        };
+                        counter++;
+                    }
+                    if (!(u==0) || !(v==settings.BoardHeight-1))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = (v + 1) * settings.BoardWidth + u - 1,
+                            d = idSommet
+                        };
+                        counter++;
+                    }
+                    if (!(u==0))
+                    {
+                        graph.sommets[idSommet].arretes[counter] = new Arretes { 
+                            a = v * settings.BoardWidth + u - 1,
+                            d = idSommet
                         };
                     }
                 }
