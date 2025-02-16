@@ -45,11 +45,20 @@ namespace Torthello
         public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pawnsToFlip)
         {
             // si un coup est valide, on ajoute un pion et on retourne les pions adverses
-            if(IsValidMove(idSommets, couleur,pawnsToFlip)){
-                    graph.sommets[idSommets].couleur = couleur;
-                    pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
-                    return true;
+            if (IsValidMove(idSommets, couleur, pawnsToFlip))
+            {
+                graph.sommets[idSommets].couleur = couleur;
+                pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
+                
+                //Peut être pas necessaire: peux-t-on encore se bloquer avec les diagonales ?
+                // Vérifier si l'adversaire a des coups valides
+                Couleur adversaire = (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir;
+                if (!HasValidMove(adversaire))
+                {
+                    Debug.Log($"Le joueur {adversaire} ne peut pas jouer. Son tour est passé.");
                 }
+                return true;
+            }
             return false;
         }
 
@@ -162,6 +171,18 @@ namespace Torthello
             return new List<int>();
         }
 
+        public bool HasValidMove(Couleur couleur)
+        {
+            List<List<int>> dummyList = new List<List<int>>();
+            for (int i = 0; i < graph.sommets.Length; i++)
+            {
+                if (IsValidMove(i, couleur, dummyList))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
 

@@ -14,6 +14,7 @@ namespace Torthello {
             this.settings = settings;
         }
 
+// Initialiser le maillage
         public void InitMesh(MeshFilter meshFilter)
         {
             if (meshFilter.sharedMesh == null)
@@ -27,8 +28,16 @@ namespace Torthello {
             combines = new CombineInstance[settings.BoardSize * settings.BoardSize];
             CreateBoardMesh();
             mesh.CombineMeshes(combines, false, false, false);
+
+            // Appliquer le matériau
+            MeshRenderer meshRenderer = meshFilter.GetComponent<MeshRenderer>();
+            if (meshRenderer != null)
+            {
+                meshRenderer.material = settings.TileMaterial;
+            }
         }
 
+// Mettre à jour le maillage si les paramètres ont changé
         public void UpdateMesh(MeshFilter meshFilter)
         {
             if (previousSize == settings.BoardSize && previousSideLength == settings.SideLength) return;
@@ -38,9 +47,11 @@ namespace Torthello {
             previousSideLength = settings.SideLength;
             combines = new CombineInstance[settings.BoardSize * settings.BoardSize];
             CreateBoardMesh();
-            mesh.CombineMeshes(combines, false, false, false);
+            mesh.CombineMeshes(combines, false, false, false)// Détruire le maillage et libérer les ressources
+;
         }
 
+// Détruire le maillage et libérer les ressources
         public void Destroy(MeshFilter meshFilter)
         {
     #if UNITY_EDITOR
@@ -53,34 +64,73 @@ namespace Torthello {
             combines = null;
         }
 
+// Créer le maillage du plateau
         private void CreateBoardMesh()
         {
-            float offsetX = (-settings.SideLength * settings.BoardSize + settings.SideLength) * 0.5f;
-            float offsetZ = (-settings.SideLength * settings.BoardSize + settings.SideLength) * 0.5f;
-            Vector3 offset = new(offsetX, 0f, offsetZ);
-            for (int i = 0; i < settings.BoardSize; i++)
+            int boardSize = settings.BoardSize;
+
+            // Calculer majorRadius et minorRadius en fonction de boardSize
+            float majorRadius = boardSize / (2 * Mathf.PI);
+            float minorRadius = majorRadius / 3;
+
+            for (int i = 0; i < boardSize; i++)
             {
-                for (int j = 0; j < settings.BoardSize; j++)
+                for (int j = 0; j < boardSize; j++)
                 {
-                    Vector3 c = offset + new Vector3(j * settings.SideLength, 0f, i * settings.SideLength);
-                    Mesh mesh = new();
-                    CreateSquareMesh(c, settings.SideLength, mesh);
-                    combines[i * settings.BoardSize + j].mesh = mesh;
+                    float u = (float)i / boardSize * 2 * Mathf.PI;
+                    float v = (float)j / boardSize * 2 * Mathf.PI;
+
+                    Vector3 center = new Vector3(
+                        (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Cos(u),
+                        minorRadius * Mathf.Sin(v),
+                        (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Sin(u)
+                    );
+
+                    Mesh mesh = new Mesh();
+                    CreateTrapezoidMesh(center, u, v, majorRadius, minorRadius, boardSize, mesh);
+                    combines[i * boardSize + j].mesh = mesh;
+                    combines[i * boardSize + j].transform = Matrix4x4.identity;
+
                 }
             }
         }
 
-        private static void CreateSquareMesh(Vector3 center, float sideLength, Mesh mesh)
+// Créer un maillage de trapèze pour chaque tuile
+        private static void CreateTrapezoidMesh(Vector3 center, float u, float v, float majorRadius, float minorRadius, int boardSize, Mesh mesh)
         {
-            Vector3[] points = new Vector3[]
-            {
-                center + new Vector3(0.5f * sideLength, 0f, 0.5f * sideLength),
-                center + new Vector3(0.5f * sideLength, 0f, -0.5f * sideLength),
-                center + new Vector3(-0.5f * sideLength, 0f, -0.5f * sideLength),
-                center + new Vector3(-0.5f * sideLength, 0f, 0.5f * sideLength)
-            };
+            Vector3[] points = new Vector3[4];
+
+            // Définir les angles de rotation pour chaque sommet du trapèze en fonction de la taille du plateau
+            float angleStepU = 2 * Mathf.PI / boardSize;
+            float angleStepV = 2 * Mathf.PI / boardSize;
+
+            // Calculer les sommets du trapèze en tenant compte de la courbure du tore
+            points[0] = new Vector3(
+                (majorRadius + minorRadius * Mathf.Cos(v - angleStepV / 2)) * Mathf.Cos(u - angleStepU / 2),
+                minorRadius * Mathf.Sin(v - angleStepV / 2),
+                (majorRadius + minorRadius * Mathf.Cos(v - angleStepV / 2)) * Mathf.Sin(u - angleStepU / 2)
+            );
+
+            points[1] = new Vector3(
+                (majorRadius + minorRadius * Mathf.Cos(v + angleStepV / 2)) * Mathf.Cos(u - angleStepU / 2),
+                minorRadius * Mathf.Sin(v + angleStepV / 2),
+                (majorRadius + minorRadius * Mathf.Cos(v + angleStepV / 2)) * Mathf.Sin(u - angleStepU / 2)
+            );
+
+            points[2] = new Vector3(
+                (majorRadius + minorRadius * Mathf.Cos(v + angleStepV / 2)) * Mathf.Cos(u + angleStepU / 2),
+                minorRadius * Mathf.Sin(v + angleStepV / 2),
+                (majorRadius + minorRadius * Mathf.Cos(v + angleStepV / 2)) * Mathf.Sin(u + angleStepU / 2)
+            );
+
+            points[3] = new Vector3(
+                (majorRadius + minorRadius * Mathf.Cos(v - angleStepV / 2)) * Mathf.Cos(u + angleStepU / 2),
+                minorRadius * Mathf.Sin(v - angleStepV / 2),
+                (majorRadius + minorRadius * Mathf.Cos(v - angleStepV / 2)) * Mathf.Sin(u + angleStepU / 2)
+            );
+
             int[] f = new int[] { 0, 1, 2, 2, 3, 0 };
-            Vector2[] uv = new Vector2[] { new(1, 1), new(1, 0), new(0, 0), new(0, 1) };
+            Vector2[] uv = new Vector2[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
             mesh.vertices = points;
             mesh.triangles = f;
             mesh.uv = uv;
