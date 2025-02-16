@@ -8,13 +8,15 @@ namespace Torthello {
         private int previousSize;
         private float previousSideLength;
         private CombineInstance[] combines;
+        private Vector3[][] tileCorners;
+        private Vector3[] tileCenters;
 
         public TorBoardMeshGenerator(TorBoardSettings settings)
         {
             this.settings = settings;
         }
 
-// Initialiser le maillage
+        // Initialise le maillage du plateau
         public void InitMesh(MeshFilter meshFilter)
         {
             if (meshFilter.sharedMesh == null)
@@ -26,6 +28,8 @@ namespace Torthello {
             previousSize = settings.BoardSize;
             previousSideLength = settings.SideLength;
             combines = new CombineInstance[settings.BoardSize * settings.BoardSize];
+            tileCorners = new Vector3[settings.BoardSize * settings.BoardSize][];
+            tileCenters = new Vector3[settings.BoardSize * settings.BoardSize];
             CreateBoardMesh();
             mesh.CombineMeshes(combines, false, false, false);
 
@@ -37,7 +41,7 @@ namespace Torthello {
             }
         }
 
-// Mettre à jour le maillage si les paramètres ont changé
+        // Met à jour le maillage du plateau si les paramètres ont changé
         public void UpdateMesh(MeshFilter meshFilter)
         {
             if (previousSize == settings.BoardSize && previousSideLength == settings.SideLength) return;
@@ -46,12 +50,13 @@ namespace Torthello {
             previousSize = settings.BoardSize;
             previousSideLength = settings.SideLength;
             combines = new CombineInstance[settings.BoardSize * settings.BoardSize];
+            tileCorners = new Vector3[settings.BoardSize * settings.BoardSize][];
+            tileCenters = new Vector3[settings.BoardSize * settings.BoardSize];
             CreateBoardMesh();
-            mesh.CombineMeshes(combines, false, false, false)// Détruire le maillage et libérer les ressources
-;
+            mesh.CombineMeshes(combines, false, false, false);
         }
 
-// Détruire le maillage et libérer les ressources
+        // Détruit le maillage du plateau
         public void Destroy(MeshFilter meshFilter)
         {
     #if UNITY_EDITOR
@@ -64,14 +69,14 @@ namespace Torthello {
             combines = null;
         }
 
-// Créer le maillage du plateau
+        // Crée le maillage du plateau
         private void CreateBoardMesh()
         {
             int boardSize = settings.BoardSize;
 
             // Calculer majorRadius et minorRadius en fonction de boardSize
             float majorRadius = boardSize / (2 * Mathf.PI);
-            float minorRadius = majorRadius / 3;
+            float minorRadius = majorRadius / 2;
 
             for (int i = 0; i < boardSize; i++)
             {
@@ -86,16 +91,25 @@ namespace Torthello {
                         (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Sin(u)
                     );
 
+                    tileCenters[i * boardSize + j] = center;
+
+                    tileCorners[i * boardSize + j] = new Vector3[]
+                    {
+                        center + new Vector3(-settings.SideLength / 2, 0, -settings.SideLength / 2),
+                        center + new Vector3(settings.SideLength / 2, 0, -settings.SideLength / 2),
+                        center + new Vector3(-settings.SideLength / 2, 0, settings.SideLength / 2),
+                        center + new Vector3(settings.SideLength / 2, 0, settings.SideLength / 2)
+                    };
+
                     Mesh mesh = new Mesh();
                     CreateTrapezoidMesh(center, u, v, majorRadius, minorRadius, boardSize, mesh);
                     combines[i * boardSize + j].mesh = mesh;
                     combines[i * boardSize + j].transform = Matrix4x4.identity;
-
                 }
             }
         }
 
-// Créer un maillage de trapèze pour chaque tuile
+        // Crée un maillage de trapèze pour une tuile
         private static void CreateTrapezoidMesh(Vector3 center, float u, float v, float majorRadius, float minorRadius, int boardSize, Mesh mesh)
         {
             Vector3[] points = new Vector3[4];
@@ -137,6 +151,18 @@ namespace Torthello {
             mesh.RecalculateNormals();
             mesh.RecalculateTangents();
             mesh.RecalculateBounds();
+        }
+
+        // Récupère les coins d'une tuile
+        public Vector3[] GetTileCorners(int u, int v)
+        {
+            return tileCorners[v * settings.BoardSize + u];
+        }
+
+        // Récupère le centre d'une tuile
+        public Vector3 GetTileCenter(int u, int v)
+        {
+            return tileCenters[v * settings.BoardSize + u];
         }
     }
 }
