@@ -9,11 +9,13 @@ namespace Torthello
         private TorBoardSettings settings;
         private Pawn[] pawns;
         private Transform parent;
+        private TorBoardMeshGenerator meshGenerator;
 
-        public TorBoardPawnProcessor(Transform parent, TorBoardSettings settings)
+        public TorBoardPawnProcessor(Transform parent, TorBoardSettings settings, TorBoardMeshGenerator meshGenerator)
         {
             this.settings = settings;
             this.parent = parent;
+            this.meshGenerator = meshGenerator;
         }
 
         public void Init()
@@ -55,11 +57,21 @@ namespace Torthello
                         Debug.LogError("Failed to spawn default pawn.");
                         return;
                     }
-                    pawn.pos = TileIDToWP(TileID);
+
+                    Vector3 position = TileIDToWP(TileID);
+                    Quaternion rotation = GetTileRotation(TileID);
+
+                    Debug.Log($"Spawning pawn at position: {position}, with rotation: {rotation}");
+
+                    pawn.pos = position;
                     pawn.couleur = couleur;
+                    pawn.rot = rotation;
                     pawn.StartSpawnAnim();
                     pawns[TileID] = pawn;
                     pawn.transform.parent = parent;
+
+                    Debug.Log($"Spawned pawn position :{pawn.transform.position}, rotation: {pawn.transform.rotation}");
+                    Debug.Log($"Spawned pawn pos :{pawn.pos}, rotation: {pawn.transform.localRotation}");
                     break;
             }
         }
@@ -107,14 +119,29 @@ namespace Torthello
 
         private Vector3 TileIDToWP(int TileID)
         {
-            float offsetX = (-settings.SideLength * settings.BoardSize + settings.SideLength) * 0.5f;
-            float offsetZ = (-settings.SideLength * settings.BoardSize + settings.SideLength) * 0.5f;
-            Vector3 offset = new(offsetX, 0f, offsetZ);
-            int v = Mathf.FloorToInt(TileID / settings.BoardSize);
-            int u = TileID - (v * settings.BoardSize);
-            u = (u + settings.BoardSize) % settings.BoardSize;
-            v = (v + settings.BoardSize) % settings.BoardSize;
-            return offset + new Vector3(u * settings.SideLength, 0f, v * settings.SideLength);
+            int u = TileID % settings.BoardSize;
+            int v = TileID / settings.BoardSize;
+            return meshGenerator.GetTileCenter(u, v);
+        }
+
+        private Quaternion GetTileRotation(int TileID)
+        {
+            int u = TileID % settings.BoardSize;
+            int v = TileID / settings.BoardSize;
+            Vector3[] corners = meshGenerator.GetTileCorners(u, v);
+
+            if (corners.Length < 3)
+            {
+                Debug.LogError("Not enough corners to calculate rotation.");
+                return Quaternion.identity;
+            }
+
+            // Calculer la normale de la surface
+            Vector3 forward = (corners[1] - corners[0]).normalized;
+            Vector3 right = (corners[3] - corners[0]).normalized;
+            Vector3 up = Vector3.Cross(forward, right).normalized;
+
+            return Quaternion.LookRotation(forward, up);
         }
     }
 }
