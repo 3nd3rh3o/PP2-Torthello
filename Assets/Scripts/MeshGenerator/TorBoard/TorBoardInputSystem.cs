@@ -14,73 +14,83 @@ namespace Torthello
         private InputActionAsset actionMap;
         private float yaw = 120f;
         private float pitch = 0f;
+        private TorBoardMeshGenerator meshGenerator;
 
-        public TorBoardInputSystem(TorBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
+        // Constructeur initialisant les paramètres de la classe
+        public TorBoardInputSystem(TorBoardSettings settings, Transform boardTransform, InputActionAsset actionMap, TorBoardMeshGenerator meshGenerator)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;
             this.actionMap = actionMap;
+            this.meshGenerator = meshGenerator;
         }
 
+        // Méthode pour nettoyer les ressources et désactiver les actions
         public void Destroy()
         {
             tileCorners = null;
             actionMap.FindActionMap("InGame", false).Disable();
         }
 
+        // Méthode pour obtenir l'ID de la tuile survolée par la souris
         public int GetTileHoveredID()
         {
             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
-            Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
-            if (previousHoveredTileID != -1 && IsTileHovered(previousHoveredTileID, mousePos)) return previousHoveredTileID;
+
+            // Convertir la position de la souris en un rayon dans l'espace 3D
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            int closestTileID = -1;
+            float closestDistance = float.MaxValue;
+
+            // Parcourir toutes les cases pour trouver celle qui est survolée
             for (int i = 0; i < settings.BoardSize * settings.BoardSize; i++)
             {
-                if (IsTileHovered(i, mousePos))
+                Vector3[] corners = meshGenerator.GetTileCorners(i % settings.BoardSize, i / settings.BoardSize);
+                if (RayIntersectsTile(ray, corners, out float distance))
                 {
-                    previousHoveredTileID = i;
-                    return i;
+                    if (distance < closestDistance)
+                    {
+                        closestDistance = distance;
+                        closestTileID = i;
+                    }
                 }
             }
-            previousHoveredTileID = -1;
-            return -1;
+
+            previousHoveredTileID = closestTileID;
+            return closestTileID;
         }
 
+        // Méthode pour initialiser le système d'entrée
         public void Init()
         {
             actionMap.FindActionMap("InGame", false).Enable();
             previousSize = settings.BoardSize;
             previousSideLength = settings.SideLength;
             previousHoveredTileID = -1;
-            float offsetX = (-settings.SideLength * settings.BoardSize + settings.SideLength) * 0.5f;
-            float offsetZ = (-settings.SideLength * settings.BoardSize + settings.SideLength) * 0.5f;
-            Vector3 offset = new(offsetX, 0f, offsetZ);
+
             tileCorners = new Vector3[settings.BoardSize * settings.BoardSize][];
             for (int v = 0; v < settings.BoardSize; v++)
             {
                 for (int u = 0; u < settings.BoardSize; u++)
                 {
-                    Vector3 c = offset + new Vector3(u * settings.SideLength, 0f, v * settings.SideLength);
-                    tileCorners[v * settings.BoardSize + u] = new Vector3[]
-                    {
-                        c + 0.5f * new Vector3(-settings.SideLength,0f,-settings.SideLength),
-                        c + 0.5f * new Vector3(settings.SideLength,0f,-settings.SideLength),
-                        c + 0.5f * new Vector3(-settings.SideLength,0f,settings.SideLength),
-                        c + 0.5f * new Vector3(settings.SideLength,0f,settings.SideLength)
-                    };
+                    tileCorners[v * settings.BoardSize + u] = meshGenerator.GetTileCorners(u, v);
                 }
             }
         }
 
+        // Méthode pour vérifier si l'action "Place" a été déclenchée
         public bool Place()
         {
             return previousHoveredTileID != -1 && actionMap.FindActionMap("InGame", false).FindAction("Place", false).WasReleasedThisFrame();
         }
 
+        // Méthode pour vérifier si l'action "Reset" a été déclenchée
         public bool Reset()
         {
             return actionMap.FindActionMap("InGame", false).FindAction("Reset", false).WasReleasedThisFrame();
         }
 
+        // Méthode pour mettre à jour l'état du système d'entrée
         public void Update()
         {
             if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
@@ -99,39 +109,38 @@ namespace Torthello
             return;
         }
 
-        private bool IsTileHovered(int id, Vector2 mousePosition)
+        // Méthode pour vérifier si un rayon intersecte une tuile
+        private bool RayIntersectsTile(Ray ray, Vector3[] corners, out float distance)
         {
-            Vector3[] corners = tileCorners[id];
+            distance = float.MaxValue;
+            Plane plane = new Plane(corners[0], corners[1], corners[2]);
 
-            Vector2 A = new
-            (
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[0]), Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[0]), Camera.MonoOrStereoscopicEye.Mono).y
-            );
-            Vector2 B = new
-            (
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[1]), Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[1]), Camera.MonoOrStereoscopicEye.Mono).y
-            );
-            Vector2 C = new
-            (
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[2]), Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[2]), Camera.MonoOrStereoscopicEye.Mono).y
-            );
-            Vector2 D = new
-            (
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[3]), Camera.MonoOrStereoscopicEye.Mono).x,
-                Camera.main.WorldToViewportPoint(boardTransform.position+boardTransform.rotation * Vector3.Scale(boardTransform.lossyScale,corners[3]), Camera.MonoOrStereoscopicEye.Mono).y
-            );
-            bool BAC = Vector2.Dot((B - A).normalized, (mousePosition - A).normalized) >= 0 && 
-                Vector2.Dot((C - A).normalized, (mousePosition - A).normalized) >= 0;
-            bool ABD = Vector2.Dot((A - B).normalized, (mousePosition - B).normalized) >= 0 &&
-                Vector2.Dot((D - B).normalized, (mousePosition - B).normalized) >= 0;
-            bool DCA = Vector2.Dot((D - C).normalized, (mousePosition - C).normalized) >= 0 &&
-                Vector2.Dot((A - C).normalized, (mousePosition - C).normalized) >= 0;
-            bool BDC = Vector2.Dot((B - D).normalized, (mousePosition - D).normalized) >= 0 &&
-                Vector2.Dot((C - D).normalized, (mousePosition - B).normalized) >= 0;
-            return BAC && ABD && DCA && BDC;
+            if (plane.Raycast(ray, out float enter))
+            {
+                Vector3 hitPoint = ray.GetPoint(enter);
+                if (PointInPolygon(hitPoint, corners))
+                {
+                    distance = enter;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        // Méthode pour vérifier si un point est à l'intérieur d'un polygone
+        private bool PointInPolygon(Vector3 point, Vector3[] polygon)
+        {
+            int i, j;
+            bool result = false;
+            for (i = 0, j = polygon.Length - 1; i < polygon.Length; j = i++)
+            {
+                if ((polygon[i].z > point.z) != (polygon[j].z > point.z) &&
+                    (point.x < (polygon[j].x - polygon[i].x) * (point.z - polygon[i].z) / (polygon[j].z - polygon[i].z) + polygon[i].x))
+                {
+                    result = !result;
+                }
+            }
+            return result;
         }
     }
 }
