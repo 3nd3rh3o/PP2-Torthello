@@ -1,0 +1,15 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 10%; margin-right: 5%; margin-bottom: 10%; margin-left: 5%;">
+        <engine:GroupBox name="BoardOptions" text="Board Options" style="flex-shrink: 1; flex-grow: 1;">
+            <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus" index="0" />
+            <engine:VisualElement name="BoardSize" style="flex-grow: 1; flex-direction: row; justify-content: space-between; align-self: stretch; align-content: auto; flex-wrap: wrap; align-items: center;">
+                <engine:SliderInt label="Width" value="42" high-value="100" name="Width" inverted="false" show-input-field="true" />
+                <engine:SliderInt label="Height" value="42" high-value="100" name="Height" fill="false" show-input-field="true" />
+            </engine:VisualElement>
+        </engine:GroupBox>
+        <engine:VisualElement name="StartMode" style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center; align-self: stretch; align-content: stretch; flex-wrap: wrap;">
+            <engine:Button text="Two player mode" style="flex-shrink: 1; flex-grow: 1;" />
+            <engine:Button text="Against AI" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center;" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>
