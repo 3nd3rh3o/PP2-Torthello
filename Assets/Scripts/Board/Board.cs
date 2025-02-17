@@ -49,7 +49,7 @@ namespace Torthello
         {
             Graph.RemoveAllPawns();
             pawnProccessor.RemoveAllPawns();
-            couleur = Couleur.Blanc;
+            couleur = Couleur.Noir;
             Graph.StartGame();
             pawnProccessor.StartGame();
 
@@ -73,7 +73,7 @@ namespace Torthello
                 {
                     pawnProccessor.SpawnPawn(hoveredTile, couleur);
                     pawnProccessor.FlipAnimSeq(pionRetourne);
-                    couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                    couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir; // Change le joueur actif <----------------
                     if (Graph.NoPlacementAvailable(couleur))
                     {
                         List<int> score = Graph.GetScore();

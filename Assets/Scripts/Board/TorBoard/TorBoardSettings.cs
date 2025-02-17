@@ -9,5 +9,17 @@ namespace Torthello{
         [Range(0f, 10f)] public float SideLength = 1f; // pas  utilisé pour le tor, il faut modifier le meshGenerator si on veut s'en servir pour modifier la taille du tor
         public Material TileMaterial;
         public PawnModel PawnModel = PawnModel.Default;
+
+        public PlayerType PlayerNoir = PlayerType.Human;
+
+        public PlayerType PlayerBlanc = PlayerType.MiniMax;
+
     }
+
+    public enum PlayerType
+    {
+        Human,
+        MiniMax
+    }
+
 }

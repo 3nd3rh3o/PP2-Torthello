@@ -8,6 +8,13 @@ namespace Torthello
         private Graph graph;
         private TorBoardSettings settings;
 
+        private List<int> videAdj;
+        private List<int> coupPossibleNoir;
+        private List<int> coupPossibleBlanc;
+
+        private int pawnBlanc;
+        private int pawnNoir;
+
         private int previousSize;
         public TorBoardGraph(TorBoardSettings settings)
         {
@@ -17,6 +24,10 @@ namespace Torthello
         //initialisation du Graph
         public void InitGraph()
         {
+            videAdj = new List<int>();
+            coupPossibleNoir = new List<int>();
+            coupPossibleBlanc = new List<int>();
+
             graph = new Graph
             {
                 sommets = new Sommets[settings.BoardSize * settings.BoardSize]
@@ -44,31 +55,114 @@ namespace Torthello
         //ajout d'un pion et retournement des pions adverses
         public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pawnsToFlip)
         {
+            if (couleur == Couleur.Noir)
+            {
+                pawnNoir++;
+            }
+            else
+            {
+                pawnBlanc++;
+            }
+
             // si un coup est valide, on ajoute un pion et on retourne les pions adverses
             if (IsValidMove(idSommets, couleur, pawnsToFlip))
             {
                 graph.sommets[idSommets].couleur = couleur;
-                pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
-                
-                //Peut être pas necessaire: peux-t-on encore se bloquer avec les diagonales ?
-                // Vérifier si l'adversaire a des coups valides
-                Couleur adversaire = (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir;
-                if (NoPlacementAvailable(adversaire))
+                foreach (List<int> pions in pawnsToFlip)
                 {
-                    Debug.Log($"Le joueur {adversaire} ne peut pas jouer. Son tour est passé.");
+                    foreach (int p in pions)
+                    {
+                        graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                        if (couleur == Couleur.Noir)
+                        {
+                            pawnNoir++;
+                            pawnBlanc--;
+                        }
+                        else
+                        {
+                            pawnBlanc++;
+                            pawnNoir--;
+                        }
+                    }
+                }
+
+                if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+
+                foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+                {
+                    if (arrete == null) continue;
+                    if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
+                    {
+                        videAdj.Add(arrete.a);
+                    }
+                }
+
+                if (couleur == Couleur.Noir)
+                {
+                    coupPossibleBlanc = new List<int>();
+                }
+                else
+                {
+                    coupPossibleNoir = new List<int>();
+                }
+
+                foreach (int s in videAdj)
+                {
+                    if (couleur == Couleur.Noir && IsValidMove(s, Couleur.Blanc, new List<List<int>>()))
+                    {
+                        coupPossibleBlanc.Add(s);
+                    }
+                    else if (couleur == Couleur.Blanc && IsValidMove(s, Couleur.Noir, new List<List<int>>()))
+                    {
+                        coupPossibleNoir.Add(s);
+                    }
                 }
                 return true;
             }
             return false;
         }
 
+        public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip)
+        {
+            graph.sommets[idSommets].couleur = Couleur.Vide;
+            foreach (List<int> pions in pawnsToFlip)
+            {
+                foreach (int p in pions)
+                {
+                    graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                    if (graph.sommets[p].couleur == Couleur.Noir)
+                    {
+                        pawnNoir++;
+                        pawnBlanc--;
+                    }
+                    else
+                    {
+                        pawnBlanc++;
+                        pawnNoir--;
+                    }
+                }
+            }
+        }
+
         public void SetPawn(int idSommets, Couleur couleur)
         {
             graph.sommets[idSommets].couleur = couleur;
+            if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+            foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+            {
+                if (arrete == null) continue;
+                if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
+                {
+                    videAdj.Add(arrete.a);
+                }
+            }
         }
 
         public void DestroyGraph()
         {
+            videAdj = null;
+            coupPossibleNoir = null;
+            coupPossibleBlanc = null;
             graph = null;
         }
 
@@ -163,25 +257,28 @@ namespace Torthello
             SetPawn(u + 1 + v * settings.BoardSize, Couleur.Blanc);
             SetPawn(u + (v + 1) * settings.BoardSize, Couleur.Blanc);
             SetPawn(u + 1 + (v + 1) * settings.BoardSize, Couleur.Noir);
+            pawnBlanc = 2;
+            pawnNoir = 2;
         }
 
         public List<int> GetScore()
         {
-            // Implementation for getting the score
-            return new List<int>();
+            return new List<int> { pawnBlanc, pawnNoir };
         }
 
         public bool NoPlacementAvailable(Couleur couleur)
         {
-            List<List<int>> dummyList = new List<List<int>>();
-            for (int i = 0; i < graph.sommets.Length; i++)
-            {
-            if (IsValidMove(i, couleur, dummyList))
-            {
-                return false;
-            }
-            }
-            return true;
+            return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
+        }
+
+        public int GetBoardSize()
+        {
+            return settings.BoardSize*settings.BoardSize;
+        }
+        // HORRIBLE METHODE: A REFAIRE, il faut calculer le nombre de pions de chaque couleur à chaque pion posé / retiré comme dans flatboard. PLACEHOLDER
+        public bool IsGameOver()
+        {
+            return NoPlacementAvailable(Couleur.Noir) && NoPlacementAvailable(Couleur.Blanc);
         }
     }
 }

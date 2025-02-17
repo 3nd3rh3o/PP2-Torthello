@@ -14,5 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BoardSize: 8
   SideLength: 1
-  TileMaterial: {fileID: 2100000, guid: b850d599b71111a4abbfabc95fcc7f82, type: 2}
+  TileMaterial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
   PawnModel: 0
+  PlayerNoir: 0
+  PlayerBlanc: 1
