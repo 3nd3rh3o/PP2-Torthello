@@ -6,7 +6,7 @@ namespace Torthello
     /// <summary>
     /// Doit contenir un générateur de forme, un générateur de materiau, un gestionnaire d'input et un graphe.
     /// </summary>
-    
+
     [RequireComponent(typeof(MeshRenderer))]
     [RequireComponent(typeof(MeshFilter))]
     public abstract class Board : MonoBehaviour
@@ -62,17 +62,23 @@ namespace Torthello
         {
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
-            MeshGenerator.UpdateMesh(mF);            
+            MeshGenerator.UpdateMesh(mF);
             inputSystem.Update();
             int hoveredTile = inputSystem.GetTileHoveredID();
             MaterialHandler.SetHoveredTile(hoveredTile);
-            if (inputSystem.Place()) {
+            if (inputSystem.Place())
+            {
                 List<List<int>> pionRetourne = new();
                 if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
                 {
                     pawnProccessor.SpawnPawn(hoveredTile, couleur);
                     pawnProccessor.FlipAnimSeq(pionRetourne);
                     couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                    if (Graph.NoPlacementAvailable(couleur))
+                    {
+                        List<int> score = Graph.GetScore();
+                        Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                    }
                 }
                 else
                 {
@@ -83,7 +89,7 @@ namespace Torthello
             MaterialHandler.UpdateMeshRenderer(mR);
             if (inputSystem.Reset()) StartGame();
         }
-        
+
         /// <summary>
         /// Appelé toute les Time.fixedDeltaTime(intervale constant).
         /// </summary>
