@@ -65,6 +65,7 @@ namespace Torthello
                 case PawnModel.Default:
                     DefaultPawn pawn = parent.GetComponent<StaticPawnImporter>().SpawnDefaultPawn();
                     pawn.pos = TileIDToWP(TileID);
+                    pawn.rot = Quaternion.identity;
                     pawn.couleur = couleur;
                     pawn.StartSpawnAnim();
                     pawns[TileID] = pawn;
