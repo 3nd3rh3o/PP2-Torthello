@@ -53,7 +53,7 @@ namespace Torthello
                 //Peut être pas necessaire: peux-t-on encore se bloquer avec les diagonales ?
                 // Vérifier si l'adversaire a des coups valides
                 Couleur adversaire = (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir;
-                if (!HasValidMove(adversaire))
+                if (NoPlacementAvailable(adversaire))
                 {
                     Debug.Log($"Le joueur {adversaire} ne peut pas jouer. Son tour est passé.");
                 }
@@ -171,17 +171,17 @@ namespace Torthello
             return new List<int>();
         }
 
-        public bool HasValidMove(Couleur couleur)
+        public bool NoPlacementAvailable(Couleur couleur)
         {
             List<List<int>> dummyList = new List<List<int>>();
             for (int i = 0; i < graph.sommets.Length; i++)
             {
-                if (IsValidMove(i, couleur, dummyList))
-                {
-                    return true;
-                }
+            if (IsValidMove(i, couleur, dummyList))
+            {
+                return false;
             }
-            return false;
+            }
+            return true;
         }
     }
 }

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Tortello
+namespace Torthello
 {
 
     public class FlatBoardGraph : IGraph
