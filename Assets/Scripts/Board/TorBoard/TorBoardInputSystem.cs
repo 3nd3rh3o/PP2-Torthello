@@ -39,7 +39,7 @@ namespace Torthello
 
             // Convertir la position de la souris en un rayon dans l'espace 3D
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int closestTileID = -1;
+            int closestTileID = -1; 
             float closestDistance = float.MaxValue;
 
             // Parcourir toutes les cases pour trouver celle qui est survolée
@@ -109,16 +109,44 @@ namespace Torthello
             return;
         }
 
-        // Méthode pour vérifier si un rayon intersecte une tuile
+        // Méthode pour vérifier si un rayon intersecte une tuile, appelée par GetTileHoveredID pour chaque case
         private bool RayIntersectsTile(Ray ray, Vector3[] corners, out float distance)
         {
             distance = float.MaxValue;
-            Plane plane = new Plane(corners[0], corners[1], corners[2]);
+
+            // Définir les triangles de la tuile à partir de ses quatre coins
+            Vector3[] triangle1 = new Vector3[] { corners[0], corners[1], corners[2] };
+            Vector3[] triangle2 = new Vector3[] { corners[0], corners[2], corners[3] };
+
+            // Vérifier l'intersection avec le premier triangle
+            if (RayIntersectsTriangle(ray, triangle1, out float enter1))
+            {
+                distance = enter1;
+                return true;
+            }
+
+            // Vérifier l'intersection avec le deuxième triangle
+            if (RayIntersectsTriangle(ray, triangle2, out float enter2))
+            {
+                if (enter2 < distance)
+                {
+                    distance = enter2;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool RayIntersectsTriangle(Ray ray, Vector3[] triangle, out float distance)
+        {
+            distance = float.MaxValue;
+            Plane plane = new Plane(triangle[0], triangle[1], triangle[2]);
 
             if (plane.Raycast(ray, out float enter))
             {
                 Vector3 hitPoint = ray.GetPoint(enter);
-                if (PointInPolygon(hitPoint, corners))
+                if (PointInPolygon(hitPoint, triangle))
                 {
                     distance = enter;
                     return true;

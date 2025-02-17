@@ -82,12 +82,12 @@ namespace Torthello {
             {
             for (int j = 0; j < boardSize; j++)
             {
-                float u = (float)i / boardSize * 2 * Mathf.PI;
-                float v = (float)j / boardSize * 2 * Mathf.PI;
+                float u = (float)i / boardSize * 2 * Mathf.PI; // Angle autour du tore
+                float v = (float)j / boardSize * 2 * Mathf.PI; // Angle le long du tore
 
                 Vector3 center = new Vector3(
-                (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Cos(u),
-                minorRadius * Mathf.Sin(v),
+                (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Cos(u), 
+                minorRadius * Mathf.Sin(v), 
                 (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Sin(u)
                 );
 
@@ -119,7 +119,15 @@ namespace Torthello {
                 minorRadius * Mathf.Sin(v - angleStepV / 2),
                 (majorRadius + minorRadius * Mathf.Cos(v - angleStepV / 2)) * Mathf.Sin(u - angleStepU / 2)
             );
+            /*Calcul de la composante X: ^^au dessus^^
 
+                v - angleStepV / 2 :                            Ajuste l'angle v pour le calcul de la position sur le petit cercle (section transversale du tore).
+                Mathf.Cos(v - angleStepV / 2) :                 Calcule le cosinus de cet angle ajusté.
+                minorRadius * Mathf.Cos(v - angleStepV / 2) :   Multiplie le cosinus par le rayon mineur pour obtenir la position sur le petit cercle.
+                majorRadius + ... :                             Ajoute le rayon majeur pour décaler cette position par rapport au centre du tore.
+                Mathf.Cos(u - angleStepU / 2) :                 Calcule le cosinus de l'angle u ajusté pour la position sur le grand cercle (le tore lui-même).
+                ... * Mathf.Cos(u - angleStepU / 2) :            Multiplie par ce cosinus pour obtenir la composante X finale.
+            */
             points[1] = new Vector3(
                 (majorRadius + minorRadius * Mathf.Cos(v + angleStepV / 2)) * Mathf.Cos(u - angleStepU / 2),
                 minorRadius * Mathf.Sin(v + angleStepV / 2),
@@ -138,14 +146,15 @@ namespace Torthello {
                 (majorRadius + minorRadius * Mathf.Cos(v - angleStepV / 2)) * Mathf.Sin(u + angleStepU / 2)
             );
 
-            int[] f = new int[] { 0, 1, 2, 2, 3, 0 };
+            int[] f = new int[] { 0, 1, 2, 2, 3, 0 }; // Définir les faces du trapèze dans le sens horaire
             Vector2[] uv = new Vector2[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) };
             mesh.vertices = points;
             mesh.triangles = f;
-            mesh.uv = uv;
-            mesh.RecalculateNormals();
-            mesh.RecalculateTangents();
-            mesh.RecalculateBounds();
+            mesh.uv = uv; // Définir les coordonnées de texture pour chaque sommet, m'en sers pas pour le moment mais le tuto l'avait et chatgpt dit que c'est bien si jamais on veut texturer plus tard 
+            mesh.RecalculateNormals(); // Recalculer les normales pour l'éclairage
+            mesh.RecalculateTangents(); // Recalculer les tangentes pour les effets de surface
+            mesh.RecalculateBounds(); // Recalculer les limites pour le rendu
+            // commentaires généré par chatgpt au dessus, recalculateNormals suffit pour avoit un rendu
         }
 
         // Récupère les coins d'une tuile

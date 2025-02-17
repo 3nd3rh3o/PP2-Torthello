@@ -6,7 +6,7 @@ namespace Torthello{
     public class TorBoardSettings : ScriptableObject
     {
         [Range(4, 20)] public int BoardSize = 8;
-        [Range(0f, 10f)] public float SideLength = 1f;
+        [Range(0f, 10f)] public float SideLength = 1f; // pas  utilisé pour le tor, il faut modifier le meshGenerator si on veut s'en servir pour modifier la taille du tor
         public Material TileMaterial;
         public PawnModel PawnModel = PawnModel.Default;
     }
