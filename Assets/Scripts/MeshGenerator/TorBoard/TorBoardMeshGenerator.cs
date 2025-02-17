@@ -75,37 +75,32 @@ namespace Torthello {
             int boardSize = settings.BoardSize;
 
             // Calculer majorRadius et minorRadius en fonction de boardSize
-            float majorRadius = boardSize / (2 * Mathf.PI);
+            float majorRadius = boardSize / (Mathf.PI);
             float minorRadius = majorRadius / 2;
 
             for (int i = 0; i < boardSize; i++)
             {
-                for (int j = 0; j < boardSize; j++)
-                {
-                    float u = (float)i / boardSize * 2 * Mathf.PI;
-                    float v = (float)j / boardSize * 2 * Mathf.PI;
+            for (int j = 0; j < boardSize; j++)
+            {
+                float u = (float)i / boardSize * 2 * Mathf.PI;
+                float v = (float)j / boardSize * 2 * Mathf.PI;
 
-                    Vector3 center = new Vector3(
-                        (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Cos(u),
-                        minorRadius * Mathf.Sin(v),
-                        (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Sin(u)
-                    );
+                Vector3 center = new Vector3(
+                (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Cos(u),
+                minorRadius * Mathf.Sin(v),
+                (majorRadius + minorRadius * Mathf.Cos(v)) * Mathf.Sin(u)
+                );
 
-                    tileCenters[i * boardSize + j] = center;
+                tileCenters[i * boardSize + j] = center;
 
-                    tileCorners[i * boardSize + j] = new Vector3[]
-                    {
-                        center + new Vector3(-settings.SideLength / 2, 0, -settings.SideLength / 2),
-                        center + new Vector3(settings.SideLength / 2, 0, -settings.SideLength / 2),
-                        center + new Vector3(-settings.SideLength / 2, 0, settings.SideLength / 2),
-                        center + new Vector3(settings.SideLength / 2, 0, settings.SideLength / 2)
-                    };
+                Mesh mesh = new Mesh();
+                CreateTrapezoidMesh(center, u, v, majorRadius, minorRadius, boardSize, mesh);
+                combines[i * boardSize + j].mesh = mesh;
+                combines[i * boardSize + j].transform = Matrix4x4.identity;
 
-                    Mesh mesh = new Mesh();
-                    CreateTrapezoidMesh(center, u, v, majorRadius, minorRadius, boardSize, mesh);
-                    combines[i * boardSize + j].mesh = mesh;
-                    combines[i * boardSize + j].transform = Matrix4x4.identity;
-                }
+                // Ajouter les coins du trapèze à tileCorners
+                tileCorners[i * boardSize + j] = mesh.vertices;
+            }
             }
         }
 
