@@ -34,22 +34,13 @@ namespace Tortello
             // on ajoute un pion selement si le coup est valide
             if (CoupEstValide(idSommets, couleur, pionsARetournes))
             {
+
                 if(couleur == Couleur.Noir){
                     pawnNoir++;
                 }
                 else{
                     pawnBlanc++;
                 }
-                if(couleur == Couleur.Noir){
-                    pawnNoir++;
-                }
-                else{
-                    pawnBlanc++;
-                }
-
-                List<int> score = GetScore();
-                Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
-
                 graph.sommets[idSommets].couleur = couleur;
 
                 foreach (List<int> pions in pionsARetournes)
