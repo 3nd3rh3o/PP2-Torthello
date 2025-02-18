@@ -1,16 +1,14 @@
+using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
-public class UIRoot : MonoBehaviour
+public class UIRoot : UIBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private VisualElement root;
+    protected override void Start()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        base.Start();
+        root = GetComponent<UIDocument>().rootVisualElement;   
     }
 }
