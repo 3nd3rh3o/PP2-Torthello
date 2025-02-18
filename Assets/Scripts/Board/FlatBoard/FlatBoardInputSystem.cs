@@ -91,10 +91,13 @@ namespace Tortello
             // Camera controls
             if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
+                Cursor.lockState = CursorLockMode.Confined;
                 yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime;
                 pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime;
                 pitch %= 360f;
                 yaw = Mathf.Clamp(yaw, 100f, 165f);
+            } else {
+                Cursor.lockState = CursorLockMode.None;
             }
             Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);

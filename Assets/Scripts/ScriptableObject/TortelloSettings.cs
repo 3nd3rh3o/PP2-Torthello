@@ -22,7 +22,36 @@ namespace Tortello
         public int BoardWidth = 8;
         [Range(1, 20)]
         public int BoardHeight = 8;
-        
+
+        //default: true
+        public Parameter<bool> m_fullscreen = new(true);
+
+        [CreateProperty]
+        public bool Fullscreen
+        {
+            get => m_fullscreen.GetValue();
+            set => m_fullscreen.SetValue(value);
+        }
+    }
+    public struct Parameter<T>
+    {
+        private T value;
+        bool dirty;
+
+        public Parameter(T v)
+        {
+            value = v;
+            dirty = false;
+        }
+
+        public readonly T GetValue() => value;
+        public void SetValue(T val)
+        {
+            value = val;
+            dirty = true;
+        }
+        public readonly bool IsDirty() => dirty;
+        public void Proccesed() => dirty = false;
     }
 }
 

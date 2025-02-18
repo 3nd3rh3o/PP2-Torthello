@@ -1,7 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="ButtonsContainer" data-source-path="q" style="flex-grow: 1; flex-shrink: 1; align-self: stretch; align-items: stretch; justify-content: center; align-content: stretch; flex-wrap: wrap; margin-top: 20%; margin-right: 25%; margin-bottom: 16%; margin-left: 25%;">
+    <engine:VisualElement style="flex-grow: 1; flex-shrink: 1; align-self: stretch; align-items: stretch; justify-content: center; align-content: stretch; flex-wrap: wrap; margin-top: 20%; margin-right: 25%; margin-bottom: 16%; margin-left: 25%;">
         <engine:Button text="New game" name="StartGame" />
         <engine:Button text="Options" name="Options" />
-        <engine:Button text="Exit" name="Exit" enabled="true" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" data-source-type="UIRoot, Assembly-CSharp" />
+        <engine:Button text="Exit" name="Menu_Exit_button" />
     </engine:VisualElement>
 </engine:UXML>

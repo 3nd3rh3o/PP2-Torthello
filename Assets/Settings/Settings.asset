@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bec92b9f11df85468e9bdea46d866f2, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  hue: 0
+  hue: 0.16
   BoardWidth: 8
   BoardHeight: 8
