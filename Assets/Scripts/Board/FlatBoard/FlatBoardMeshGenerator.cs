@@ -6,7 +6,7 @@ namespace Tortello
     public class FlatBoardMeshGenerator : IMeshGenerator
     {
 
-        private FlatBoardSettings settings;
+        private Settings settings;
         private int PreviousWidth;
 
         private int PreviousHeight;
@@ -15,7 +15,7 @@ namespace Tortello
 
         private CombineInstance[] combines;
 
-        public FlatBoardMeshGenerator(FlatBoardSettings settings)
+        public FlatBoardMeshGenerator(Settings settings)
         {
             this.settings = settings;
         }

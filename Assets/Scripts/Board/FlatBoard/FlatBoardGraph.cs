@@ -23,9 +23,9 @@ namespace Tortello
         private int pawnBlanc;
         private int pawnNoir;
 
-        private FlatBoardSettings settings;
+        private Settings settings;
 
-        public FlatBoardGraph(FlatBoardSettings settings)
+        public FlatBoardGraph(Settings settings)
         {
             this.settings = settings;
         }

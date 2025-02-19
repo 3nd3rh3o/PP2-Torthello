@@ -5,7 +5,7 @@ namespace Tortello
 {
     public class FlatBoardInputSystem : IBoardInputSystem
     {
-        private readonly FlatBoardSettings settings;
+        private readonly Settings settings;
         private Transform boardTransform;
         private Vector3[][] tileCorners;
         private int previousHoveredTileID;
@@ -16,7 +16,7 @@ namespace Tortello
         private float yaw = 120f;
         private float pitch = 0f;
 
-        public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
+        public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;

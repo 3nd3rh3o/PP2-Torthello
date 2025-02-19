@@ -6,11 +6,11 @@ namespace Tortello
 {
     public class FlatBoardPawnProccessor : IPawnProccessor
     {
-        private FlatBoardSettings settings;
+        private Settings settings;
         private Pawn[] pawns;
         private Transform parent;
 
-        public FlatBoardPawnProccessor(Transform parent, FlatBoardSettings settings)
+        public FlatBoardPawnProccessor(Transform parent, Settings settings)
         {
             this.settings = settings;
             this.parent = parent;

@@ -26,7 +26,7 @@ namespace Tortello
         public IPawnProccessor pawnProccessor;
         public IGraph Graph;
         public Couleur couleur = Couleur.Blanc;
-        public Settings Appsettings;
+        public Settings settings;
 
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Tortello
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
-            if (Appsettings.isInGame)
+            if (settings.isInGame)
             {
                 inputSystem.Update();
                 int hoveredTile = inputSystem.GetTileHoveredID();
@@ -93,7 +93,7 @@ namespace Tortello
             }
 
             MaterialHandler.UpdateMeshRenderer(mR);
-            if (Appsettings.isInGame && inputSystem.Reset()) StartGame();
+            if (settings.isInGame && inputSystem.Reset()) StartGame();
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ namespace Tortello
 {
     public class FlatBoard : Board
     {
-        public FlatBoardSettings settings;
         public InputActionAsset actionMap;
         new void OnEnable()
         {
@@ -15,14 +14,7 @@ namespace Tortello
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
             pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
 
-            settings.Tilematerial.color = Appsettings.color;
             base.OnEnable();
-        }
-
-        new void Update()
-        {
-            settings.Tilematerial.color = Appsettings.color;
-            base.Update();
         }
     }
 }

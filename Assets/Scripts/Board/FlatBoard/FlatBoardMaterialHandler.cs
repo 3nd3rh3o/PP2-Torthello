@@ -5,7 +5,7 @@ namespace Tortello
     public class FlatBoardMaterialHandler : IMaterialHandler
     {
 
-        private FlatBoardSettings settings;
+        private Settings settings;
         private int previousWidth;
 
         private int previousHeight;
@@ -16,7 +16,7 @@ namespace Tortello
         private float animTime = 0f;
 
         private Material[] mats;
-        public FlatBoardMaterialHandler(FlatBoardSettings settings)
+        public FlatBoardMaterialHandler(Settings settings)
         {
             this.settings = settings;
         }

@@ -5,17 +5,28 @@ namespace Tortello
     [CreateAssetMenu(fileName = "Settings", menuName = "Tortello/Settings")]
     public class Settings : ScriptableObject
     {
-        [SerializeField]
-        public float hue = 0f;
+        [Range(0f,10f)] public float sideLength = 1f;
+        public PawnModel PawnModel = PawnModel.Default;
+
+        public Material Tilematerial;
+        
+        private float _hue = 0f;
+        
+        [CreateProperty]
+        public float hue {
+            get => _hue;
+            set {
+                _hue = value;
+                Tilematerial.color = Color.HSVToRGB(_hue, 0.7f, 0.7f);
+            }
+        } 
+
 
         [CreateProperty]
         public Color color
         {
             get => Color.HSVToRGB(hue, 0.7f, 0.7f);
-            set
-            {
-                Color.RGBToHSV(value, out hue, out _, out _);
-            }
+            
         }
 
         [Range(1, 20)]
