@@ -11,5 +11,6 @@
             <engine:Button text="Two player mode" style="flex-shrink: 1; flex-grow: 1;" />
             <engine:Button text="Against AI" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center;" />
         </engine:VisualElement>
+        <engine:Button text="Back" name="GameOption_Menu_button" />
     </engine:VisualElement>
 </engine:UXML>

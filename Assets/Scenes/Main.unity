@@ -527,7 +527,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PanelSettings: {fileID: 11400000, guid: 5f4af32e66b951a49ae7de2ac30a5785, type: 2}
   m_ParentUI: {fileID: 0}
-  sourceAsset: {fileID: 9197481963319205126, guid: 358db55cb1dff9f40b410048bf22f178, type: 3}
+  sourceAsset: {fileID: 9197481963319205126, guid: a2aa12bdb7c336b4aac75827cd520c43, type: 3}
   m_SortingOrder: 0
   m_WorldSpaceSizeMode: 1
   m_WorldSpaceWidth: 1920
@@ -559,6 +559,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f24de84350462cf46b1871ef1159f956, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MenuAsset: {fileID: 9197481963319205126, guid: 358db55cb1dff9f40b410048bf22f178, type: 3}
+  MenuOptionAsset: {fileID: 9197481963319205126, guid: 7ae2415bed009f549ab5d8c678c5cc8a, type: 3}
   settings: {fileID: 11400000, guid: bf87f3f9f4f5995488da73d20981c615, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
