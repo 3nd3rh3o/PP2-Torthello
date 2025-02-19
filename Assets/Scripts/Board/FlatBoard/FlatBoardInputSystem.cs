@@ -74,6 +74,8 @@ namespace Tortello
                     };
                 }
             }
+            Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
         }
 
         public bool Place()

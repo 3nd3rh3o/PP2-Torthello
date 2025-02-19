@@ -32,6 +32,8 @@ namespace Tortello
             get => m_fullscreen.GetValue();
             set => m_fullscreen.SetValue(value);
         }
+
+        public bool isInGame = false;
     }
     public struct Parameter<T>
     {

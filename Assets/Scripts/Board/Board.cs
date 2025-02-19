@@ -26,6 +26,7 @@ namespace Tortello
         public IPawnProccessor pawnProccessor;
         public IGraph Graph;
         public Couleur couleur = Couleur.Blanc;
+        public Settings Appsettings;
 
 
         /// <summary>
@@ -34,6 +35,8 @@ namespace Tortello
         public void OnEnable()
         {
             
+
+            // on init les composants
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.InitMesh(mF);
@@ -42,7 +45,7 @@ namespace Tortello
             Graph.InitGraph();
             pawnProccessor.Init();
 
-            StartGame();
+            //StartGame();
         }
 
         public void StartGame()
@@ -58,36 +61,39 @@ namespace Tortello
         /// <summary>
         /// Appelé à chaque frame.
         /// </summary>
-        void Update()
+        public void Update()
         {
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
-            inputSystem.Update();
-            int hoveredTile = inputSystem.GetTileHoveredID();
-            MaterialHandler.SetHoveredTile(hoveredTile);
-            if (inputSystem.Place())
+            if (Appsettings.isInGame)
             {
-                List<List<int>> pionRetourne = new();
-                if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                inputSystem.Update();
+                int hoveredTile = inputSystem.GetTileHoveredID();
+                MaterialHandler.SetHoveredTile(hoveredTile);
+                if (inputSystem.Place())
                 {
-                    pawnProccessor.SpawnPawn(hoveredTile, couleur);
-                    pawnProccessor.FlipAnimSeq(pionRetourne);
-                    couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
-                    if (Graph.NoPlacementAvailable(couleur))
+                    List<List<int>> pionRetourne = new();
+                    if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
                     {
-                        List<int> score = Graph.GetScore();
-                        Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                        pawnProccessor.SpawnPawn(hoveredTile, couleur);
+                        pawnProccessor.FlipAnimSeq(pionRetourne);
+                        couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                        if (Graph.NoPlacementAvailable(couleur))
+                        {
+                            List<int> score = Graph.GetScore();
+                            Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                        }
                     }
-                }
-                else
-                {
-                    MaterialHandler.FailedPlacement();
+                    else
+                    {
+                        MaterialHandler.FailedPlacement();
+                    }
                 }
             }
 
             MaterialHandler.UpdateMeshRenderer(mR);
-            if (inputSystem.Reset()) StartGame();
+            if (Appsettings.isInGame && inputSystem.Reset()) StartGame();
         }
 
         /// <summary>

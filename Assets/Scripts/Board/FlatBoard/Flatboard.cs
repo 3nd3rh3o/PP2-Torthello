@@ -14,7 +14,15 @@ namespace Tortello
             Graph = new FlatBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
             pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
+
+            settings.Tilematerial.color = Appsettings.color;
             base.OnEnable();
+        }
+
+        new void Update()
+        {
+            settings.Tilematerial.color = Appsettings.color;
+            base.Update();
         }
     }
 }

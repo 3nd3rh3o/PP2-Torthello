@@ -1,16 +1,24 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 10%; margin-right: 5%; margin-bottom: 10%; margin-left: 5%;">
+    <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 3%; margin-right: 5%; margin-bottom: 10%; margin-left: 5%;">
         <engine:GroupBox name="BoardOptions" text="Board Options" style="flex-shrink: 1; flex-grow: 1;">
-            <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus" index="0" />
+            <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus" index="0" focusable="false" />
             <engine:VisualElement name="BoardSize" style="flex-grow: 1; flex-direction: row; justify-content: space-between; align-self: stretch; align-content: auto; flex-wrap: wrap; align-items: center;">
-                <engine:SliderInt label="Width" value="42" high-value="100" name="Width" inverted="false" show-input-field="true" />
-                <engine:SliderInt label="Height" value="42" high-value="100" name="Height" fill="false" show-input-field="true" />
+                <engine:SliderInt label="Board width" value="42" high-value="20" show-input-field="true" focusable="false" fill="true" low-value="1" style="flex-shrink: 1; flex-grow: 1;">
+                    <Bindings>
+                        <engine:DataBinding property="value" data-source-path="BoardWidth" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="TwoWay" />
+                    </Bindings>
+                </engine:SliderInt>
+                <engine:SliderInt label="Board height" value="42" high-value="20" focusable="false" fill="true" show-input-field="true" low-value="1" style="flex-shrink: 1; flex-grow: 1;">
+                    <Bindings>
+                        <engine:DataBinding property="value" data-source-path="BoardHeight" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="TwoWay" />
+                    </Bindings>
+                </engine:SliderInt>
             </engine:VisualElement>
         </engine:GroupBox>
         <engine:VisualElement name="StartMode" style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center; align-self: stretch; align-content: stretch; flex-wrap: wrap;">
             <engine:Button text="Two player mode" style="flex-shrink: 1; flex-grow: 1;" />
             <engine:Button text="Against AI" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center;" />
         </engine:VisualElement>
-        <engine:Button text="Back" name="GameOption_Menu_button" />
+        <engine:Button text="Back" name="NewGame_Menu_button" />
     </engine:VisualElement>
 </engine:UXML>
