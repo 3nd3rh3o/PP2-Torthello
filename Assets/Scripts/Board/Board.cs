@@ -70,9 +70,9 @@ namespace Tortello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
             Graph.UpdateGraph();
+            inputSystem.Update();
             if (settings.isInGame)
             {
-                inputSystem.Update();
                 int hoveredTile = inputSystem.GetTileHoveredID();
                 MaterialHandler.SetHoveredTile(hoveredTile);
                 if (inputSystem.Place())
@@ -104,8 +104,9 @@ namespace Tortello
             {
                 settings.rebuildBoardCMD = false;
                 
-                OnDisable();
-                OnEnable();
+                Graph.RemoveAllPawns();
+                pawnProccessor.RemoveAllPawns();
+                
                 MaterialHandler.SetHoveredTile(-1);
             }
         }

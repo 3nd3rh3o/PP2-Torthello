@@ -87,7 +87,7 @@ namespace Tortello
         public void Update()
         {
             // Camera controls
-            if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
+            if (settings.isInGame && actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
                 Cursor.lockState = CursorLockMode.Confined;
                 settings.yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
