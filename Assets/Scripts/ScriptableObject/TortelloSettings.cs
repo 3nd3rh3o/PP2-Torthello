@@ -5,12 +5,26 @@ namespace Tortello
     [CreateAssetMenu(fileName = "Settings", menuName = "Tortello/Settings")]
     public class Settings : ScriptableObject
     {
-        [Range(0f,10f)] public float sideLength = 1f;
+        [Range(0f,10f)] public float sideLength = 1.5f;
         public PawnModel PawnModel = PawnModel.Default;
 
         public Material Tilematerial;
+
+
         
-        private float _hue = 0f;
+
+        //used by UI.
+        public float Score = 0f;
+
+        //UI asked for game start.
+        public bool startCMD = false;
+        
+        //Game state for UI.
+        public string turn = "";
+
+
+
+        private float _hue = 0.45f;
         
         [CreateProperty]
         public float hue {
@@ -45,6 +59,7 @@ namespace Tortello
         }
 
         public bool isInGame = false;
+        public float CamSentivity = 0.5f;
     }
     public struct Parameter<T>
     {

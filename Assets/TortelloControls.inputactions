@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Esc",
+                    "type": "Button",
+                    "id": "27bd3e3f-a787-4537-9345-cd3ae1e54d8a",
+                    "expectedControlType": "",
+                    "processors": "Clamp(max=1)",
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Reset",
                     "type": "Button",
                     "id": "f6203b8c-91f5-4dae-97d9-3ddf68026f10",
@@ -42,6 +51,17 @@
                     "processors": "Clamp(max=1)",
                     "groups": "",
                     "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fe5fdfd2-522f-494e-ba5c-cc38c28d655c",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "Clamp(max=1)",
+                    "groups": "",
+                    "action": "Esc",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

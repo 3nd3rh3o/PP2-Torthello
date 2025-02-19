@@ -1,0 +1,21 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement name="VisualElement" style="flex-grow: 0; align-items: auto; align-content: auto; justify-content: flex-start; flex-direction: column;">
+        <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-self: stretch; align-items: center; justify-content: center; align-content: auto;">
+            <engine:Label text="Blanc" />
+            <engine:ProgressBar value="0" title="Score" high-value="1" style="flex-grow: 1; flex-shrink: 1; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; max-width: 81%;">
+                <Bindings>
+                    <engine:DataBinding property="value" data-source-path="Score" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="ToTarget" />
+                </Bindings>
+            </engine:ProgressBar>
+            <engine:Label text="Noir" />
+        </engine:VisualElement>
+    </engine:VisualElement>
+    <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-items: auto; justify-content: flex-start; align-self: stretch;">
+        <engine:Label text="Tour du joueur :" />
+        <engine:Label text="Label" name="JoueurActuel">
+            <Bindings>
+                <engine:DataBinding property="text" data-source-path="turn" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="ToTarget" />
+            </Bindings>
+        </engine:Label>
+    </engine:VisualElement>
+</engine:UXML>

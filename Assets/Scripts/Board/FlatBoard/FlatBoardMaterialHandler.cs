@@ -9,7 +9,7 @@ namespace Tortello
         private int previousWidth;
 
         private int previousHeight;
-        private int hoveredTile;
+        private int hoveredTile = -1;
         private bool hoverChanged = false;
         private bool failedPlacementAnim = false;
         private int failedPlacementTileID = -1;

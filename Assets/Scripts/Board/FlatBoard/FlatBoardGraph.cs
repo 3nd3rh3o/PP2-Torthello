@@ -31,33 +31,39 @@ namespace Tortello
         }
         public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
         {
-            if(couleur == Couleur.Noir){
-                pawnNoir++;
-            }
-            else{
-                pawnBlanc++;
-            }
+
             // on ajoute un pion selement si le coup est valide
             if (CoupEstValide(idSommets, couleur, pionsARetournes))
             {
+                if (couleur == Couleur.Noir)
+                {
+                    pawnNoir++;
+                }
+                else
+                {
+                    pawnBlanc++;
+                }
                 graph.sommets[idSommets].couleur = couleur;
 
                 foreach (List<int> pions in pionsARetournes)
                 {
-                    foreach(int p in pions){
+                    foreach (int p in pions)
+                    {
                         graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
 
-                        if(couleur == Couleur.Noir){
+                        if (couleur == Couleur.Noir)
+                        {
                             pawnNoir++;
                             pawnBlanc--;
                         }
-                        else{
+                        else
+                        {
                             pawnBlanc++;
                             pawnNoir--;
                         }
                     }
                 }
-                if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+                if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
 
                 foreach (Arretes arrete in graph.sommets[idSommets].arretes)
                 {
@@ -244,6 +250,7 @@ namespace Tortello
 
         public void UpdateGraph()
         {
+            if (settings.isInGame) settings.Score = ((float)pawnBlanc) / (float)(pawnNoir + pawnBlanc);
             if (prevHeight == settings.BoardHeight && prevWidth == settings.BoardWidth)
             {
                 return;
@@ -283,20 +290,23 @@ namespace Tortello
                     {
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
                     {
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == couleur)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == couleur)
                     {
                         CoupValide = true;
                         pionsARetournes.Add(parcours[i].Item3);
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == inverse)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == inverse)
                     {
                         parcours[i].Item3.Add(nAr.a);
-                        parcours[i] = new (nAr.a, parcours[i].Item2, parcours[i].Item3);
+                        parcours[i] = new(nAr.a, parcours[i].Item2, parcours[i].Item3);
                     }
                 }
             }
@@ -318,7 +328,7 @@ namespace Tortello
 
         public List<int> GetScore()
         {
-            return new List<int>(){pawnBlanc,pawnNoir};
+            return new List<int>() { pawnBlanc, pawnNoir };
         }
 
         public bool NoPlacementAvailable(Couleur couleur)

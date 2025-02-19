@@ -44,18 +44,21 @@ namespace Tortello
             inputSystem.Init();
             Graph.InitGraph();
             pawnProccessor.Init();
-
+            settings.isInGame = false;
+            settings.startCMD = false;
             //StartGame();
         }
 
         public void StartGame()
         {
+            settings.startCMD = false;
+            settings.isInGame = true;
             Graph.RemoveAllPawns();
             pawnProccessor.RemoveAllPawns();
             couleur = Couleur.Blanc;
+            settings.turn = "Blanc";
             Graph.StartGame();
             pawnProccessor.StartGame();
-
         }
 
         /// <summary>
@@ -66,6 +69,7 @@ namespace Tortello
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
+            Graph.UpdateGraph();
             if (settings.isInGame)
             {
                 inputSystem.Update();
@@ -79,10 +83,12 @@ namespace Tortello
                         pawnProccessor.SpawnPawn(hoveredTile, couleur);
                         pawnProccessor.FlipAnimSeq(pionRetourne);
                         couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                        settings.turn = couleur == Couleur.Noir? "Noir" : "Blanc";
                         if (Graph.NoPlacementAvailable(couleur))
                         {
                             List<int> score = Graph.GetScore();
                             Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                            settings.turn = "Fini!";
                         }
                     }
                     else
@@ -93,7 +99,7 @@ namespace Tortello
             }
 
             MaterialHandler.UpdateMeshRenderer(mR);
-            if (settings.isInGame && inputSystem.Reset()) StartGame();
+            if ((settings.isInGame && inputSystem.Reset()) || settings.startCMD) StartGame();
         }
 
         /// <summary>

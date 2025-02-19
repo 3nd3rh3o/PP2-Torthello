@@ -1,24 +1,29 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 namespace Tortello
 {
     public class UIRoot : MonoBehaviour
     {
+        public InputActionAsset actions;
         public VisualTreeAsset MenuAsset;
         private TemplateContainer menu;
         public VisualTreeAsset MenuOptionAsset;
         private TemplateContainer option;
         public VisualTreeAsset NewGameAsset;
         private TemplateContainer newGame;
+        public VisualTreeAsset InGameOverlayAsset;
+        private TemplateContainer inGameOverlay;
+
         private UIDocument uiDocument;
         // action a bind aux bouttons
         private readonly Action menu_quit = () => Application.Quit();
         private Action menu_option;
-        private Action option_back;
+        private Action back_to_menu;
         private Action menu_newGame;
-        private Action newGame_back;
+        private Action newGame_twoPlayer;
 
 
         private int state = 0;
@@ -33,7 +38,7 @@ namespace Tortello
                 EnableOptionFromMenu();
             };
 
-            option_back = () =>
+            back_to_menu = () =>
             {
                 Disable(state);
                 EnableMenu();
@@ -45,17 +50,21 @@ namespace Tortello
                 EnableNewGame();
             };
 
-            newGame_back = () =>
+            newGame_twoPlayer = () =>
             {
                 Disable(state);
-                EnableMenu();
+                EnableInGameOverlay();
+                settings.startCMD = true;
+                
             };
-
+            
             uiDocument = GetComponent<UIDocument>();
             menu = MenuAsset.Instantiate();
             option = MenuOptionAsset.Instantiate();
             newGame = NewGameAsset.Instantiate();
-
+            inGameOverlay = InGameOverlayAsset.Instantiate();
+            actions.FindActionMap("InGame", false).Enable();
+            
 
             EnableMenu();
         }
@@ -67,6 +76,27 @@ namespace Tortello
                 if (settings.m_fullscreen.GetValue()) Screen.fullScreen = true;
                 else Screen.fullScreen = false;
                 settings.m_fullscreen.Proccesed();
+            }
+
+
+
+            if (actions.FindActionMap("InGame", false).FindAction("Esc").WasReleasedThisFrame())
+            {
+                //in main menu
+                if (state == 0)
+                {
+                    Application.Quit();
+                }
+                //in option(Menu) or new game
+                else if (state == 1 || state == 2)
+                {
+                    back_to_menu();
+                }
+                //in game
+                else if (state == 3)
+                {
+
+                }
             }
         }
 
@@ -92,9 +122,12 @@ namespace Tortello
                     case 2:
                         DisableNewGame();
                         break;
+                    case 3:
+                        DisableInGameOverlay();
+                        break;
                 }
 
-            } catch (ArgumentNullException)
+            } catch
             {
                 
             }
@@ -131,14 +164,14 @@ namespace Tortello
             VisualElement root = uiDocument.rootVisualElement;
             root.Add(option);
 
-            root.Q<Button>("Option_Menu_button").clicked += option_back;
+            root.Q<Button>("Option_Menu_button").clicked += back_to_menu;
         }
 
         void DisableOption()
         {
             VisualElement root = uiDocument.rootVisualElement;
 
-            root.Q<Button>("Option_Menu_button").clicked -= option_back;
+            root.Q<Button>("Option_Menu_button").clicked -= back_to_menu;
 
             root.Remove(option);
         }
@@ -152,18 +185,35 @@ namespace Tortello
 
             root.Add(newGame);
 
-            root.Q<Button>("NewGame_Menu_button").clicked += newGame_back;
+            root.Q<Button>("NewGame_Menu_button").clicked += back_to_menu;
+            root.Q<Button>("NewGame_TwoPlayer_button").clicked += newGame_twoPlayer;
         }
 
         void DisableNewGame()
         {
             VisualElement root = uiDocument.rootVisualElement;
 
-            root.Q<Button>("NewGame_Menu_button").clicked -= newGame_back;
+            root.Q<Button>("NewGame_Menu_button").clicked -= back_to_menu;
+            root.Q<Button>("NewGame_TwoPlayer_button").clicked -= newGame_twoPlayer;
 
             root.Remove(newGame);
         }
 
+        void EnableInGameOverlay()
+        {
+            state = 3;
+
+            VisualElement root = uiDocument.rootVisualElement;
+
+            root.Add(inGameOverlay);
+        }
+
+        void DisableInGameOverlay()
+        {
+            VisualElement root = uiDocument.rootVisualElement;
+
+            root.Remove(inGameOverlay);
+        }
 
     }
 }

@@ -94,8 +94,8 @@ namespace Tortello
             if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
                 Cursor.lockState = CursorLockMode.Confined;
-                yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime;
-                pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime;
+                yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
+                pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
                 pitch %= 360f;
                 yaw = Mathf.Clamp(yaw, 100f, 165f);
             } else {
