@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8d899a48f27c7a54f8b81b91f62c7dcf, type: 3}
-  m_Name: FlatboardDefaults
+  m_Script: {fileID: 11500000, guid: 14cb7ce9f40efae4081d809359942530, type: 3}
+  m_Name: ToreBoardDefaults
   m_EditorClassIdentifier: 
   BoardWidth: 4
   BoardHeight: 4

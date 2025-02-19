@@ -131,20 +131,20 @@ namespace Tortello
             prevHeight = settings.BoardHeight;
             prevWidth = settings.BoardWidth;
 
-            for (int v = 0; v < settings.BoardHeight; v++)
+            for (int v = 1; v <= settings.BoardHeight; v++)
             {
 
-                for (int u = 0; u < settings.BoardWidth; u++)
+                for (int u = 1; u <= settings.BoardWidth; u++)
                 {
 
-                    graph.sommets[v * settings.BoardWidth + u] = new Sommets();
+                    graph.sommets[v % settings.BoardHeight * settings.BoardWidth + (u % settings.BoardWidth)] = new Sommets();
                     // listes d'arretes du sommet
-                    graph.sommets[v * settings.BoardWidth + u].arretes = new Arretes[8];
+                    graph.sommets[v % settings.BoardHeight * settings.BoardWidth + (u % settings.BoardWidth)].arretes = new Arretes[8];
                     //le contenu du sommet
-                    graph.sommets[v * settings.BoardWidth + u].couleur = Couleur.Vide;
+                    graph.sommets[v % settings.BoardHeight * settings.BoardWidth + (u % settings.BoardWidth)].couleur = Couleur.Vide;
 
                     // test des cas particuliers.
-                    int idSommet = v * settings.BoardWidth + u;
+                    int idSommet = v % settings.BoardHeight * settings.BoardWidth + (u % settings.BoardWidth);
 
                     // 0 1 2    C B C
                     // 7 _ 3 => B _ B
@@ -165,70 +165,53 @@ namespace Tortello
                     // (+1, 0) => 0,1,5,6,7,8
                     // (+1, +1) => 0,1,7,8
 
-                    if (!(u == 0) && !(v == 0))
-                    {
                         graph.sommets[idSommet].arretes[0] = new Arretes
                         {
-                            a = (v - 1) * settings.BoardWidth + u - 1,
+                            a = (v - 1) % settings.BoardHeight * settings.BoardWidth + ((u - 1)% settings.BoardWidth),
                             d = idSommet
                         };
-                    }
-                    if (!(v == 0))
-                    {
+
                         graph.sommets[idSommet].arretes[1] = new Arretes
                         {
-                            a = (v - 1) * settings.BoardWidth + u,
+                            a = (v - 1) % settings.BoardHeight * settings.BoardWidth + u,
                             d = idSommet
                         };
-                    }
-                    if (!(u == settings.BoardWidth - 1) && !(v == 0))
-                    {
+
                         graph.sommets[idSommet].arretes[2] = new Arretes
                         {
-                            a = (v - 1) * settings.BoardWidth + u + 1,
+                            a = (v - 1) % settings.BoardHeight * settings.BoardWidth + ((u + 1)% settings.BoardWidth),
                             d = idSommet
                         };
-                    }
-                    if (!(u == settings.BoardWidth - 1))
-                    {
+
                         graph.sommets[idSommet].arretes[3] = new Arretes
                         {
-                            a = v * settings.BoardWidth + u + 1,
+                            a = v * settings.BoardWidth + ((u + 1)% settings.BoardWidth),
                             d = idSommet
                         };
-                    }
-                    if (!(u == settings.BoardWidth - 1) && !(v == settings.BoardHeight - 1))
-                    {
+
                         graph.sommets[idSommet].arretes[4] = new Arretes
                         {
-                            a = (v + 1) * settings.BoardWidth + u + 1,
+                            a = (v + 1) % settings.BoardHeight * settings.BoardWidth + ((u + 1)% settings.BoardWidth),
                             d = idSommet
                         };
-                    }
-                    if (!(v == settings.BoardHeight - 1))
-                    {
+
                         graph.sommets[idSommet].arretes[5] = new Arretes
                         {
-                            a = (v + 1) * settings.BoardWidth + u,
+                            a = (v + 1) % settings.BoardHeight * settings.BoardWidth + u,
                             d = idSommet
                         };
-                    }
-                    if (!(u == 0) && !(v == settings.BoardHeight - 1))
-                    {
+
                         graph.sommets[idSommet].arretes[6] = new Arretes
                         {
-                            a = (v + 1) * settings.BoardWidth + u - 1,
+                            a = (v + 1) % settings.BoardHeight * settings.BoardWidth + ((u - 1)% settings.BoardWidth),
                             d = idSommet
                         };
-                    }
-                    if (!(u == 0))
-                    {
+ 
                         graph.sommets[idSommet].arretes[7] = new Arretes
                         {
-                            a = v * settings.BoardWidth + u - 1,
+                            a = v * settings.BoardWidth + ((u - 1)% settings.BoardWidth),
                             d = idSommet
                         };
-                    }
                 }
             }
         }
