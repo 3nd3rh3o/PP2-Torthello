@@ -100,6 +100,14 @@ namespace Tortello
 
             MaterialHandler.UpdateMeshRenderer(mR);
             if ((settings.isInGame && inputSystem.Reset()) || settings.startCMD) StartGame();
+            if (settings.rebuildBoardCMD)
+            {
+                settings.rebuildBoardCMD = false;
+                
+                OnDisable();
+                OnEnable();
+                MaterialHandler.SetHoveredTile(-1);
+            }
         }
 
         /// <summary>

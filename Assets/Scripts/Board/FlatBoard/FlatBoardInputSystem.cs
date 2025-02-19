@@ -13,9 +13,6 @@ namespace Tortello
         private int previousHeight;
         private float previousSideLength;
         private InputActionAsset actionMap;
-        private float yaw = 120f;
-        private float pitch = 0f;
-
         public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
@@ -30,12 +27,11 @@ namespace Tortello
         }
 
 
-        //TODO
+
         public int GetTileHoveredID()
         {
             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
             Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
-            // is prev tile still hovered?
             if (previousHoveredTileID != -1 && IsTileHovered(previousHoveredTileID, mousePos)) return previousHoveredTileID;
             for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
@@ -74,7 +70,7 @@ namespace Tortello
                     };
                 }
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
         }
 
@@ -94,14 +90,14 @@ namespace Tortello
             if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
                 Cursor.lockState = CursorLockMode.Confined;
-                yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
-                pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
-                pitch %= 360f;
-                yaw = Mathf.Clamp(yaw, 100f, 165f);
+                settings.yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
+                settings.pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
+                settings.pitch %= 360f;
+                settings.yaw = Mathf.Clamp(settings.yaw, 100f, 165f);
             } else {
                 Cursor.lockState = CursorLockMode.None;
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
 
             // need to rebuild board map?

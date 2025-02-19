@@ -11,11 +11,16 @@ namespace Tortello
         public VisualTreeAsset MenuAsset;
         private TemplateContainer menu;
         public VisualTreeAsset MenuOptionAsset;
-        private TemplateContainer option;
+        private TemplateContainer menuOption;
         public VisualTreeAsset NewGameAsset;
         private TemplateContainer newGame;
         public VisualTreeAsset InGameOverlayAsset;
         private TemplateContainer inGameOverlay;
+        public VisualTreeAsset PauseUIAsset;
+        private TemplateContainer pauseUI;
+        
+        public VisualTreeAsset PauseOptionUIAsset;
+        private TemplateContainer pauseOptionUI;
 
         private UIDocument uiDocument;
         // action a bind aux bouttons
@@ -24,7 +29,10 @@ namespace Tortello
         private Action back_to_menu;
         private Action menu_newGame;
         private Action newGame_twoPlayer;
-
+        private Action pause_Resume;
+        private Action pause_Menu;
+        private Action pause_Option;
+        private Action pause_option_back;
 
         private int state = 0;
 
@@ -55,14 +63,39 @@ namespace Tortello
                 Disable(state);
                 EnableInGameOverlay();
                 settings.startCMD = true;
-                
+            };
+            pause_Resume = () => 
+            {
+                Disable(state);
+                settings.isInGame = true;
+                EnableInGameOverlay();
+            };
+            pause_Menu = () =>
+            {
+                Disable(state);
+                settings.isInGame = false;
+                settings.rebuildBoardCMD = true;
+                EnableMenu();
+            };
+            pause_Option = () =>
+            {
+                Disable(state);
+                EnablePauseOption();
+            };
+            pause_option_back = () =>
+            {
+                Disable(state);
+                EnablePauseMenu();
             };
             
             uiDocument = GetComponent<UIDocument>();
             menu = MenuAsset.Instantiate();
-            option = MenuOptionAsset.Instantiate();
+            menuOption = MenuOptionAsset.Instantiate();
             newGame = NewGameAsset.Instantiate();
             inGameOverlay = InGameOverlayAsset.Instantiate();
+            pauseUI = PauseUIAsset.Instantiate();
+            pauseOptionUI = PauseOptionUIAsset.Instantiate();
+
             actions.FindActionMap("InGame", false).Enable();
             
 
@@ -95,7 +128,17 @@ namespace Tortello
                 //in game
                 else if (state == 3)
                 {
-
+                    Disable(state);
+                    settings.isInGame = false;
+                    EnablePauseMenu();
+                }
+                else if (state == 4)
+                {
+                    pause_Resume();
+                }
+                else if (state == 5)
+                {
+                    pause_option_back();
                 }
             }
         }
@@ -125,6 +168,12 @@ namespace Tortello
                     case 3:
                         DisableInGameOverlay();
                         break;
+                    case 4:
+                        DisablePauseMenu();
+                        break;
+                    case 5:
+                        DisablePauseOption();
+                        break;
                 }
 
             } catch
@@ -138,6 +187,8 @@ namespace Tortello
             state = 0;
             VisualElement root = uiDocument.rootVisualElement;
             root.Add(menu);
+            settings.yaw = 120f;
+            settings.pitch = 0f;
 
             // register de l'action au boutton Menu_Exit_Button.
             root.Q<Button>("Menu_Exit_button").clicked += menu_quit;
@@ -162,7 +213,7 @@ namespace Tortello
         {
             state = 1;
             VisualElement root = uiDocument.rootVisualElement;
-            root.Add(option);
+            root.Add(menuOption);
 
             root.Q<Button>("Option_Menu_button").clicked += back_to_menu;
         }
@@ -173,7 +224,7 @@ namespace Tortello
 
             root.Q<Button>("Option_Menu_button").clicked -= back_to_menu;
 
-            root.Remove(option);
+            root.Remove(menuOption);
         }
 
 
@@ -215,5 +266,36 @@ namespace Tortello
             root.Remove(inGameOverlay);
         }
 
+        void EnablePauseMenu()
+        {
+            state = 4;
+            VisualElement root = uiDocument.rootVisualElement;
+            root.Add(pauseUI);
+            root.Q<Button>("Pause_Resume_button").clicked += pause_Resume;
+            root.Q<Button>("Pause_Option_button").clicked += pause_Option;
+            root.Q<Button>("Pause_Menu_button").clicked += pause_Menu;
+        }
+
+        void DisablePauseMenu()
+        {
+            VisualElement root = uiDocument.rootVisualElement;
+            root.Q<Button>("Pause_Resume_button").clicked -= pause_Resume;
+            root.Q<Button>("Pause_Option_button").clicked -= pause_Option;
+            root.Q<Button>("Pause_Menu_button").clicked -= pause_Menu;
+            root.Remove(pauseUI);
+        }
+        void EnablePauseOption()
+        {
+            state = 5;
+            VisualElement root = uiDocument.rootVisualElement;
+            root.Add(pauseOptionUI);
+            root.Q<Button>("Option_Pause_button").clicked += pause_option_back;
+        }
+        void DisablePauseOption()
+        {
+            VisualElement root = uiDocument.rootVisualElement;
+            root.Q<Button>("Option_Pause_button").clicked -= pause_option_back;
+            root.Remove(pauseOptionUI);
+        }
     }
 }

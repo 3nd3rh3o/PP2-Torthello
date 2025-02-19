@@ -60,6 +60,9 @@ namespace Tortello
 
         public bool isInGame = false;
         public float CamSentivity = 0.5f;
+        public float pitch = 0f;
+        public float yaw = 120f;
+        public bool rebuildBoardCMD;
     }
     public struct Parameter<T>
     {

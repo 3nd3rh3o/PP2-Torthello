@@ -564,6 +564,8 @@ MonoBehaviour:
   MenuOptionAsset: {fileID: 9197481963319205126, guid: 7ae2415bed009f549ab5d8c678c5cc8a, type: 3}
   NewGameAsset: {fileID: 9197481963319205126, guid: 837c4755064060f4b97317f22452ad4b, type: 3}
   InGameOverlayAsset: {fileID: 9197481963319205126, guid: dea3cbab22d66b24cad0fdea9257af06, type: 3}
+  PauseUIAsset: {fileID: 9197481963319205126, guid: a8df6b1d701c0f44d9cf59ff9870e545, type: 3}
+  PauseOptionUIAsset: {fileID: 9197481963319205126, guid: e63916d5c68382645ac13c2f46658392, type: 3}
   settings: {fileID: 11400000, guid: bf87f3f9f4f5995488da73d20981c615, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
