@@ -17,7 +17,7 @@
         </engine:GroupBox>
         <engine:VisualElement name="StartMode" style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center; align-self: stretch; align-content: stretch; flex-wrap: wrap;">
             <engine:Button text="Two player mode" focusable="true" name="NewGame_TwoPlayer_button" style="flex-shrink: 1; flex-grow: 1;" />
-            <engine:Button text="Against AI" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center;" />
+            <engine:Button text="Against AI" name="NewGame_BOT_button" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center;" />
         </engine:VisualElement>
         <engine:Button text="Back" name="NewGame_Menu_button" />
     </engine:VisualElement>

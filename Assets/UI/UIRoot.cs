@@ -29,6 +29,7 @@ namespace Tortello
         private Action back_to_menu;
         private Action menu_newGame;
         private Action newGame_twoPlayer;
+        private Action newGame_BOT;
         private Action pause_Resume;
         private Action pause_Menu;
         private Action pause_Option;
@@ -62,6 +63,15 @@ namespace Tortello
             {
                 Disable(state);
                 EnableInGameOverlay();
+                settings.IA = false;
+                settings.startCMD = true;
+                
+            };
+            newGame_BOT = () =>
+            {
+                Disable(state);
+                EnableInGameOverlay();
+                settings.IA = true;
                 settings.startCMD = true;
             };
             pause_Resume = () => 
@@ -238,6 +248,7 @@ namespace Tortello
 
             root.Q<Button>("NewGame_Menu_button").clicked += back_to_menu;
             root.Q<Button>("NewGame_TwoPlayer_button").clicked += newGame_twoPlayer;
+            root.Q<Button>("NewGame_BOT_button").clicked += newGame_BOT;
         }
 
         void DisableNewGame()
@@ -246,6 +257,7 @@ namespace Tortello
 
             root.Q<Button>("NewGame_Menu_button").clicked -= back_to_menu;
             root.Q<Button>("NewGame_TwoPlayer_button").clicked -= newGame_twoPlayer;
+            root.Q<Button>("NewGame_BOT_button").clicked -= newGame_BOT;
 
             root.Remove(newGame);
         }

@@ -12,7 +12,7 @@ namespace Tortello
 
 
         
-
+        public bool IA = true;
         //used by UI.
         public float Score = 0f;
 
@@ -63,6 +63,7 @@ namespace Tortello
         public float pitch = 0f;
         public float yaw = 120f;
         public bool rebuildBoardCMD;
+        public int Difficulty = 2;
     }
     public struct Parameter<T>
     {

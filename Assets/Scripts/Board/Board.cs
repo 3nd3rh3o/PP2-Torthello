@@ -27,14 +27,14 @@ namespace Tortello
         public IGraph Graph;
         public Couleur couleur = Couleur.Blanc;
         public Settings settings;
-
+        private float coolDown = 0f;
 
         /// <summary>
         /// Appelé lorsque le GO ou le script est activé.
         /// </summary>
         public void OnEnable()
         {
-            
+
 
             // on init les composants
             MeshRenderer mR = GetComponent<MeshRenderer>();
@@ -73,9 +73,42 @@ namespace Tortello
             inputSystem.Update();
             if (settings.isInGame)
             {
-                int hoveredTile = inputSystem.GetTileHoveredID();
+                if (couleur == Couleur.Noir && settings.IA)
+                {
+                    if (coolDown < 2f)
+                    {
+                        coolDown += Time.deltaTime;
+                        MaterialHandler.SetHoveredTile(inputSystem.GetTileHoveredID());
+                        MaterialHandler.UpdateMeshRenderer(mR);
+                        if ((settings.isInGame && inputSystem.Reset()) || settings.startCMD) StartGame();
+                        if (settings.rebuildBoardCMD)
+                        {
+                            settings.rebuildBoardCMD = false;
+
+                            Graph.RemoveAllPawns();
+                            pawnProccessor.RemoveAllPawns();
+
+                            MaterialHandler.SetHoveredTile(-1);
+                        }
+                        return;
+                    }
+                    else
+                    {
+                        coolDown = 0f;
+                    }
+                }
+                int hoveredTile;
+                //NOTE : test
+                if (settings.IA&&couleur == Couleur.Noir && !Graph.NoPlacementAvailable(couleur))
+                {
+                    hoveredTile = Graph.MINIMAX(settings.Difficulty);
+                }
+                else
+                {
+                    hoveredTile = inputSystem.GetTileHoveredID();
+                }
                 MaterialHandler.SetHoveredTile(hoveredTile);
-                if (inputSystem.Place())
+                if (inputSystem.Place() || (settings.IA && couleur == Couleur.Noir))
                 {
                     List<List<int>> pionRetourne = new();
                     if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
@@ -83,7 +116,7 @@ namespace Tortello
                         pawnProccessor.SpawnPawn(hoveredTile, couleur);
                         pawnProccessor.FlipAnimSeq(pionRetourne);
                         couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
-                        settings.turn = couleur == Couleur.Noir? "Noir" : "Blanc";
+                        settings.turn = couleur == Couleur.Noir ? (settings.IA? "BESSY-BOT": "Noir"): "Blanc";
                         if (Graph.NoPlacementAvailable(couleur))
                         {
                             List<int> score = Graph.GetScore();
@@ -97,16 +130,15 @@ namespace Tortello
                     }
                 }
             }
-
             MaterialHandler.UpdateMeshRenderer(mR);
             if ((settings.isInGame && inputSystem.Reset()) || settings.startCMD) StartGame();
             if (settings.rebuildBoardCMD)
             {
                 settings.rebuildBoardCMD = false;
-                
+
                 Graph.RemoveAllPawns();
                 pawnProccessor.RemoveAllPawns();
-                
+
                 MaterialHandler.SetHoveredTile(-1);
             }
         }
