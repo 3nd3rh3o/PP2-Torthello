@@ -1,8 +1,4 @@
-using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.AI;
 
 namespace Tortello
 {
@@ -43,7 +39,7 @@ namespace Tortello
 
                     // test des cas particuliers.
                     int idSommet = v % settings.BoardHeight * settings.BoardWidth + (u % settings.BoardWidth);
-                    
+
 
                         graph.sommets[idSommet].arretes[0] = new Arretes
                         {

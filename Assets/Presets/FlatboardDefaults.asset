@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d899a48f27c7a54f8b81b91f62c7dcf, type: 3}
   m_Name: FlatboardDefaults
   m_EditorClassIdentifier: 
-  BoardWidth: 4
-  BoardHeight: 4
+  BoardWidth: 8
+  BoardHeight: 8
   sideLength: 1
   PawnModel: 0
   Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
