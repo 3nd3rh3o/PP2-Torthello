@@ -108,7 +108,7 @@ namespace Tortello
                     hoveredTile = inputSystem.GetTileHoveredID();
                 }
                 MaterialHandler.SetHoveredTile(hoveredTile);
-                if (inputSystem.Place() || (settings.IA && couleur == Couleur.Noir))
+                if ((inputSystem.Place() || (settings.IA && couleur == Couleur.Noir)) && !Graph.NoPlacementAvailable(couleur))
                 {
                     List<List<int>> pionRetourne = new();
                     if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))

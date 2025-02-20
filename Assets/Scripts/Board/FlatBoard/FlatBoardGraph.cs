@@ -111,6 +111,7 @@ namespace Tortello
                     videAdj.Add(arrete.a);
                 }
             }
+            
         }
 
         public void DestroyGraph()
@@ -324,6 +325,11 @@ namespace Tortello
             SetPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
             pawnBlanc = 2;
             pawnNoir = 2;
+            foreach(int p in videAdj)
+            {
+                if (CoupEstValide(p, Couleur.Blanc, new())) coupPossibleBlanc.Add(p);
+                if (CoupEstValide(p, Couleur.Noir, new())) coupPossibleNoir.Add(p);
+            }
         }
 
         public List<int> GetScore()
