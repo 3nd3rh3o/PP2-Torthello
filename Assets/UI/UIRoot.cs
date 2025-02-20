@@ -18,7 +18,7 @@ namespace Tortello
         private TemplateContainer inGameOverlay;
         public VisualTreeAsset PauseUIAsset;
         private TemplateContainer pauseUI;
-        
+
         public VisualTreeAsset PauseOptionUIAsset;
         private TemplateContainer pauseOptionUI;
 
@@ -65,7 +65,7 @@ namespace Tortello
                 EnableInGameOverlay();
                 settings.IA = false;
                 settings.startCMD = true;
-                
+
             };
             newGame_BOT = () =>
             {
@@ -74,7 +74,7 @@ namespace Tortello
                 settings.IA = true;
                 settings.startCMD = true;
             };
-            pause_Resume = () => 
+            pause_Resume = () =>
             {
                 Disable(state);
                 settings.isInGame = true;
@@ -97,7 +97,7 @@ namespace Tortello
                 Disable(state);
                 EnablePauseMenu();
             };
-            
+
             uiDocument = GetComponent<UIDocument>();
             menu = MenuAsset.Instantiate();
             menuOption = MenuOptionAsset.Instantiate();
@@ -105,9 +105,13 @@ namespace Tortello
             inGameOverlay = InGameOverlayAsset.Instantiate();
             pauseUI = PauseUIAsset.Instantiate();
             pauseOptionUI = PauseOptionUIAsset.Instantiate();
+            Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
+            if (settings.m_fullscreen.GetValue()) Screen.fullScreen = true;
+            else Screen.fullScreen = false;
+            settings.m_fullscreen.Proccesed();
 
             actions.FindActionMap("InGame", false).Enable();
-            
+
 
             EnableMenu();
         }
@@ -186,9 +190,10 @@ namespace Tortello
                         break;
                 }
 
-            } catch
+            }
+            catch
             {
-                
+
             }
         }
 
