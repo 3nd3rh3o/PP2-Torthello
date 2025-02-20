@@ -388,7 +388,7 @@ GameObject:
   - component: {fileID: 1487057720}
   - component: {fileID: 1487057722}
   - component: {fileID: 1487057721}
-  - component: {fileID: 1487057723}
+  - component: {fileID: 1487057725}
   - component: {fileID: 1487057724}
   m_Layer: 0
   m_Name: GameManager
@@ -464,21 +464,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1487057719}
   m_Mesh: {fileID: 0}
---- !u!114 &1487057723
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1487057719}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eff382953590dc64a86637613757c5b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  couleur: 1
-  settings: {fileID: 11400000, guid: 00369571f844ef341bf9c1160c3bd8ff, type: 2}
-  actionMap: {fileID: -944628639613478452, guid: b510c0bc50020334a9db12bed2cbf5fc, type: 3}
 --- !u!114 &1487057724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -495,6 +480,21 @@ MonoBehaviour:
   DefaultPawnMats:
   - {fileID: -1580535799172915004, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
   - {fileID: -8848810374240701247, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
+--- !u!114 &1487057725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487057719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51e63fe6585f4664da2cc4937368ba0d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  couleur: 1
+  settings: {fileID: 11400000, guid: 00369571f844ef341bf9c1160c3bd8ff, type: 2}
+  actionMap: {fileID: -944628639613478452, guid: b510c0bc50020334a9db12bed2cbf5fc, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

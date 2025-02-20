@@ -10,20 +10,20 @@ namespace Tortello
     public class FlatBoardGraph : IGraph
     {
 
-        private Graph graph;
+        protected Graph graph;
 
-        private int prevWidth;
+        protected int prevWidth;
 
-        private int prevHeight;
+        protected int prevHeight;
 
-        private List<int> videAdj;
-        private List<int> coupPossibleNoir;
-        private List<int> coupPossibleBlanc;
+        protected List<int> videAdj;
+        protected List<int> coupPossibleNoir;
+        protected List<int> coupPossibleBlanc;
 
-        private int pawnBlanc;
-        private int pawnNoir;
+        protected int pawnBlanc;
+        protected int pawnNoir;
 
-        private FlatBoardSettings settings;
+        protected FlatBoardSettings settings;
 
         public FlatBoardGraph(FlatBoardSettings settings)
         {
@@ -117,7 +117,7 @@ namespace Tortello
         }
 
         //initialisation du Graph
-        public void InitGraph()
+        public virtual void InitGraph()
         {
             videAdj = new List<int>();
             coupPossibleNoir = new List<int>();

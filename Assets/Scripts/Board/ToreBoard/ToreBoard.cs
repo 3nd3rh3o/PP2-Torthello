@@ -5,15 +5,15 @@ namespace Tortello
 {
     public class ToreBoard : Board
     {
-        public ToreBoardSettings settings;
+        public FlatBoardSettings settings;
         public InputActionAsset actionMap;
         new void OnEnable()
         {
-            MeshGenerator = new ToreBoardMeshGenerator(settings);
-            MaterialHandler = new ToreBoardMaterialHandler(settings);
+            MeshGenerator = new FlatBoardMeshGenerator(settings);
+            MaterialHandler = new FlatBoardMaterialHandler(settings);
             Graph = new ToreBoardGraph(settings);
-            inputSystem = new ToreBoardInputSystem(settings, transform, actionMap);
-            pawnProccessor = new ToreBoardPawnProccessor(transform, settings);
+            inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
+            pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
             base.OnEnable();
         }
     }
