@@ -42,7 +42,7 @@ namespace Tortello
 
         }
 
-        public void UpdateMesh(MeshFilter meshFilter)
+        public virtual void UpdateMesh(MeshFilter meshFilter)
         {
             //on teste si les parametres in changes
             if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength) return;

@@ -8,7 +8,7 @@ namespace Tortello
         public InputActionAsset actionMap;
         new void OnEnable()
         {
-            MeshGenerator = new FlatBoardMeshGenerator(settings);
+            MeshGenerator = new ToreBoardMeshGenerator(settings);
             MaterialHandler = new FlatBoardMaterialHandler(settings);
             Graph = new ToreBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);

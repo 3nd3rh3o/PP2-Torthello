@@ -35,7 +35,7 @@ namespace Tortello
 
         }
 
-        public void UpdateMesh(MeshFilter meshFilter)
+        public override void UpdateMesh(MeshFilter meshFilter)
         {
             //on teste si les parametres in changes
             if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength) return;
@@ -60,28 +60,26 @@ namespace Tortello
             mesh.CombineMeshes(combines, false, false, false);
         }
 
-        public void Destroy(MeshFilter mF)
-        {
-#if UNITY_EDITOR
-            combines.ToList().ForEach(c => MonoBehaviour.DestroyImmediate(c.mesh));
-            MonoBehaviour.DestroyImmediate(mF.sharedMesh);
-#else
-            combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
-            MonoBehaviour.Destroy(mF.sharedMesh);
-#endif
-            combines = null;
-
-        }
 
 
 
 
         private void CreateToreMesh()
         {
-            Vector3[] points = new Vector3[settings.BoardHeight*settings.BoardWidth];
-            for(int i = 0 ; i < settings.BoardHeight ; i++){
-                for(int j = 0 ; j < settings.BoardWidth ; j++){
-                    points[i*settings.BoardWidth+j] = new Vector3();
+            //Calcul du centre de la premiere case
+            float offsetX = (-settings.sideLength * settings.BoardWidth + settings.sideLength) * 0.5f;
+            float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
+            Vector3 offset = new(offsetX, 0f, offsetZ);
+
+            //generation des mesh en fonction de l'offset
+            for (int i = 0; i < settings.BoardHeight; i++)
+            {
+                for (int j = 0; j < settings.BoardWidth; j++)
+                {
+                    Vector3 c = offset + new Vector3(j * settings.sideLength, 0f, i * settings.sideLength);
+                    Mesh mesh = new();
+                    GenMeshOfTileByIndex(mesh, i,j,3f,1f,settings.BoardHeight,settings.BoardWidth);
+                    combines[i * settings.BoardWidth + j].mesh = mesh;
                 }
             }
         }
