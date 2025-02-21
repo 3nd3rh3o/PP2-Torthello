@@ -65,6 +65,7 @@ namespace Tortello
                 case PawnModel.Default:
                     DefaultPawn pawn = parent.GetComponent<StaticPawnImporter>().SpawnDefaultPawn();
                     pawn.pos = TileIDToWP(TileID);
+                    pawn.rot = TileIDToNormal(TileID);
                     pawn.couleur = couleur;
                     pawn.StartSpawnAnim();
                     pawns[TileID] = pawn;
@@ -96,6 +97,12 @@ namespace Tortello
             int v = Mathf.FloorToInt(TileID / settings.BoardWidth);
             int u = TileID - (v * settings.BoardWidth);
             return offset + new Vector3(u * settings.sideLength, 0f, v * settings.sideLength);
+        }
+
+        protected virtual Quaternion TileIDToNormal(int TileID)
+        {
+            Vector3 PawnUpDirection = new(0, 1, 0);
+            return Quaternion.FromToRotation(new (0, 1, 0), PawnUpDirection);
         }
     }
 }

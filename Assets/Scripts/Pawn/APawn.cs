@@ -6,6 +6,7 @@ namespace Tortello
     {
         public Couleur couleur;
         public Vector3 pos;
+        public Quaternion rot;
         
         public void Start()
         {
