@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace Tortello
+namespace Torthello
 {
 
     public class ToreBoardGraph : FlatBoardGraph
     {
-        public ToreBoardGraph(FlatBoardSettings settings) : base(settings)
+        public ToreBoardGraph(Settings settings) : base(settings)
         {
             this.settings = settings;
         }

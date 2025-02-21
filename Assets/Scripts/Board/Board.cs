@@ -31,7 +31,6 @@ namespace Torthello
         private IPlayerAI aiPlayerNoir;
         private IPlayerAI aiPlayerBlanc;
 
-        public int hoveredTile;
 
         private float coolDown = 0f;
 

@@ -2,11 +2,11 @@ using JetBrains.Annotations;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-namespace Tortello
+namespace Torthello
 {
     public class ToreBoardInputManager : FlatBoardInputSystem
     {
-        public ToreBoardInputManager(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap) : base(settings, boardTransform, actionMap)
+        public ToreBoardInputManager(Settings settings, Transform boardTransform, InputActionAsset actionMap) : base(settings, boardTransform, actionMap)
         {
         }
 

@@ -2,14 +2,14 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.SocialPlatforms.GameCenter;
 
-namespace Tortello
+namespace Torthello
 {
     public class ToreBoardMeshGenerator : FlatBoardMeshGenerator
     {
 
 
 
-        public ToreBoardMeshGenerator(FlatBoardSettings settings) : base(settings)
+        public ToreBoardMeshGenerator(Settings settings) : base(settings)
         {
         }
 

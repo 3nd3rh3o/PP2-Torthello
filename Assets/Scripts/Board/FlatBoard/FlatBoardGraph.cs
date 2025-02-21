@@ -23,7 +23,7 @@ namespace Torthello
         protected int pawnBlanc;
         protected int pawnNoir;
 
-        protected FlatBoardSettings settings;
+        protected Settings settings;
 
         public FlatBoardGraph(Settings settings)
         {

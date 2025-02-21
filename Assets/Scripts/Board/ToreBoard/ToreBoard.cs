@@ -1,10 +1,9 @@
 using UnityEngine.InputSystem;
 
-namespace Tortello
+namespace Torthello
 {
     public class ToreBoard : Board
     {
-        public FlatBoardSettings settings;
         public InputActionAsset actionMap;
         new void OnEnable()
         {

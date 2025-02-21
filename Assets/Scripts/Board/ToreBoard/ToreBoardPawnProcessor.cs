@@ -1,11 +1,11 @@
 using System.ComponentModel;
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
     public class ToreBoardPawnProcessor : FlatBoardPawnProccessor
     {
-        public ToreBoardPawnProcessor(Transform parent, FlatBoardSettings settings) : base(parent, settings)
+        public ToreBoardPawnProcessor(Transform parent, Settings settings) : base(parent, settings)
         {
         }
 

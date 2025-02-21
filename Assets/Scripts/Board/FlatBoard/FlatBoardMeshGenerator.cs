@@ -6,7 +6,7 @@ namespace Torthello
     public class FlatBoardMeshGenerator : IMeshGenerator
     {
 
-        protected FlatBoardSettings settings;
+        protected Settings settings;
         protected int PreviousWidth;
 
         protected int PreviousHeight;

@@ -6,7 +6,7 @@ namespace Torthello
 {
     public class FlatBoardPawnProccessor : IPawnProccessor
     {
-        protected FlatBoardSettings settings;
+        protected Settings settings;
         protected Pawn[] pawns;
         protected Transform parent;
 
