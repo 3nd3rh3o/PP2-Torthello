@@ -91,7 +91,6 @@ namespace Torthello
                         coupPossibleNoir.Add(s);
                     }
                 }
-                Debug.Log($"Score: {pawnBlanc} - {pawnNoir}");
                 return true;
             }
             return false;

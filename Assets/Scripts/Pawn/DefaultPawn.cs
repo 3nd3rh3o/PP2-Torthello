@@ -33,7 +33,7 @@ namespace Torthello
             SpawnAnim = false;
             SpawnAnimT = 0f;
             transform.localPosition = pos;
-            transform.localRotation = rot * (couleur == Couleur.Noir ? Quaternion.Euler(180f, 0f, 0f) : Quaternion.Euler(0f, 0f, 0f));
+            transform.localRotation = couleur == Couleur.Noir ? rot * Quaternion.Euler(180f, 0f, 0f) : rot * Quaternion.Euler(0f, 0f, 0f);
         }
 
         public void EndFlipAnim()
@@ -41,7 +41,7 @@ namespace Torthello
             FlipAnim = false;
             FlipAnimT = 0f;
             transform.localPosition = pos;
-            transform.localRotation = couleur == Couleur.Noir ? rot * Quaternion.Euler(180f, 0f, 0f) : rot *  Quaternion.Euler(0f, 0f, 0f);
+            transform.localRotation = couleur == Couleur.Noir ? rot * Quaternion.Euler(180f, 0f, 0f) : rot * Quaternion.Euler(0f, 0f, 0f);
         }
 
         new void Update()
@@ -55,7 +55,7 @@ namespace Torthello
             else if (FlipAnim)
             {
                 FlipAnimT += Time.deltaTime * 0.8f;
-                transform.localRotation = rot * (couleur == Couleur.Blanc ?
+                transform.localRotation = couleur == Couleur.Blanc ?
                                             (
                                                 FlipAnimT < 0.5f ?
                                                     Quaternion.Lerp(rot * Quaternion.Euler(180f, 0f, 0f), rot * Quaternion.Euler(90f, 0f, 0f), FlipAnimT * 2f)
@@ -66,7 +66,7 @@ namespace Torthello
                                                 FlipAnimT < 0.5f ?
                                                     Quaternion.Lerp(rot * Quaternion.Euler(0f, 0f, 0f), rot * Quaternion.Euler(90f, 0f, 0f), FlipAnimT * 2f)
                                                     : Quaternion.Lerp(rot * Quaternion.Euler(90f, 0f, 0f), rot * Quaternion.Euler(180f, 0f, 0f), FlipAnimT * 2f - 1f)
-                                            ));
+                                            );
                 transform.localPosition = FlipAnimT < 0.5f ?
                                                 Vector3.Lerp(pos, pos +( rot * new Vector3(0f, 1.5f, 0f)), 1f - Mathf.Pow(1f - (FlipAnimT * 2f), 2))
                                                 : Vector3.Lerp(pos + (rot * new Vector3(0f, 1.5f, 0f)), pos, Mathf.Pow(2f*FlipAnimT - 1f, 2))
