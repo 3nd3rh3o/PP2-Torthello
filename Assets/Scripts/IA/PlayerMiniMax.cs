@@ -18,7 +18,7 @@ namespace Torthello
 
         public int GetBestMove()
         {
-            List<int> validMoves = GetValidMoves();
+            List<int> validMoves = graph.GetValidMoves(couleur);
             int bestMove = -1;
             int bestValue = int.MinValue;
 
@@ -35,7 +35,7 @@ namespace Torthello
                     bestMove = move;
                 }
             }
-
+            Debug.Log($"Meilleur coup: {bestMove} avec une valeur de {bestValue}");
             return bestMove;
         }
 
@@ -46,22 +46,26 @@ namespace Torthello
                 return Evaluate(graph, playerColor);
             }
 
-            List<int> validMoves = GetValidMoves();
+            List<int> validMoves = graph.GetValidMoves(playerColor);
             if (isMaximizingPlayer)
             {
                 int bestValue = int.MinValue;
                 foreach (int move in validMoves)
                 {
                     List<List<int>> pawnsToFlip = new List<List<int>>();
-                    graph.AddPawn(move, playerColor, pawnsToFlip);
-                    int value = Minimax(graph, depth - 1, false, playerColor, alpha, beta);
-                    graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
-                    bestValue = Math.Max(bestValue, value);
-                    alpha = Math.Max(alpha, bestValue);
-                    if (beta <= alpha)
-                    {
-                        break; // Élagage beta
+                    if(graph.AddPawn(move, playerColor, pawnsToFlip)){
+                        int value = Minimax(graph, depth - 1, false, playerColor, alpha, beta);
+                        graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
+                        bestValue = Math.Max(bestValue, value);
+                        alpha = Math.Max(alpha, bestValue);
+                        if (beta <= alpha)
+                        {
+                            break; // Élagage beta
+                        }
                     }
+                    else {
+                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {depth} pour le joueur {playerColor}");
+                    };
                 }
                 return bestValue;
             }
@@ -72,34 +76,23 @@ namespace Torthello
                 foreach (int move in validMoves)
                 {
                     List<List<int>> pawnsToFlip = new List<List<int>>();
-                    graph.AddPawn(move, opponentColor, pawnsToFlip);
-                    int value = Minimax(graph, depth - 1, true, playerColor, alpha, beta);
-                    graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
-                    bestValue = Math.Min(bestValue, value);
-                    beta = Math.Min(beta, bestValue);
-                    if (beta <= alpha)
-                    {
-                        break; // Élagage alpha
+                    if (graph.AddPawn(move, opponentColor, pawnsToFlip)){
+                        int value = Minimax(graph, depth - 1, true, playerColor, alpha, beta);
+                        graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
+                        bestValue = Math.Min(bestValue, value);
+                        beta = Math.Min(beta, bestValue);
+                        if (beta <= alpha)
+                        {
+                            break; // Élagage alpha
+                        }
                     }
+                    else {
+                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {depth} pour le joueur {opponentColor}");
+                    };
                 }
                 return bestValue;
             }
         }
-
-        private List<int> GetValidMoves()
-        {
-            List<List<int>> dummyList = new List<List<int>>();
-            List<int> validMoves = new List<int>();
-            for (int i = 0; i < graph.GetBoardSize(); i++)
-            {
-                if (graph.IsValidMove(i, couleur, dummyList))
-                {
-                    validMoves.Add(i);
-                }
-            }
-            return validMoves;
-        }
-
         private int Evaluate(IGraph graph, Couleur playerColor)
         {
             // Utiliser la méthode GetScore pour évaluer le score

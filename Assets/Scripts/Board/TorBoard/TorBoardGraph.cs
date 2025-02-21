@@ -261,6 +261,10 @@ namespace Torthello
             return new List<int> { pawnBlanc, pawnNoir };
         }
 
+        public List<int> GetValidMoves(Couleur couleur)
+        {
+            return couleur == Couleur.Blanc ? coupPossibleBlanc : coupPossibleNoir;
+        }
         public bool NoPlacementAvailable(Couleur couleur)
         {
             return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;

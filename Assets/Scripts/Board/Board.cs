@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Torthello
@@ -29,6 +30,8 @@ namespace Torthello
         public Settings settings;
         private IPlayerAI aiPlayerNoir;
         private IPlayerAI aiPlayerBlanc;
+
+        public int hoveredTile;
 
         private float coolDown = 0f;
 
@@ -79,7 +82,7 @@ namespace Torthello
             inputSystem.Update();
             Graph.UpdateGraph();
 
-            int hoveredTile = -1;
+            //int hoveredTile = -1;
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();

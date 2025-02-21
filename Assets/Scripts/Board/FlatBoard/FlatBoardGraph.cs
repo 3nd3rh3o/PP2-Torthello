@@ -32,7 +32,6 @@ namespace Torthello
             // on ajoute un pion selement si le coup est valide
             if (IsValidMove(idSommet, couleur, pionsARetournes))
             {
-
                 if(couleur == Couleur.Noir){
                     pawnNoir++;
                 }
@@ -90,16 +89,22 @@ namespace Torthello
                         coupPossibleNoir.Add(s);
                     }
                 }
+                Debug.Log($"Score: {pawnBlanc} - {pawnNoir}");
                 return true;
             }
             return false;
         }
 
-        public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip)
+        public void RemovePawn(int idSommet, List<List<int>> pawnsToFlip)
         {
-            if (graph.sommets[idSommets].couleur == Couleur.Noir ) pawnNoir--;
+            //Réduire le compteur de pions pour le couleur du pion, retiré
+            if (graph.sommets[idSommet].couleur == Couleur.Noir ) pawnNoir--; 
             else pawnBlanc--;
-            graph.sommets[idSommets].couleur = Couleur.Vide;
+
+            // Remettre la case à vide
+            graph.sommets[idSommet].couleur = Couleur.Vide;
+
+            // Remettre les pions retournés à leur couleur d'origine
             pawnsToFlip.ForEach(l => l.ForEach(p => {if (graph.sommets[p].couleur == Couleur.Noir) {
                 pawnNoir--;
                 pawnBlanc++;
@@ -111,6 +116,46 @@ namespace Torthello
                 pawnBlanc--;
                 graph.sommets[p].couleur = Couleur.Noir;
             }}));
+
+            // Repositionner l'id de la case dans les cases adjacentes vides
+            if (!videAdj.Contains(idSommet)) videAdj.Add(idSommet);
+            
+            // Retirer les cases vides qui étaient uniquement adjacentes au pion retiré
+            foreach (Arretes arrete in graph.sommets[idSommet].arretes)
+            {
+                if (arrete == null) continue;
+                int idVide = arrete.a;
+                bool isAdjacentToOther = false;
+                foreach (Arretes adjArrete in graph.sommets[idVide].arretes)
+                {
+                    if (adjArrete == null) continue;
+                    if (graph.sommets[adjArrete.a].couleur != Couleur.Vide)
+                    {
+                        isAdjacentToOther = true;
+                        break;
+                    }
+                }
+                if (!isAdjacentToOther)
+                {
+                    videAdj.Remove(idVide);
+                }
+            }
+
+            // Mettre à jour les listes de coups possibles
+            coupPossibleNoir.Clear();
+            coupPossibleBlanc.Clear();
+
+            foreach (int s in videAdj)
+            {
+                if (IsValidMove(s, Couleur.Blanc, new List<List<int>>()))
+                {
+                    coupPossibleBlanc.Add(s);
+                }
+                if (IsValidMove(s, Couleur.Noir, new List<List<int>>()))
+                {
+                    coupPossibleNoir.Add(s);
+                }
+            }
         }
 
         public void SetPawn(int idSommet, Couleur couleur)
@@ -360,6 +405,10 @@ namespace Torthello
             return settings.BoardWidth * settings.BoardHeight;
         }
 
+        public List<int> GetValidMoves(Couleur couleur)
+        {
+            return couleur == Couleur.Blanc ? new List<int>(coupPossibleBlanc) : new List<int>(coupPossibleNoir);
+        }
         public bool IsGameOver()
         {
             return NoPlacementAvailable(Couleur.Noir) && NoPlacementAvailable(Couleur.Blanc);

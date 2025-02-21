@@ -76,6 +76,13 @@ namespace Torthello
         /// <param name="pionsARetournes">La liste des pions retournés par le coup.</param>
         public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes);
         /// <summary>
+        /// Retourne les coups valides pour un joueur.
+        /// Attention, renvoie un copie des coups valides.
+        /// </summary>
+        /// <param name="couleur"></param>
+        /// <returns></returns>
+        public List<int> GetValidMoves(Couleur couleur);
+        /// <summary>
         /// Retourne la taille du plateau.
         /// </summary>
         public int GetBoardSize();
@@ -96,8 +103,8 @@ namespace Torthello
     }
     public class Arretes
     {
-        public int d;
-        public int a;
+        public int d; //Id du sommet de départ
+        public int a; //Id du sommet d'arrivée
     }
     public enum Couleur
     {
