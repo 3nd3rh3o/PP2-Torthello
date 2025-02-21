@@ -78,7 +78,9 @@ namespace Tortello
                 {
                     Vector3 c = offset + new Vector3(j * settings.sideLength, 0f, i * settings.sideLength);
                     Mesh mesh = new();
-                    GenMeshOfTileByIndex(mesh, i,j,3f,1f,settings.BoardHeight,settings.BoardWidth);
+                    float subradius = 1.5f*settings.BoardWidth/(2f*Mathf.PI);
+                    float radius = (1.5f*settings.BoardHeight/(2f*Mathf.PI))+subradius;
+                    GenMeshOfTileByIndex(mesh, i,j,radius,subradius,settings.BoardHeight,settings.BoardWidth);
                     combines[i * settings.BoardWidth + j].mesh = mesh;
                 }
             }
@@ -123,6 +125,7 @@ namespace Tortello
         highLightMesh.Clear();
         highLightMesh.vertices = points;
         highLightMesh.triangles = triangles;
+        highLightMesh.uv = new Vector2[]{new(0,0),new(0,1),new(1,1),new(1,0)};
 
         highLightMesh.RecalculateNormals();
         highLightMesh.RecalculateTangents();
