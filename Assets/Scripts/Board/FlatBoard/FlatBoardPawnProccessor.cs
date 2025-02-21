@@ -6,9 +6,9 @@ namespace Tortello
 {
     public class FlatBoardPawnProccessor : IPawnProccessor
     {
-        private FlatBoardSettings settings;
-        private Pawn[] pawns;
-        private Transform parent;
+        protected FlatBoardSettings settings;
+        protected Pawn[] pawns;
+        protected Transform parent;
 
         public FlatBoardPawnProccessor(Transform parent, FlatBoardSettings settings)
         {
@@ -88,7 +88,7 @@ namespace Tortello
 
         }
 
-        private Vector3 TileIDToWP(int TileID)
+        protected virtual Vector3 TileIDToWP(int TileID)
         {
             float offsetX = (-settings.sideLength * settings.BoardWidth + settings.sideLength) * 0.5f;
             float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;

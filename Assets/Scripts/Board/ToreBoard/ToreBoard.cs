@@ -12,7 +12,7 @@ namespace Tortello
             MaterialHandler = new FlatBoardMaterialHandler(settings);
             Graph = new ToreBoardGraph(settings);
             inputSystem = new ToreBoardInputManager(settings, transform, actionMap);
-            pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
+            pawnProccessor = new ToreBoardPawnProcessor(transform, settings);
             base.OnEnable();
         }
     }
