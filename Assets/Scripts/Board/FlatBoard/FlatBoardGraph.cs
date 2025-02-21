@@ -274,7 +274,7 @@ namespace Tortello
 
             Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
             // (sommetAVisit, dir, pionsARetournes)
-            List<Tuple<int, int, List<int>>> parcours = new List<Tuple<int, int, List<int>>>();
+            List<Tuple<int, int, List<int>>> parcours = new();
             for (int i = 0; i < 8; i++)
             {
                 if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)

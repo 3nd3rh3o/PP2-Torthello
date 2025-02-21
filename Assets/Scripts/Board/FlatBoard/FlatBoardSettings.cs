@@ -15,6 +15,4 @@ namespace Tortello
 
         public Material Tilematerial;
     }
-
 }
-
