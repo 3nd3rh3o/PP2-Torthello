@@ -6,9 +6,9 @@ namespace Torthello
 {
     public class FlatBoardPawnProccessor : IPawnProccessor
     {
-        private Settings settings;
-        private Pawn[] pawns;
-        private Transform parent;
+        protected FlatBoardSettings settings;
+        protected Pawn[] pawns;
+        protected Transform parent;
 
         public FlatBoardPawnProccessor(Transform parent, Settings settings)
         {
@@ -65,7 +65,7 @@ namespace Torthello
                 case PawnModel.Default:
                     DefaultPawn pawn = parent.GetComponent<StaticPawnImporter>().SpawnDefaultPawn();
                     pawn.pos = TileIDToWP(TileID);
-                    pawn.rot = Quaternion.identity;
+                    pawn.rot = TileIDToNormal(TileID);
                     pawn.couleur = couleur;
                     pawn.StartSpawnAnim();
                     pawns[TileID] = pawn;
@@ -89,7 +89,7 @@ namespace Torthello
 
         }
 
-        private Vector3 TileIDToWP(int TileID)
+        protected virtual Vector3 TileIDToWP(int TileID)
         {
             float offsetX = (-settings.sideLength * settings.BoardWidth + settings.sideLength) * 0.5f;
             float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
@@ -97,6 +97,12 @@ namespace Torthello
             int v = Mathf.FloorToInt(TileID / settings.BoardWidth);
             int u = TileID - (v * settings.BoardWidth);
             return offset + new Vector3(u * settings.sideLength, 0f, v * settings.sideLength);
+        }
+
+        protected virtual Quaternion TileIDToNormal(int TileID)
+        {
+            Vector3 PawnUpDirection = new(0, 1, 0);
+            return Quaternion.FromToRotation(new (0, 1, 0), PawnUpDirection);
         }
     }
 }

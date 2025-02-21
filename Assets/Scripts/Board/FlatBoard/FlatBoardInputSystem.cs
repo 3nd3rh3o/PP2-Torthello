@@ -5,15 +5,18 @@ namespace Torthello
 {
     public class FlatBoardInputSystem : IBoardInputSystem
     {
-        private readonly Settings settings;
-        private Transform boardTransform;
-        private Vector3[][] tileCorners;
-        private int previousHoveredTileID;
-        private int previousWidth;
-        private int previousHeight;
-        private float previousSideLength;
-        private InputActionAsset actionMap;
-        public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
+        protected readonly FlatBoardSettings settings;
+        protected Transform boardTransform;
+        protected Vector3[][] tileCorners;
+        protected int previousHoveredTileID;
+        protected int previousWidth;
+        protected int previousHeight;
+        protected float previousSideLength;
+        protected InputActionAsset actionMap;
+        protected float yaw = 120f;
+        protected float pitch = 0f;
+
+        public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;
@@ -26,9 +29,7 @@ namespace Torthello
             actionMap.FindActionMap("InGame", false).Disable();
         }
 
-
-
-        public int GetTileHoveredID()
+        public virtual int GetTileHoveredID()
         {
             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
             Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
@@ -45,7 +46,7 @@ namespace Torthello
             return -1;
         }
 
-        public void Init()
+        public virtual void Init()
         {
             actionMap.FindActionMap("InGame", false).Enable();
             previousWidth = settings.BoardWidth;
@@ -56,6 +57,7 @@ namespace Torthello
             float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
             Vector3 offset = new(offsetX, 0f, offsetZ);
             tileCorners = new Vector3[settings.BoardHeight * settings.BoardWidth][];
+            
             for (int v = 0; v < settings.BoardHeight; v++)
             {
                 for (int u = 0; u < settings.BoardWidth; u++)
@@ -112,7 +114,7 @@ namespace Torthello
             return;
         }
 
-        private bool IsTileHovered(int id, Vector2 mousePosition)
+        protected bool IsTileHovered(int id, Vector2 mousePosition)
         {
             Vector3[] corners = tileCorners[id];
 
@@ -146,7 +148,7 @@ namespace Torthello
                 Vector2.Dot((A - C).normalized, (mousePosition - C).normalized) >= 0;
             bool BDC = Vector2.Dot((B - D).normalized, (mousePosition - D).normalized) >= 0 &&
                 Vector2.Dot((C - D).normalized, (mousePosition - B).normalized) >= 0;
-            return BAC && ABD && DCA && BDC;
+            return BAC && ABD && DCA&& BDC;
         }
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Torthello
 {
@@ -8,20 +10,20 @@ namespace Torthello
     public class FlatBoardGraph : IGraph
     {
 
-        private Graph graph;
+        protected Graph graph;
 
-        private int prevWidth;
+        protected int prevWidth;
 
-        private int prevHeight;
+        protected int prevHeight;
 
-        private List<int> videAdj;
-        private List<int> coupPossibleNoir;
-        private List<int> coupPossibleBlanc;
+        protected List<int> videAdj;
+        protected List<int> coupPossibleNoir;
+        protected List<int> coupPossibleBlanc;
 
-        private int pawnBlanc;
-        private int pawnNoir;
+        protected int pawnBlanc;
+        protected int pawnNoir;
 
-        private Settings settings;
+        protected FlatBoardSettings settings;
 
         public FlatBoardGraph(Settings settings)
         {
@@ -138,7 +140,7 @@ namespace Torthello
         }
 
         //initialisation du Graph
-        public void InitGraph()
+        public virtual void InitGraph()
         {
             videAdj = new List<int>();
             coupPossibleNoir = new List<int>();
