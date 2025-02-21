@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Tortello
 {
@@ -23,9 +21,9 @@ namespace Tortello
         private int pawnBlanc;
         private int pawnNoir;
 
-        private FlatBoardSettings settings;
+        private Settings settings;
 
-        public FlatBoardGraph(FlatBoardSettings settings)
+        public FlatBoardGraph(Settings settings)
         {
             this.settings = settings;
         }
@@ -45,20 +43,23 @@ namespace Tortello
 
                 foreach (List<int> pions in pionsARetournes)
                 {
-                    foreach(int p in pions){
+                    foreach (int p in pions)
+                    {
                         graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
 
-                        if(couleur == Couleur.Noir){
+                        if (couleur == Couleur.Noir)
+                        {
                             pawnNoir++;
                             pawnBlanc--;
                         }
-                        else{
+                        else
+                        {
                             pawnBlanc++;
                             pawnNoir--;
                         }
                     }
                 }
-                if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+                if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
 
                 foreach (Arretes arrete in graph.sommets[idSommets].arretes)
                 {
@@ -106,6 +107,7 @@ namespace Tortello
                     videAdj.Add(arrete.a);
                 }
             }
+            
         }
 
         public void DestroyGraph()
@@ -245,6 +247,7 @@ namespace Tortello
 
         public void UpdateGraph()
         {
+            if (settings.isInGame) settings.Score = ((float)pawnBlanc) / (float)(pawnNoir + pawnBlanc);
             if (prevHeight == settings.BoardHeight && prevWidth == settings.BoardWidth)
             {
                 return;
@@ -267,7 +270,7 @@ namespace Tortello
 
             Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
             // (sommetAVisit, dir, pionsARetournes)
-            List<Tuple<int, int, List<int>>> parcours = new List<Tuple<int, int, List<int>>>();
+            List<Tuple<int, int, List<int>>> parcours = new();
             for (int i = 0; i < 8; i++)
             {
                 if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)
@@ -284,20 +287,23 @@ namespace Tortello
                     {
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
                     {
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == couleur)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == couleur)
                     {
                         CoupValide = true;
                         pionsARetournes.Add(parcours[i].Item3);
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == inverse)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == inverse)
                     {
                         parcours[i].Item3.Add(nAr.a);
-                        parcours[i] = new (nAr.a, parcours[i].Item2, parcours[i].Item3);
+                        parcours[i] = new(nAr.a, parcours[i].Item2, parcours[i].Item3);
                     }
                 }
             }
@@ -315,16 +321,196 @@ namespace Tortello
             SetPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
             pawnBlanc = 2;
             pawnNoir = 2;
+            foreach(int p in videAdj)
+            {
+                if (CoupEstValide(p, Couleur.Blanc, new())) coupPossibleBlanc.Add(p);
+                if (CoupEstValide(p, Couleur.Noir, new())) coupPossibleNoir.Add(p);
+            }
         }
 
         public List<int> GetScore()
         {
-            return new List<int>(){pawnBlanc,pawnNoir};
+            return new List<int>() { pawnBlanc, pawnNoir };
         }
 
         public bool NoPlacementAvailable(Couleur couleur)
         {
             return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
+        }
+
+        public int MINIMAX(int prof)
+        {
+            return Node.MM(graph, prof, videAdj);
+        }
+        private class Node
+        {
+            public int added;
+            public List<int> flipped;
+            public int nbBlanc;
+            public int nbNoir;
+            public List<int> coupPossible = new();
+            public List<int> videAdj;
+            public Couleur tour;
+
+            public Node[] branches;
+            
+
+            public Node(Couleur tour, List<int> videAdj)
+            {
+                this.tour = tour;
+                this.videAdj = new(videAdj);
+                flipped = new();
+                
+            }
+
+            public void PlayBranch(Graph graph, int id)
+            {
+                List<int> flip = new();
+                CoupEstValide(graph, id, tour, flip);
+                if (tour == Couleur.Blanc)
+                {
+                    nbBlanc++;
+                } else {
+                    nbNoir++;
+                }
+                added = id;
+                for (int i = 0; i < flip.Count; i++)
+                {
+                    flipped.Add(flip[i]);
+                    if (graph.sommets[flip[i]].couleur == Couleur.Blanc)
+                    {
+                        nbBlanc--;
+                        nbNoir++;
+                        graph.sommets[flip[i]].couleur = Couleur.Noir;
+                    } else {
+                        nbBlanc++;
+                        nbNoir--;
+                        graph.sommets[flip[i]].couleur = Couleur.Blanc;
+                    }
+                }
+                graph.sommets[id].couleur = tour;
+                if (videAdj.Contains(id)) videAdj.Remove(id);
+                foreach(int i in videAdj)
+                {
+                    if (CoupEstValide(graph, id, tour == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc, new()))
+                    {
+                        coupPossible.Add(i);
+                    }
+                }
+
+            }
+
+            public static int MM(Graph graph, int p, List<int> videAdj)
+            {
+                Node node = new(Couleur.Noir, videAdj);
+                videAdj.ForEach(i => {
+                    if (node.CoupEstValide(graph, i, Couleur.Noir, new())) node.coupPossible.Add(i);
+                });
+                node.branches = new Node[node.coupPossible.Count];
+                int res = node.coupPossible[0];
+                int bestD = 0;
+
+                for (int i = 0; i < node.coupPossible.Count; i++)
+                {
+                    node.branches[i] = new(Couleur.Noir, videAdj);
+                    node.branches[i].PlayBranch(graph, node.coupPossible[i]);
+                    Tuple<int, int> r = node.branches[i].Next(graph, p-1);
+                    if (bestD<r.Item2 - r.Item1)
+                    {
+                        res = node.coupPossible[i];
+                        bestD = node.branches[i].nbNoir - node.branches[i].nbBlanc;
+                    }
+                    node.branches[i].UndoThis(graph);
+                }
+                node = null;
+                return res;
+            }
+            public void UndoThis(Graph graph)
+            {
+                graph.sommets[added].couleur = Couleur.Vide;
+                flipped.ForEach(i => 
+                    graph.sommets[i].couleur = graph.sommets[i].couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc
+                );
+            }
+
+            public Tuple<int, int> Next(Graph graph, int p)
+            {
+                int SSN = nbNoir;
+                int SSB = nbBlanc;
+                branches = new Node[coupPossible.Count];
+                for (int i = 0; i < branches.Length; i++)
+                {
+                    branches[i] = new Node(tour == Couleur.Blanc? Couleur.Noir : Couleur.Blanc, videAdj);
+                    
+
+                    PlayBranch(graph, coupPossible[i]);
+                    if (p > 1)
+                    {
+                        Tuple<int, int> r = branches[i].Next(graph, p - 1);
+                        SSB += r.Item1;
+                        SSN += r.Item2;
+                    } else {
+                        SSN+=branches[i].nbNoir;
+                        SSB+=branches[i].nbBlanc;
+                    }
+                    branches[i].UndoThis(graph);
+                }
+                return new(SSB, SSN);
+            }
+            private bool CoupEstValide(Graph graph, int idSommets, Couleur couleur, List<int> pionARetournes)
+            {
+
+                bool CoupValide = false;
+                Sommets sommetActuel = graph.sommets[idSommets];
+
+                // si le sommet (case) est pas vide on ne peut pas jouer
+                if (sommetActuel.couleur != Couleur.Vide)
+                {
+                    return false;
+                }
+
+                Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
+                // (sommetAVisit, dir, pionsARetournes)
+                List<Tuple<int, int, List<int>>> parcours = new List<Tuple<int, int, List<int>>>();
+                for (int i = 0; i < 8; i++)
+                {
+                    if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)
+                    {
+                        parcours.Add(new Tuple<int, int, List<int>>(sommetActuel.arretes[i].a, i, new List<int>() { sommetActuel.arretes[i].a }));
+                    }
+                }
+                while (parcours.Count > 0)
+                {
+                    for (int i = 0; i < parcours.Count; i++)
+                    {
+                        Arretes nAr = graph.sommets[parcours[i].Item1].arretes[parcours[i].Item2];
+                        if (nAr == null)
+                        {
+                            parcours.RemoveAt(i);
+                            i--;
+                        }
+                        else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
+                        {
+                            parcours.RemoveAt(i);
+                            i--;
+                        }
+                        else if (graph.sommets[nAr.a].couleur == couleur)
+                        {
+                            CoupValide = true;
+                            pionARetournes.AddRange(parcours[i].Item3);
+                            parcours.RemoveAt(i);
+                            i--;
+                        }
+                        else if (graph.sommets[nAr.a].couleur == inverse)
+                        {
+                            parcours[i].Item3.Add(nAr.a);
+                            parcours[i] = new(nAr.a, parcours[i].Item2, parcours[i].Item3);
+                        }
+                    }
+                }
+
+                return CoupValide;
+            }
         }
     }
 }

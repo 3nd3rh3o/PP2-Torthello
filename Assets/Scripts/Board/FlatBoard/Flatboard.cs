@@ -5,7 +5,6 @@ namespace Tortello
 {
     public class FlatBoard : Board
     {
-        public FlatBoardSettings settings;
         public InputActionAsset actionMap;
         new void OnEnable()
         {
@@ -14,6 +13,7 @@ namespace Tortello
             Graph = new FlatBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
             pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
+
             base.OnEnable();
         }
     }

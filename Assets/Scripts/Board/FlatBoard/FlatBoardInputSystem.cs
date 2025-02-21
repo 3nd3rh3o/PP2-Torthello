@@ -5,7 +5,7 @@ namespace Tortello
 {
     public class FlatBoardInputSystem : IBoardInputSystem
     {
-        private readonly FlatBoardSettings settings;
+        private readonly Settings settings;
         private Transform boardTransform;
         private Vector3[][] tileCorners;
         private int previousHoveredTileID;
@@ -13,10 +13,7 @@ namespace Tortello
         private int previousHeight;
         private float previousSideLength;
         private InputActionAsset actionMap;
-        private float yaw = 120f;
-        private float pitch = 0f;
-
-        public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
+        public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;
@@ -30,12 +27,11 @@ namespace Tortello
         }
 
 
-        //TODO
+
         public int GetTileHoveredID()
         {
             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
             Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
-            // is prev tile still hovered?
             if (previousHoveredTileID != -1 && IsTileHovered(previousHoveredTileID, mousePos)) return previousHoveredTileID;
             for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
@@ -74,6 +70,8 @@ namespace Tortello
                     };
                 }
             }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
         }
 
         public bool Place()
@@ -89,14 +87,22 @@ namespace Tortello
         public void Update()
         {
             // Camera controls
-            if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
+            if (settings.isInGame && actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
-                yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime;
-                pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime;
-                pitch %= 360f;
-                yaw = Mathf.Clamp(yaw, 100f, 165f);
+                Cursor.lockState = CursorLockMode.Confined;
+                settings.yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
+                settings.pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
+                settings.pitch %= 360f;
+                settings.yaw = Mathf.Clamp(settings.yaw, 100f, 165f);
+            } else {
+                Cursor.lockState = CursorLockMode.None;
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
+            if (settings.isInGame)
+            {
+                Vector2 zoom = actionMap.FindActionMap("InGame", false).FindAction("Zoom").ReadValue<Vector2>();
+                settings.zoom = Mathf.Clamp(settings.zoom+zoom.y, 10f, 30f);
+            }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
 
             // need to rebuild board map?

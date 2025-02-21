@@ -61,6 +61,8 @@ namespace Tortello
         /// Supprime le graphe, et libère les ressources.
         /// </summary>
         public void DestroyGraph();
+
+        public int MINIMAX(int prof);
     }
     public class Graph
     {
