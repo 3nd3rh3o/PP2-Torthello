@@ -5,7 +5,7 @@ namespace Torthello
 {
     public class TorBoardInputSystem : IBoardInputSystem
     {
-        private readonly TorBoardSettings settings;
+        private readonly Settings settings;
         private Transform boardTransform;
         private Vector3[][] tileCorners;
         private int previousHoveredTileID;
@@ -17,7 +17,7 @@ namespace Torthello
         private TorBoardMeshGenerator meshGenerator;
 
         // Constructeur initialisant les paramètres de la classe
-        public TorBoardInputSystem(TorBoardSettings settings, Transform boardTransform, InputActionAsset actionMap, TorBoardMeshGenerator meshGenerator)
+        public TorBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap, TorBoardMeshGenerator meshGenerator)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;
@@ -43,9 +43,9 @@ namespace Torthello
             float closestDistance = float.MaxValue;
 
             // Parcourir toutes les cases pour trouver celle qui est survolée
-            for (int i = 0; i < settings.BoardSize * settings.BoardSize; i++)
+            for (int i = 0; i < settings.BoardWidth * settings.BoardWidth; i++)
             {
-                Vector3[] corners = meshGenerator.GetTileCorners(i % settings.BoardSize, i / settings.BoardSize);
+                Vector3[] corners = meshGenerator.GetTileCorners(i % settings.BoardWidth, i / settings.BoardWidth);
                 if (RayIntersectsTile(ray, corners, out float distance))
                 {
                     if (distance < closestDistance)
@@ -64,16 +64,16 @@ namespace Torthello
         public void Init()
         {
             actionMap.FindActionMap("InGame", false).Enable();
-            previousSize = settings.BoardSize;
-            previousSideLength = settings.SideLength;
+            previousSize = settings.BoardWidth;
+            previousSideLength = settings.sideLength;
             previousHoveredTileID = -1;
 
-            tileCorners = new Vector3[settings.BoardSize * settings.BoardSize][];
-            for (int v = 0; v < settings.BoardSize; v++)
+            tileCorners = new Vector3[settings.BoardWidth * settings.BoardWidth][];
+            for (int v = 0; v < settings.BoardWidth; v++)
             {
-                for (int u = 0; u < settings.BoardSize; u++)
+                for (int u = 0; u < settings.BoardWidth; u++)
                 {
-                    tileCorners[v * settings.BoardSize + u] = meshGenerator.GetTileCorners(u, v);
+                    tileCorners[v * settings.BoardWidth + u] = meshGenerator.GetTileCorners(u, v);
                 }
             }
         }
@@ -103,7 +103,7 @@ namespace Torthello
             Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
 
-            if (previousSize == settings.BoardSize && previousSideLength == settings.SideLength) return;
+            if (previousSize == settings.BoardWidth && previousSideLength == settings.sideLength) return;
             Destroy();
             Init();
             return;

@@ -4,14 +4,15 @@ using System.Linq;
 namespace Torthello {
     public class TorBoardMeshGenerator : IMeshGenerator
     {
-        private TorBoardSettings settings;
-        private int previousSize;
+        private Settings settings;
+        private int previousWidth;
+        private int previousHeight;
         private float previousSideLength;
         private CombineInstance[] combines;
         private Vector3[][] tileCorners;
         private Vector3[] tileCenters;
 
-        public TorBoardMeshGenerator(TorBoardSettings settings)
+        public TorBoardMeshGenerator(Settings settings)
         {
             this.settings = settings;
         }
@@ -25,11 +26,12 @@ namespace Torthello {
             }
             Mesh mesh = meshFilter.sharedMesh;
             mesh.Clear();
-            previousSize = settings.BoardSize;
-            previousSideLength = settings.SideLength;
-            combines = new CombineInstance[settings.BoardSize * settings.BoardSize];
-            tileCorners = new Vector3[settings.BoardSize * settings.BoardSize][];
-            tileCenters = new Vector3[settings.BoardSize * settings.BoardSize];
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
+            previousSideLength = settings.sideLength;
+            combines = new CombineInstance[settings.BoardHeight * settings.BoardWidth];
+            tileCorners = new Vector3[settings.BoardHeight * settings.BoardWidth][];
+            tileCenters = new Vector3[settings.BoardHeight * settings.BoardWidth];
             CreateBoardMesh();
             mesh.CombineMeshes(combines, false, false, false);
 
@@ -37,21 +39,22 @@ namespace Torthello {
             MeshRenderer meshRenderer = meshFilter.GetComponent<MeshRenderer>();
             if (meshRenderer != null)
             {
-                meshRenderer.material = settings.TileMaterial;
+                meshRenderer.material = settings.Tilematerial;
             }
         }
 
         // Met à jour le maillage du plateau si les paramètres ont changé
         public void UpdateMesh(MeshFilter meshFilter)
         {
-            if (previousSize == settings.BoardSize && previousSideLength == settings.SideLength) return;
+            if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && previousSideLength == settings.sideLength) return;
             Mesh mesh = meshFilter.sharedMesh;
             mesh.Clear();
-            previousSize = settings.BoardSize;
-            previousSideLength = settings.SideLength;
-            combines = new CombineInstance[settings.BoardSize * settings.BoardSize];
-            tileCorners = new Vector3[settings.BoardSize * settings.BoardSize][];
-            tileCenters = new Vector3[settings.BoardSize * settings.BoardSize];
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
+            previousSideLength = settings.sideLength;
+            combines = new CombineInstance[settings.BoardHeight * settings.BoardWidth];
+            tileCorners = new Vector3[settings.BoardHeight * settings.BoardWidth][];
+            tileCenters = new Vector3[settings.BoardHeight * settings.BoardWidth];
             CreateBoardMesh();
             mesh.CombineMeshes(combines, false, false, false);
         }
@@ -72,7 +75,7 @@ namespace Torthello {
         // Crée le maillage du plateau
         private void CreateBoardMesh()
         {
-            int boardSize = settings.BoardSize;
+            int boardSize = settings.BoardWidth * settings.BoardHeight;
 
             // Calculer majorRadius et minorRadius en fonction de boardSize
             float majorRadius = boardSize / (Mathf.PI);
@@ -160,13 +163,13 @@ namespace Torthello {
         // Récupère les coins d'une tuile
         public Vector3[] GetTileCorners(int u, int v)
         {
-            return tileCorners[v * settings.BoardSize + u];
+            return tileCorners[v * settings.BoardWidth + u];
         }
 
         // Récupère le centre d'une tuile
         public Vector3 GetTileCenter(int u, int v)
         {
-            return tileCenters[v * settings.BoardSize + u];
+            return tileCenters[v * settings.BoardWidth + u];
         }
     }
 }

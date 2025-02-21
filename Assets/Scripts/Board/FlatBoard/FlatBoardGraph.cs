@@ -30,7 +30,7 @@ namespace Torthello
         public bool AddPawn(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
             // on ajoute un pion selement si le coup est valide
-            if (CoupEstValide(idSommets, couleur, pionsARetournes))
+            if (IsValidMove(idSommet, couleur, pionsARetournes))
             {
 
                 if(couleur == Couleur.Noir){
@@ -39,7 +39,7 @@ namespace Torthello
                 else{
                     pawnBlanc++;
                 }
-                graph.sommets[idSommets].couleur = couleur;
+                graph.sommets[idSommet].couleur = couleur;
 
                 foreach (List<int> pions in pionsARetournes)
                 {
@@ -97,8 +97,20 @@ namespace Torthello
 
         public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip)
         {
+            if (graph.sommets[idSommets].couleur == Couleur.Noir ) pawnNoir--;
+            else pawnBlanc--;
             graph.sommets[idSommets].couleur = Couleur.Vide;
-            pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
+            pawnsToFlip.ForEach(l => l.ForEach(p => {if (graph.sommets[p].couleur == Couleur.Noir) {
+                pawnNoir--;
+                pawnBlanc++;
+                graph.sommets[p].couleur = Couleur.Blanc;
+            }
+            else
+            {
+                pawnNoir++;
+                pawnBlanc--;
+                graph.sommets[p].couleur = Couleur.Noir;
+            }}));
         }
 
         public void SetPawn(int idSommet, Couleur couleur)
@@ -265,7 +277,6 @@ namespace Torthello
         // fonction qui retourne si le coup est valide
         public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
-            Debug.Log($"Checking valid move for {couleur} at {idSommet}");
             bool CoupValide = false;
             Sommets sommetActuel = graph.sommets[idSommet];
 
@@ -314,8 +325,6 @@ namespace Torthello
                     }
                 }
             }
-
-            Debug.Log($"Move valid: {CoupValide}");
             return CoupValide;
         }
 
@@ -331,8 +340,8 @@ namespace Torthello
             pawnNoir = 2;
             foreach(int p in videAdj)
             {
-                if (CoupEstValide(p, Couleur.Blanc, new())) coupPossibleBlanc.Add(p);
-                if (CoupEstValide(p, Couleur.Noir, new())) coupPossibleNoir.Add(p);
+                if (IsValidMove(p, Couleur.Blanc, new())) coupPossibleBlanc.Add(p);
+                if (IsValidMove(p, Couleur.Noir, new())) coupPossibleNoir.Add(p);
             }
         }
 
@@ -384,7 +393,7 @@ namespace Torthello
             public void PlayBranch(Graph graph, int id)
             {
                 List<int> flip = new();
-                CoupEstValide(graph, id, tour, flip);
+                IsValidMove(graph, id, tour, flip);
                 if (tour == Couleur.Blanc)
                 {
                     nbBlanc++;
@@ -410,7 +419,7 @@ namespace Torthello
                 if (videAdj.Contains(id)) videAdj.Remove(id);
                 foreach(int i in videAdj)
                 {
-                    if (CoupEstValide(graph, id, tour == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc, new()))
+                    if (IsValidMove(graph, id, tour == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc, new()))
                     {
                         coupPossible.Add(i);
                     }
@@ -422,7 +431,7 @@ namespace Torthello
             {
                 Node node = new(Couleur.Noir, videAdj);
                 videAdj.ForEach(i => {
-                    if (node.CoupEstValide(graph, i, Couleur.Noir, new())) node.coupPossible.Add(i);
+                    if (node.IsValidMove(graph, i, Couleur.Noir, new())) node.coupPossible.Add(i);
                 });
                 node.branches = new Node[node.coupPossible.Count];
                 int res = node.coupPossible[0];
@@ -475,7 +484,7 @@ namespace Torthello
                 }
                 return new(SSB, SSN);
             }
-            private bool CoupEstValide(Graph graph, int idSommets, Couleur couleur, List<int> pionARetournes)
+            private bool IsValidMove(Graph graph, int idSommets, Couleur couleur, List<int> pionARetournes)
             {
 
                 bool CoupValide = false;

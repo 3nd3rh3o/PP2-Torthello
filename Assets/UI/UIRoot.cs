@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
-namespace Tortello
+namespace Torthello
 {
     public class UIRoot : MonoBehaviour
     {

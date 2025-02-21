@@ -1,46 +1,48 @@
 using Unity.Properties;
 using UnityEngine;
-namespace Tortello
+namespace Torthello
 {
     [CreateAssetMenu(fileName = "Settings", menuName = "Tortello/Settings")]
     public class Settings : ScriptableObject
     {
-        [Range(0f,10f)] public float sideLength = 1.5f;
+        [Range(0f, 10f)] public float sideLength = 1.5f;
         public PawnModel PawnModel = PawnModel.Default;
 
         public Material Tilematerial;
 
 
-        
+
         public bool IA = true;
         //used by UI.
         public float Score = 0f;
 
         //UI asked for game start.
         public bool startCMD = false;
-        
+
         //Game state for UI.
         public string turn = "";
 
 
 
         private float _hue = 0.45f;
-        
+
         [CreateProperty]
-        public float hue {
+        public float hue
+        {
             get => _hue;
-            set {
+            set
+            {
                 _hue = value;
                 Tilematerial.color = Color.HSVToRGB(_hue, 0.7f, 0.7f);
             }
-        } 
+        }
 
 
         [CreateProperty]
         public Color color
         {
             get => Color.HSVToRGB(hue, 0.7f, 0.7f);
-            
+
         }
 
         [Range(1, 20)]
@@ -65,6 +67,14 @@ namespace Tortello
         public float zoom = 15f;
         public bool rebuildBoardCMD;
         public int Difficulty = 2;
+
+        //NOTE : Need checks
+
+        public PlayerType PlayerNoir = PlayerType.Human;
+
+        public PlayerType PlayerBlanc = PlayerType.MiniMax;
+
+
     }
     public struct Parameter<T>
     {
