@@ -6,21 +6,21 @@ namespace Tortello
     public class FlatBoardMeshGenerator : IMeshGenerator
     {
 
-        private FlatBoardSettings settings;
-        private int PreviousWidth;
+        protected FlatBoardSettings settings;
+        protected int PreviousWidth;
 
-        private int PreviousHeight;
+        protected int PreviousHeight;
 
-        private float PreviousLength;
+        protected float PreviousLength;
 
-        private CombineInstance[] combines;
+        protected CombineInstance[] combines;
 
         public FlatBoardMeshGenerator(FlatBoardSettings settings)
         {
             this.settings = settings;
         }
 
-        public void InitMesh(MeshFilter meshFilter)
+        public virtual void InitMesh(MeshFilter meshFilter)
         {
             if (meshFilter.sharedMesh == null)
             {
