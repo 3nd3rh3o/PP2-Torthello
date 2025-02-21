@@ -62,6 +62,7 @@ namespace Tortello
         public float CamSentivity = 0.5f;
         public float pitch = 0f;
         public float yaw = 120f;
+        public float zoom = 15f;
         public bool rebuildBoardCMD;
         public int Difficulty = 2;
     }

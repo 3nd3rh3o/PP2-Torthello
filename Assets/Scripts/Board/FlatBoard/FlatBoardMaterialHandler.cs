@@ -7,7 +7,6 @@ namespace Tortello
 
         private Settings settings;
         private int previousWidth;
-
         private int previousHeight;
         private int hoveredTile = -1;
         private bool hoverChanged = false;

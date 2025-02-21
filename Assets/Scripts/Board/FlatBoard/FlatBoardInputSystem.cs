@@ -70,7 +70,7 @@ namespace Tortello
                     };
                 }
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(15f, 0f, 0f));
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
         }
 
@@ -97,7 +97,12 @@ namespace Tortello
             } else {
                 Cursor.lockState = CursorLockMode.None;
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(15f, 0f, 0f));
+            if (settings.isInGame)
+            {
+                Vector2 zoom = actionMap.FindActionMap("InGame", false).FindAction("Zoom").ReadValue<Vector2>();
+                settings.zoom = Mathf.Clamp(settings.zoom+zoom.y, 10f, 30f);
+            }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
 
             // need to rebuild board map?

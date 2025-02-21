@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Tortello
 {
@@ -373,7 +371,7 @@ namespace Tortello
                 CoupEstValide(graph, id, tour, flip);
                 if (tour == Couleur.Blanc)
                 {
-                    nbBlanc++;      
+                    nbBlanc++;
                 } else {
                     nbNoir++;
                 }
@@ -400,7 +398,7 @@ namespace Tortello
                     {
                         coupPossible.Add(i);
                     }
-                }             
+                }
 
             }
 
@@ -480,8 +478,7 @@ namespace Tortello
                 {
                     if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)
                     {
-                        parcours.Add(new Tuple<int, int, List<int>>(sommetActuel.arretes[i].a, i, new List<int>() { sommetActuel.arretes[i].a
-        }));
+                        parcours.Add(new Tuple<int, int, List<int>>(sommetActuel.arretes[i].a, i, new List<int>() { sommetActuel.arretes[i].a }));
                     }
                 }
                 while (parcours.Count > 0)
@@ -518,6 +515,4 @@ namespace Tortello
             }
         }
     }
-
-
 }
