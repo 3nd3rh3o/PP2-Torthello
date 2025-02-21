@@ -81,91 +81,93 @@ namespace Torthello
             inputSystem.Update();
             Graph.UpdateGraph();
 
-            //int hoveredTile = -1;
+            int hoveredTile = -1;
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();
-                
-                if (coolDown < 2f) coolDown += Time.deltaTime;
-                if (settings.PlayerNoir == PlayerType.Human && couleur == Couleur.Noir)
+                if (hoveredTile != -1)
                 {
-                    coolDown = 0f;
-                    if (inputSystem.Place())
+                    if (coolDown < 2f) coolDown += Time.deltaTime;
+                    if (settings.PlayerNoir == PlayerType.Human && couleur == Couleur.Noir)
                     {
-                        List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                        coolDown = 0f;
+                        if (inputSystem.Place())
                         {
-                            pawnProccessor.SpawnPawn(hoveredTile, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Blanc; // Change le joueur actif à l'IA
-                            if (Graph.NoPlacementAvailable(couleur))
+                            List<List<int>> pionRetourne = new();
+                            if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
                             {
-                                settings.turn = "FINI!";
+                                pawnProccessor.SpawnPawn(hoveredTile, couleur);
+                                pawnProccessor.FlipAnimSeq(pionRetourne);
+                                couleur = Couleur.Blanc; // Change le joueur actif à l'IA
+                                if (Graph.NoPlacementAvailable(couleur))
+                                {
+                                    settings.turn = "FINI!";
+                                }
                             }
-                        }
-                        else
-                        {
-                            MaterialHandler.FailedPlacement();
-                        }
-                    }
-                }
-                else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 2f)
-                {
-                    coolDown = 0f;
-                    int bestMove = aiPlayerNoir.GetBestMove();
-                    if (bestMove != -1)
-                    {
-                        List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(bestMove, couleur, pionRetourne))
-                        {
-                            pawnProccessor.SpawnPawn(bestMove, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Blanc; // Change le joueur actif à l'humain
-                            if (Graph.NoPlacementAvailable(couleur))
+                            else
                             {
-                                settings.turn = "FINI!";
+                                MaterialHandler.FailedPlacement();
                             }
                         }
                     }
-                }
-                else if (settings.PlayerBlanc == PlayerType.Human && couleur == Couleur.Blanc)
-                {
-                    coolDown = 0f;
-                    if (inputSystem.Place())
+                    else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 2f)
                     {
-                        List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                        coolDown = 0f;
+                        int bestMove = aiPlayerNoir.GetBestMove();
+                        if (bestMove != -1)
                         {
-                            pawnProccessor.SpawnPawn(hoveredTile, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Noir; // Change le joueur actif à l'IA
-                            settings.turn = "Noir";
-                            if (Graph.NoPlacementAvailable(couleur))
+                            List<List<int>> pionRetourne = new();
+                            if (Graph.AddPawn(bestMove, couleur, pionRetourne))
                             {
-                                settings.turn = "FINI!";
+                                pawnProccessor.SpawnPawn(bestMove, couleur);
+                                pawnProccessor.FlipAnimSeq(pionRetourne);
+                                couleur = Couleur.Blanc; // Change le joueur actif à l'humain
+                                if (Graph.NoPlacementAvailable(couleur))
+                                {
+                                    settings.turn = "FINI!";
+                                }
                             }
                         }
-                        else
+                    }
+                    else if (settings.PlayerBlanc == PlayerType.Human && couleur == Couleur.Blanc)
+                    {
+                        coolDown = 0f;
+                        if (inputSystem.Place())
                         {
-                            MaterialHandler.FailedPlacement();
+                            List<List<int>> pionRetourne = new();
+                            if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                            {
+                                pawnProccessor.SpawnPawn(hoveredTile, couleur);
+                                pawnProccessor.FlipAnimSeq(pionRetourne);
+                                couleur = Couleur.Noir; // Change le joueur actif à l'IA
+                                settings.turn = "Noir";
+                                if (Graph.NoPlacementAvailable(couleur))
+                                {
+                                    settings.turn = "FINI!";
+                                }
+                            }
+                            else
+                            {
+                                MaterialHandler.FailedPlacement();
+                            }
                         }
                     }
-                }
-                else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 2f)
-                {
-                    coolDown = 0f;
-                    int bestMove = aiPlayerBlanc.GetBestMove();
-                    if (bestMove != -1)
+                    else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 2f)
                     {
-                        List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(bestMove, couleur, pionRetourne))
+                        coolDown = 0f;
+                        int bestMove = aiPlayerBlanc.GetBestMove();
+                        if (bestMove != -1)
                         {
-                            pawnProccessor.SpawnPawn(bestMove, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Noir; // Change le joueur actif à l'humain
-                            if (Graph.NoPlacementAvailable(couleur))
+                            List<List<int>> pionRetourne = new();
+                            if (Graph.AddPawn(bestMove, couleur, pionRetourne))
                             {
-                                settings.turn = "FINI!";
+                                pawnProccessor.SpawnPawn(bestMove, couleur);
+                                pawnProccessor.FlipAnimSeq(pionRetourne);
+                                couleur = Couleur.Noir; // Change le joueur actif à l'humain
+                                if (Graph.NoPlacementAvailable(couleur))
+                                {
+                                    settings.turn = "FINI!";
+                                }
                             }
                         }
                     }
