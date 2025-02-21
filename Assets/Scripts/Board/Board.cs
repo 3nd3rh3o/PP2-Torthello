@@ -99,6 +99,7 @@ namespace Torthello
                                 pawnProccessor.SpawnPawn(hoveredTile, couleur);
                                 pawnProccessor.FlipAnimSeq(pionRetourne);
                                 couleur = Couleur.Blanc; // Change le joueur actif à l'IA
+                                settings.turn = "Blanc";
                                 if (Graph.NoPlacementAvailable(couleur))
                                 {
                                     settings.turn = "FINI!";
@@ -122,6 +123,7 @@ namespace Torthello
                                 pawnProccessor.SpawnPawn(bestMove, couleur);
                                 pawnProccessor.FlipAnimSeq(pionRetourne);
                                 couleur = Couleur.Blanc; // Change le joueur actif à l'humain
+                                settings.turn = "Blanc";
                                 if (Graph.NoPlacementAvailable(couleur))
                                 {
                                     settings.turn = "FINI!";
@@ -164,6 +166,7 @@ namespace Torthello
                                 pawnProccessor.SpawnPawn(bestMove, couleur);
                                 pawnProccessor.FlipAnimSeq(pionRetourne);
                                 couleur = Couleur.Noir; // Change le joueur actif à l'humain
+                                settings.turn = "Noir";
                                 if (Graph.NoPlacementAvailable(couleur))
                                 {
                                     settings.turn = "FINI!";
