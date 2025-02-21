@@ -29,8 +29,6 @@ namespace Tortello
             actionMap.FindActionMap("InGame", false).Disable();
         }
 
-
-        //TODO
         public virtual int GetTileHoveredID()
         {
             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
@@ -142,7 +140,7 @@ namespace Tortello
                 Vector2.Dot((A - C).normalized, (mousePosition - C).normalized) >= 0;
             bool BDC = Vector2.Dot((B - D).normalized, (mousePosition - D).normalized) >= 0 &&
                 Vector2.Dot((C - D).normalized, (mousePosition - B).normalized) >= 0;
-            return BAC && ABD && DCA && BDC;
+            return BAC && ABD && DCA&& BDC;
         }
     }
 }
