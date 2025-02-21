@@ -40,7 +40,7 @@ namespace Tortello
         public int GetTileHovered(Vector3 rayDir, Vector3 rayOrigin, Transform gameBoardTransform, int numCol, int numLine, float radius, float sectionRadius)
         {
             float dist = 1000f;
-            int2 cand = new(-1, -1);
+            int cand = -1;
             for (int i = 0; i < numCol; i++)
             {
                 for (int j = 0; j < numLine; j++)
@@ -84,14 +84,14 @@ namespace Tortello
                         float cD = (IndexToPos(i, j, numCol, numLine, radius, sectionRadius) - rayOrigin).sqrMagnitude;
                         if (cD < dist)
                         {
-                            cand = new(j, i);
+                            cand = i * settings.BoardWidth + j;
                             dist = cD;
                         }
                     }
                 }
             }
 
-            return cand.y * settings.BoardWidth + cand.x;
+            return cand;
         }
 
         public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
