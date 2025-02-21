@@ -11,12 +11,13 @@ namespace Torthello
         public Material Tilematerial;
 
 
-
+        [HideInInspector]
         public bool IA = true;
         //used by UI.
         public float Score = 0f;
 
         //UI asked for game start.
+        [HideInInspector]
         public bool startCMD = false;
 
         //Game state for UI.
@@ -51,6 +52,7 @@ namespace Torthello
         public int BoardHeight = 8;
 
         //default: true
+        
         public Parameter<bool> m_fullscreen = new(true);
 
         [CreateProperty]
@@ -59,12 +61,13 @@ namespace Torthello
             get => m_fullscreen.GetValue();
             set => m_fullscreen.SetValue(value);
         }
-
+        [HideInInspector]
         public bool isInGame = false;
         public float CamSentivity = 0.5f;
         public float pitch = 0f;
         public float yaw = 120f;
         public float zoom = 15f;
+        [HideInInspector]
         public bool rebuildBoardCMD;
         public int Difficulty = 2;
 
