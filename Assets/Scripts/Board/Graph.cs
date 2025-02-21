@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Tortello
+namespace Torthello
 {
     /// <summary>
     /// Le graphe qui contient les pions et les cases du plateau.<br/>
@@ -26,6 +26,13 @@ namespace Tortello
         /// <param name="pionsRetournes">La liste des pions retournés par le coup.</param>
         /// <returns>True si le coup est valide, false sinon.</returns>
         public bool AddPawn(int idSommet, Couleur couleur, List<List<int>> pionsRetournes);
+        /// <summary>
+        /// Retire un pion du graphe.<br/>
+        /// Ne vérifie pas si le coup est valide.
+        /// </summary>
+        /// <param name="idSommets">L'identifiant du sommet où retirer le pion.</param>
+        /// <param name="pawnsToFlip">La liste des pions retournés par le coup.</param>
+        public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip);
 
         /// <summary>
         /// Place un pion sur le graphe.<br/>
@@ -61,8 +68,21 @@ namespace Tortello
         /// Supprime le graphe, et libère les ressources.
         /// </summary>
         public void DestroyGraph();
-
-        public int MINIMAX(int prof);
+        /// <summary>
+        /// Vérifie si un coup est valide.
+        /// </summary>
+        /// <param name="idSommet">L'identifiant du sommet où placer le pion.</param>
+        /// <param name="couleur">La couleur du pion à placer.</param>
+        /// <param name="pionsARetournes">La liste des pions retournés par le coup.</param>
+        public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes);
+        /// <summary>
+        /// Retourne la taille du plateau.
+        /// </summary>
+        public int GetBoardSize();
+        /// <summary>
+        /// Retourne si la partie est terminée.
+        /// </summary>
+        bool IsGameOver(); 
     }
     public class Graph
     {

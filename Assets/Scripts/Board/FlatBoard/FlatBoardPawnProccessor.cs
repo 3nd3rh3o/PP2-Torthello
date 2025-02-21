@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
     public class FlatBoardPawnProccessor : IPawnProccessor
     {
@@ -65,6 +65,7 @@ namespace Tortello
                 case PawnModel.Default:
                     DefaultPawn pawn = parent.GetComponent<StaticPawnImporter>().SpawnDefaultPawn();
                     pawn.pos = TileIDToWP(TileID);
+                    pawn.rot = Quaternion.identity;
                     pawn.couleur = couleur;
                     pawn.StartSpawnAnim();
                     pawns[TileID] = pawn;

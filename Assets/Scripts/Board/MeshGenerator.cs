@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace Tortello
+namespace Torthello
 {
     public interface IMeshGenerator
     {

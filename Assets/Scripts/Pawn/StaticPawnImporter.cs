@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
     /// <summary>
     /// Classe qui permet de charger n'importe quels pions.

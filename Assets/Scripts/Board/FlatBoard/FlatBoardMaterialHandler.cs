@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
     public class FlatBoardMaterialHandler : IMaterialHandler
     {

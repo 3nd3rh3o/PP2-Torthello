@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
 
     public class FlatBoardGraph : IGraph
@@ -27,7 +27,7 @@ namespace Tortello
         {
             this.settings = settings;
         }
-        public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
+        public bool AddPawn(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
             // on ajoute un pion selement si le coup est valide
             if (CoupEstValide(idSommets, couleur, pionsARetournes))
@@ -59,9 +59,9 @@ namespace Tortello
                         }
                     }
                 }
-                if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+                if(videAdj.Contains(idSommet)) videAdj.Remove(idSommet);
 
-                foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+                foreach (Arretes arrete in graph.sommets[idSommet].arretes)
                 {
                     if (arrete == null) continue;
                     if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
@@ -81,11 +81,11 @@ namespace Tortello
 
                 foreach (int s in videAdj)
                 {
-                    if (couleur == Couleur.Noir && CoupEstValide(s, Couleur.Blanc, new List<List<int>>()))
+                    if (couleur == Couleur.Noir && IsValidMove(s, Couleur.Blanc, new List<List<int>>()))
                     {
                         coupPossibleBlanc.Add(s);
                     }
-                    else if (couleur == Couleur.Blanc && CoupEstValide(s, Couleur.Noir, new List<List<int>>()))
+                    else if (couleur == Couleur.Blanc && IsValidMove(s, Couleur.Noir, new List<List<int>>()))
                     {
                         coupPossibleNoir.Add(s);
                     }
@@ -95,12 +95,18 @@ namespace Tortello
             return false;
         }
 
-        public void SetPawn(int idSommets, Couleur couleur)
+        public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip)
+        {
+            graph.sommets[idSommets].couleur = Couleur.Vide;
+            pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
+        }
+
+        public void SetPawn(int idSommet, Couleur couleur)
         {
             // on initialise un pion
-            graph.sommets[idSommets].couleur = couleur;
-            if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
-            foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+            graph.sommets[idSommet].couleur = couleur;
+            if (videAdj.Contains(idSommet)) videAdj.Remove(idSommet);
+            foreach (Arretes arrete in graph.sommets[idSommet].arretes)
             {
                 if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
                 {
@@ -257,10 +263,11 @@ namespace Tortello
         }
 
         // fonction qui retourne si le coup est valide
-        public bool CoupEstValide(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
+        public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
+            Debug.Log($"Checking valid move for {couleur} at {idSommet}");
             bool CoupValide = false;
-            Sommets sommetActuel = graph.sommets[idSommets];
+            Sommets sommetActuel = graph.sommets[idSommet];
 
             // si le sommet (case) est pas vide on ne peut pas jouer
             if (sommetActuel.couleur != Couleur.Vide)
@@ -308,6 +315,7 @@ namespace Tortello
                 }
             }
 
+            Debug.Log($"Move valid: {CoupValide}");
             return CoupValide;
         }
 
@@ -336,6 +344,16 @@ namespace Tortello
         public bool NoPlacementAvailable(Couleur couleur)
         {
             return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
+        }
+
+        public int GetBoardSize()
+        {
+            return settings.BoardWidth * settings.BoardHeight;
+        }
+
+        public bool IsGameOver()
+        {
+            return NoPlacementAvailable(Couleur.Noir) && NoPlacementAvailable(Couleur.Blanc);
         }
 
         public int MINIMAX(int prof)

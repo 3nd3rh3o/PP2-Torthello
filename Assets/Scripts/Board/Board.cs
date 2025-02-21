@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Tortello
+namespace Torthello
 {
     /// <summary>
     /// Doit contenir un générateur de forme, un générateur de materiau, un gestionnaire d'input et un graphe.
@@ -27,6 +27,9 @@ namespace Tortello
         public IGraph Graph;
         public Couleur couleur = Couleur.Blanc;
         public Settings settings;
+        private IPlayerAI aiPlayerNoir;
+        private IPlayerAI aiPlayerBlanc;
+
         private float coolDown = 0f;
 
         /// <summary>
@@ -46,6 +49,8 @@ namespace Tortello
             pawnProccessor.Init();
             settings.isInGame = false;
             settings.startCMD = false;
+            aiPlayerNoir = new PlayerMiniMax(Graph, Couleur.Noir);
+            aiPlayerBlanc = new PlayerMiniMax(Graph, Couleur.Blanc);
             //StartGame();
         }
 
@@ -55,8 +60,8 @@ namespace Tortello
             settings.isInGame = true;
             Graph.RemoveAllPawns();
             pawnProccessor.RemoveAllPawns();
-            couleur = Couleur.Blanc;
-            settings.turn = "Blanc";
+            couleur = Couleur.Noir;
+            settings.turn = "Noir";
             Graph.StartGame();
             pawnProccessor.StartGame();
         }
@@ -69,59 +74,25 @@ namespace Tortello
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
-            Graph.UpdateGraph();
             inputSystem.Update();
-            if (settings.isInGame)
+            int hoveredTile = inputSystem.GetTileHoveredID();
+            MaterialHandler.SetHoveredTile(hoveredTile);
+            Debug.Log("Couleur: " + couleur);
+            Debug.Log("PlayerNoir: " + settings.PlayerNoir);
+            if (settings.PlayerNoir == PlayerType.Human && couleur == Couleur.Noir)
             {
-                if (couleur == Couleur.Noir && settings.IA)
-                {
-                    if (coolDown < 2f)
-                    {
-                        coolDown += Time.deltaTime;
-                        MaterialHandler.SetHoveredTile(inputSystem.GetTileHoveredID());
-                        MaterialHandler.UpdateMeshRenderer(mR);
-                        if ((settings.isInGame && inputSystem.Reset()) || settings.startCMD) StartGame();
-                        if (settings.rebuildBoardCMD)
-                        {
-                            settings.rebuildBoardCMD = false;
-
-                            Graph.RemoveAllPawns();
-                            pawnProccessor.RemoveAllPawns();
-
-                            MaterialHandler.SetHoveredTile(-1);
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        coolDown = 0f;
-                    }
-                }
-                int hoveredTile;
-                //NOTE : test
-                if (settings.IA&&couleur == Couleur.Noir && !Graph.NoPlacementAvailable(couleur))
-                {
-                    hoveredTile = Graph.MINIMAX(settings.Difficulty);
-                }
-                else
-                {
-                    hoveredTile = inputSystem.GetTileHoveredID();
-                }
-                MaterialHandler.SetHoveredTile(hoveredTile);
-                if ((inputSystem.Place() || (settings.IA && couleur == Couleur.Noir)) && !Graph.NoPlacementAvailable(couleur))
+                if (inputSystem.Place())
                 {
                     List<List<int>> pionRetourne = new();
                     if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
                     {
                         pawnProccessor.SpawnPawn(hoveredTile, couleur);
                         pawnProccessor.FlipAnimSeq(pionRetourne);
-                        couleur = couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
-                        settings.turn = couleur == Couleur.Noir ? (settings.IA? "BESSY-BOT": "Noir"): "Blanc";
+                        couleur = Couleur.Blanc; // Change le joueur actif à l'IA
                         if (Graph.NoPlacementAvailable(couleur))
                         {
                             List<int> score = Graph.GetScore();
                             Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
-                            settings.turn = "Fini!";
                         }
                     }
                     else
@@ -130,16 +101,65 @@ namespace Tortello
                     }
                 }
             }
-            MaterialHandler.UpdateMeshRenderer(mR);
-            if ((settings.isInGame && inputSystem.Reset()) || settings.startCMD) StartGame();
-            if (settings.rebuildBoardCMD)
+            else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir)
             {
-                settings.rebuildBoardCMD = false;
-
-                Graph.RemoveAllPawns();
-                pawnProccessor.RemoveAllPawns();
-
-                MaterialHandler.SetHoveredTile(-1);
+                int bestMove = aiPlayerNoir.GetBestMove();
+                if (bestMove != -1)
+                {
+                    List<List<int>> pionRetourne = new();
+                    if (Graph.AddPawn(bestMove, couleur, pionRetourne))
+                    {
+                        pawnProccessor.SpawnPawn(bestMove, couleur);
+                        pawnProccessor.FlipAnimSeq(pionRetourne);
+                        couleur = Couleur.Blanc; // Change le joueur actif à l'humain
+                        if (Graph.NoPlacementAvailable(couleur))
+                        {
+                            List<int> score = Graph.GetScore();
+                            Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                        }
+                    }
+                }
+            }
+            else if (settings.PlayerBlanc == PlayerType.Human && couleur == Couleur.Blanc)
+            {
+                if (inputSystem.Place())
+                {
+                    List<List<int>> pionRetourne = new();
+                    if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                    {
+                        pawnProccessor.SpawnPawn(hoveredTile, couleur);
+                        pawnProccessor.FlipAnimSeq(pionRetourne);
+                        couleur = Couleur.Noir; // Change le joueur actif à l'IA
+                        if (Graph.NoPlacementAvailable(couleur))
+                        {
+                            List<int> score = Graph.GetScore();
+                            Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                        }
+                    }
+                    else
+                    {
+                        MaterialHandler.FailedPlacement();
+                    }
+                }
+            }
+            else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc)
+            {
+                int bestMove = aiPlayerBlanc.GetBestMove();
+                if (bestMove != -1)
+                {
+                    List<List<int>> pionRetourne = new();
+                    if (Graph.AddPawn(bestMove, couleur, pionRetourne))
+                    {
+                        pawnProccessor.SpawnPawn(bestMove, couleur);
+                        pawnProccessor.FlipAnimSeq(pionRetourne);
+                        couleur = Couleur.Noir; // Change le joueur actif à l'humain
+                        if (Graph.NoPlacementAvailable(couleur))
+                        {
+                            List<int> score = Graph.GetScore();
+                            Debug.Log("Score Blanc: " + score[0] + " Score Noir: " + score[1]);
+                        }
+                    }
+                }
             }
         }
 

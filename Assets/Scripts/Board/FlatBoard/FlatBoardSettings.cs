@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-namespace Tortello
+namespace Torthello
 {
     [Obsolete]
     [CreateAssetMenu(fileName = "FlatBoardSettings", menuName = "Tortello/FlatBoardSettings")]
