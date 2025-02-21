@@ -16,7 +16,6 @@ namespace Tortello
             previousWidth = settings.BoardWidth;
             previousHeight = settings.BoardHeight;
             previousSideLength = settings.sideLength;
-            previousHoveredTileID = -1;
             
             
 
@@ -30,10 +29,12 @@ namespace Tortello
             Vector2 mousePos = Input.mousePosition;
             mousePos.x = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(0, Camera.main.pixelWidth, Input.mousePosition.x));
             mousePos.y = Mathf.Lerp(1f, -1f, Mathf.InverseLerp(0, Camera.main.pixelHeight, Input.mousePosition.y));
-
             float subradius = 1.5f * settings.BoardWidth / (2f * Mathf.PI);
             float radius = (1.5f * settings.BoardHeight / (2f * Mathf.PI)) + subradius;
-            return GetTileHovered((Camera.main.transform.position - GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, boardTransform, settings.BoardWidth, settings.BoardHeight, radius, subradius);
+            
+            previousHoveredTileID = GetTileHovered((Camera.main.transform.position - GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, boardTransform, settings.BoardWidth, settings.BoardHeight, radius, subradius);
+            
+            return previousHoveredTileID;
         }
 
         public int GetTileHovered(Vector3 rayDir, Vector3 rayOrigin, Transform gameBoardTransform, int numCol, int numLine, float radius, float sectionRadius)

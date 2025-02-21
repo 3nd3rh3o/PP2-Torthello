@@ -15,7 +15,7 @@ namespace Tortello
         /// Ce qui génère la forme du plateau.
         /// </summary>
         public IMeshGenerator MeshGenerator;
-
+        public int hoveredTile;
 
         /// <summary>
         /// Ce qui défini le renderer du plateau.
@@ -64,7 +64,7 @@ namespace Tortello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
             inputSystem.Update();
-            int hoveredTile = inputSystem.GetTileHoveredID();
+            hoveredTile = inputSystem.GetTileHoveredID();
             MaterialHandler.SetHoveredTile(hoveredTile);
             if (inputSystem.Place())
             {
