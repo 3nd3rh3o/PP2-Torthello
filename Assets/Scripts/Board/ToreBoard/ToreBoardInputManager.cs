@@ -1,7 +1,9 @@
 using JetBrains.Annotations;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.InputSystem;
-namespace Tortello{
+namespace Tortello
+{
     public class ToreBoardInputManager : FlatBoardInputSystem
     {
         public ToreBoardInputManager(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap) : base(settings, boardTransform, actionMap)
@@ -15,85 +17,126 @@ namespace Tortello{
             previousHeight = settings.BoardHeight;
             previousSideLength = settings.sideLength;
             previousHoveredTileID = -1;
-            // float offsetX = (-settings.sideLength * settings.BoardWidth + settings.sideLength) * 0.5f;
-            // float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
-            // Vector3 offset = new(offsetX, 0f, offsetZ);
-            tileCorners = new Vector3[settings.BoardHeight * settings.BoardWidth][];
-            /*
-            for (int v = 0; v < settings.BoardHeight; v++)
-            {
-                for (int u = 0; u < settings.BoardWidth; u++)
-                {
-                    Vector3 c = offset + new Vector3(u * settings.sideLength, 0f, v * settings.sideLength);
-                    tileCorners[v * settings.BoardWidth + u] = new Vector3[]
-                    {
-                        c + 0.5f * new Vector3(-settings.sideLength,0f,-settings.sideLength),
-                        c + 0.5f * new Vector3(settings.sideLength,0f,-settings.sideLength),
-                        c + 0.5f * new Vector3(-settings.sideLength,0f,settings.sideLength),
-                        c + 0.5f * new Vector3(settings.sideLength,0f,settings.sideLength)
-                    };
-                }
-            }
-            */
             
-            for (int v = 0; v < settings.BoardHeight; v++)
-            {
-                for (int u = 0; u < settings.BoardWidth; u++)
-                {
-                    float subradius = 1.5f*settings.BoardWidth/(2f*Mathf.PI);
-                    float radius = (1.5f*settings.BoardHeight/(2f*Mathf.PI))+subradius;
+            
 
-                    tileCorners[v * settings.BoardWidth + u] = GetPointsOfTile(u,v,radius,subradius,settings.BoardHeight,settings.BoardWidth);
-                }
-            }
-
-                        
         }
 
-        private Vector3[] GetPointsOfTile(int i, int j, float radius, float sectionRadius, int numberOfSection, int pointsPerSection){
-            Vector3[] points = new Vector3[4];
-
-            Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
-            Vector3 subSectionVector = new Vector3(0, 0, 1) * (sectionRadius + 0.0001f);
-
-            Vector3 section = Quaternion.Euler(new(0, (360f / numberOfSection) * i, 0)) * sectionCenter;
-            Vector3 nextSection = Quaternion.Euler(new(0, (360f / numberOfSection) * (i + 1), 0)) * sectionCenter;
-
-            Vector3 p0 = section + Quaternion.Euler(new(0, (360f / numberOfSection) * i, 0)) * Quaternion.Euler(new((360f / pointsPerSection) * j, 0, 0)) * subSectionVector;
-            Vector3 p1 = section + Quaternion.Euler(new(0, (360f / numberOfSection) * i, 0)) * Quaternion.Euler(new((360f / pointsPerSection) * (j + 1), 0, 0)) * subSectionVector;
-            Vector3 p2 = nextSection + Quaternion.Euler(new(0, (360f / numberOfSection) * (i + 1), 0)) * Quaternion.Euler(new((360f / pointsPerSection) * (j + 1), 0, 0)) * subSectionVector;
-            Vector3 p3 = nextSection + Quaternion.Euler(new(0, (360f / numberOfSection) * (i + 1), 0)) * Quaternion.Euler(new((360f / pointsPerSection) * j, 0, 0)) * subSectionVector;
-
-            int p0i = 0;
-            int p1i = 1;
-            int p2i = 2;
-            int p3i = 3;
-
-            points[p0i] = p0;
-            points[p1i] = p1;
-            points[p2i] = p2;
-            points[p3i] = p3;
-
-            return points;
-        }
+        
 
         public override int GetTileHoveredID()
         {
-             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
-            Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
-            // is prev tile still hovered?
-            if (previousHoveredTileID != -1 && IsTileHovered(previousHoveredTileID, mousePos)) return previousHoveredTileID;
-            float d = -1f;
-            for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
+            if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
+            Vector2 mousePos = Input.mousePosition;
+            mousePos.x = Mathf.Lerp(-1f, 1f, Mathf.InverseLerp(0, Camera.main.pixelWidth, Input.mousePosition.x));
+            mousePos.y = Mathf.Lerp(1f, -1f, Mathf.InverseLerp(0, Camera.main.pixelHeight, Input.mousePosition.y));
+
+            float subradius = 1.5f * settings.BoardWidth / (2f * Mathf.PI);
+            float radius = (1.5f * settings.BoardHeight / (2f * Mathf.PI)) + subradius;
+            return GetTileHovered((Camera.main.transform.position - GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, boardTransform, settings.BoardWidth, settings.BoardHeight, radius, subradius);
+        }
+
+        public int GetTileHovered(Vector3 rayDir, Vector3 rayOrigin, Transform gameBoardTransform, int numCol, int numLine, float radius, float sectionRadius)
+        {
+            float dist = 1000f;
+            int2 cand = new(-1, -1);
+            for (int i = 0; i < numCol; i++)
             {
-                if (IsTileHovered(i, mousePos) && (d == -1f || d > (Camera.main.transform.position - tileCorners[i][0]).sqrMagnitude))
+                for (int j = 0; j < numLine; j++)
                 {
-                    previousHoveredTileID = i;
-                    return i;
+                    Vector3[] tileCorners = IndexToTileCorners(i, j, numCol, numLine, radius, sectionRadius);
+                    Vector3 A = tileCorners[0];
+                    Vector3 B = tileCorners[1];
+                    Vector3 C = tileCorners[2];
+                    Vector3 D = tileCorners[3];
+                    // two triangle chk 
+                    // ABD and CDB
+                    Vector3 n = Vector3.Cross((B - A), (D - A));
+                    Vector3 nB = Vector3.Cross((D - C), (B - C));
+
+                    //if tile parralel to ray, no intersection.
+                    if (Vector3.Dot(n, rayDir) == 0 || Vector3.Dot(nB, rayDir) == 0) continue;
+
+                    float det0 = Vector3.Dot(n, A);
+                    float det1 = Vector3.Dot(nB, C);
+
+                    float t0 = (det0 - Vector3.Dot(n, rayOrigin)) / Vector3.Dot(n, rayDir);
+                    float t1 = (det1 - Vector3.Dot(nB, rayOrigin)) / Vector3.Dot(nB, rayDir);
+
+                    Vector3 Q0 = rayOrigin + rayDir * t0;
+                    Vector3 Q1 = rayOrigin + rayDir * t1;
+
+                    if (// triangle 1
+                        (
+                            Vector3.Dot(Vector3.Cross(B - A, Q0 - A), n) >= 0
+                            && Vector3.Dot(Vector3.Cross(D - B, Q0 - B), n) >= 0
+                            && Vector3.Dot(Vector3.Cross(A - D, Q0 - D), n) >= 0
+                        )
+                    || // triangle 2
+                        (
+                            Vector3.Dot(Vector3.Cross(D - C, Q1 - C), nB) >= 0
+                            && Vector3.Dot(Vector3.Cross(B - D, Q1 - D), nB) >= 0
+                            && Vector3.Dot(Vector3.Cross(C - B, Q1 - B), nB) >= 0
+                        )
+                    )
+                    {
+                        float cD = (IndexToPos(i, j, numCol, numLine, radius, sectionRadius) - rayOrigin).sqrMagnitude;
+                        if (cD < dist)
+                        {
+                            cand = new(j, i);
+                            dist = cD;
+                        }
+                    }
                 }
             }
-            previousHoveredTileID = -1;
-            return -1;
+
+            return cand.y * settings.BoardWidth + cand.x;
         }
+
+        public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
+        {
+            Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
+            Vector3 subSectionVector = new Vector3(0, 0, 1) * sectionRadius;
+            Vector3 section = Quaternion.Euler(new(0, 360f / maxI * i, 0)) * sectionCenter;
+            Vector3 nextSection = Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * sectionCenter;
+            Vector3 p0 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+            Vector3 p1 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p2 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p3 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+            return new Vector3[] { p0, p1, p2, p3 };
+        }
+
+        public static Vector3[] GetNearClipPlaneWS(Camera camera)
+        {
+            Vector3 t = camera.transform.up * (Mathf.Tan((camera.fieldOfView / 2f) * Mathf.Deg2Rad) * camera.transform.forward * camera.nearClipPlane).magnitude;
+            Vector3 l = -camera.transform.right * ((t.magnitude * 2f) * camera.aspect) / 2f;
+            Vector3 p = camera.transform.position + (camera.transform.forward * (camera.nearClipPlane));
+            return new Vector3[] { p + l + t, p - l + t, p - l - t, p + l - t };
+        }
+
+        public static Vector3 GetLerpedPosOnClipPlaneWS(Camera camera, Vector2 cursorPos)
+        {
+            Vector3[] WSCorners = GetNearClipPlaneWS(camera);
+            Vector3 a = WSCorners[0];
+            Vector3 b = WSCorners[1];
+            Vector3 d = WSCorners[3];
+            Vector3 x = a + (((b - a) * (cursorPos.x + 1)) / 2f);
+            Vector3 y = (((d - a) * (cursorPos.y + 1)) / 2f);
+            return (x + y);
+        }
+
+        public static Vector3 IndexToPos(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
+        {
+            Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
+            Vector3 subSectionVector = new Vector3(0, 0, 1) * sectionRadius;
+            Vector3 section = Quaternion.Euler(new(0, 360f / maxI * i, 0)) * sectionCenter;
+            Vector3 nextSection = Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * sectionCenter;
+            Vector3 p0 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+            Vector3 p1 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p2 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p3 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+            return (p0 + p1 + p2 + p3) * 0.25f;
+        }
+
     }
 }

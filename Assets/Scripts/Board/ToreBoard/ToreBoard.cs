@@ -11,7 +11,7 @@ namespace Tortello
             MeshGenerator = new ToreBoardMeshGenerator(settings);
             MaterialHandler = new FlatBoardMaterialHandler(settings);
             Graph = new ToreBoardGraph(settings);
-            inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
+            inputSystem = new ToreBoardInputManager(settings, transform, actionMap);
             pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
             base.OnEnable();
         }
