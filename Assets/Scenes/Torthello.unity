@@ -367,10 +367,11 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1889094629}
-  - component: {fileID: 1889094628}
-  - component: {fileID: 1889094627}
-  - component: {fileID: 1889094630}
+  - component: {fileID: 1487057720}
+  - component: {fileID: 1487057722}
+  - component: {fileID: 1487057721}
+  - component: {fileID: 1487057725}
+  - component: {fileID: 1487057724}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera

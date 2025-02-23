@@ -6,12 +6,12 @@ namespace Torthello
 {
     public class TorBoardPawnProcessor : IPawnProccessor
     {
-        private TorBoardSettings settings;
+        private Settings settings;
         private Pawn[] pawns;
         private Transform parent;
         private TorBoardMeshGenerator meshGenerator;
 
-        public TorBoardPawnProcessor(Transform parent, TorBoardSettings settings, TorBoardMeshGenerator meshGenerator)
+        public TorBoardPawnProcessor(Transform parent, Settings settings, TorBoardMeshGenerator meshGenerator)
         {
             this.settings = settings;
             this.parent = parent;
@@ -20,17 +20,17 @@ namespace Torthello
 
         public void Init()
         {
-            pawns = new Pawn[settings.BoardSize * settings.BoardSize];
+            pawns = new Pawn[settings.BoardWidth * settings.BoardWidth];
         }
 
         public void StartGame()
         {
-            int u = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
-            int v = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
-            SpawnPawn(u + v * settings.BoardSize, Couleur.Noir);
-            SpawnPawn(u + 1 + v * settings.BoardSize, Couleur.Blanc);
-            SpawnPawn(u + (v + 1) * settings.BoardSize, Couleur.Blanc);
-            SpawnPawn(u + 1 + (v + 1) * settings.BoardSize, Couleur.Noir);
+            int u = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
+            int v = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
+            SpawnPawn(u + v * settings.BoardWidth, Couleur.Noir);
+            SpawnPawn(u + 1 + v * settings.BoardWidth, Couleur.Blanc);
+            SpawnPawn(u + (v + 1) * settings.BoardWidth, Couleur.Blanc);
+            SpawnPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
         }
 
         public void SpawnPawn(int TileID, Couleur couleur)
@@ -119,15 +119,15 @@ namespace Torthello
 
         private Vector3 TileIDToWP(int TileID)
         {
-            int u = TileID % settings.BoardSize;
-            int v = TileID / settings.BoardSize;
+            int u = TileID % settings.BoardWidth;
+            int v = TileID / settings.BoardWidth;
             return meshGenerator.GetTileCenter(u, v);
         }
 
         private Quaternion GetTileRotation(int TileID)
         {
-            int u = TileID % settings.BoardSize;
-            int v = TileID / settings.BoardSize;
+            int u = TileID % settings.BoardWidth;
+            int v = TileID / settings.BoardWidth;
             Vector3[] corners = meshGenerator.GetTileCorners(u, v);
 
             if (corners.Length < 3)

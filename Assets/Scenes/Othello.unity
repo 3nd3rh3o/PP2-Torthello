@@ -477,7 +477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   couleur: 1
-  settings: {fileID: 11400000, guid: 00369571f844ef341bf9c1160c3bd8ff, type: 2}
+  settings: {fileID: 11400000, guid: bf87f3f9f4f5995488da73d20981c615, type: 2}
   actionMap: {fileID: -944628639613478452, guid: b510c0bc50020334a9db12bed2cbf5fc, type: 3}
 --- !u!114 &1487057724
 MonoBehaviour:
@@ -495,6 +495,78 @@ MonoBehaviour:
   DefaultPawnMats:
   - {fileID: -1580535799172915004, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
   - {fileID: -8848810374240701247, guid: 643d3b00d62ec7b4a96ea648914c1fd3, type: 3}
+--- !u!1 &1592987738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1592987740}
+  - component: {fileID: 1592987739}
+  - component: {fileID: 1592987741}
+  m_Layer: 5
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1592987739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592987738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 19102, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_PanelSettings: {fileID: 11400000, guid: 5f4af32e66b951a49ae7de2ac30a5785, type: 2}
+  m_ParentUI: {fileID: 0}
+  sourceAsset: {fileID: 9197481963319205126, guid: a2aa12bdb7c336b4aac75827cd520c43, type: 3}
+  m_SortingOrder: 0
+  m_WorldSpaceSizeMode: 1
+  m_WorldSpaceWidth: 1920
+  m_WorldSpaceHeight: 1080
+--- !u!4 &1592987740
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592987738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1592987741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592987738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f24de84350462cf46b1871ef1159f956, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actions: {fileID: -944628639613478452, guid: b510c0bc50020334a9db12bed2cbf5fc, type: 3}
+  MenuAsset: {fileID: 9197481963319205126, guid: 358db55cb1dff9f40b410048bf22f178, type: 3}
+  MenuOptionAsset: {fileID: 9197481963319205126, guid: 7ae2415bed009f549ab5d8c678c5cc8a, type: 3}
+  NewGameAsset: {fileID: 9197481963319205126, guid: 837c4755064060f4b97317f22452ad4b, type: 3}
+  InGameOverlayAsset: {fileID: 9197481963319205126, guid: dea3cbab22d66b24cad0fdea9257af06, type: 3}
+  PauseUIAsset: {fileID: 9197481963319205126, guid: a8df6b1d701c0f44d9cf59ff9870e545, type: 3}
+  PauseOptionUIAsset: {fileID: 9197481963319205126, guid: e63916d5c68382645ac13c2f46658392, type: 3}
+  settings: {fileID: 11400000, guid: bf87f3f9f4f5995488da73d20981c615, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -502,3 +574,4 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 1487057720}
+  - {fileID: 1592987740}

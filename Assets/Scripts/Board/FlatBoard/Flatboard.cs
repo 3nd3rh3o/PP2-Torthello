@@ -1,11 +1,9 @@
-using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Torthello
 {
     public class FlatBoard : Board
     {
-        public FlatBoardSettings settings;
         public InputActionAsset actionMap;
         new void OnEnable()
         {
@@ -14,6 +12,7 @@ namespace Torthello
             Graph = new FlatBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
             pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
+
             base.OnEnable();
         }
     }

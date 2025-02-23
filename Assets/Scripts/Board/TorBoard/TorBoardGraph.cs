@@ -6,10 +6,17 @@ namespace Torthello
     public class TorBoardGraph : IGraph
     {
         private Graph graph;
-        private TorBoardSettings settings;
+        private Settings settings;
+
+        private List<int> videAdj;
+        private List<int> coupPossibleNoir;
+        private List<int> coupPossibleBlanc;
+
+        private int pawnBlanc;
+        private int pawnNoir;
 
         private int previousSize;
-        public TorBoardGraph(TorBoardSettings settings)
+        public TorBoardGraph(Settings settings)
         {
             this.settings = settings;
         }
@@ -17,26 +24,25 @@ namespace Torthello
         //initialisation du Graph
         public void InitGraph()
         {
+            videAdj = new List<int>();
+            coupPossibleNoir = new List<int>();
+            coupPossibleBlanc = new List<int>();
+
             graph = new Graph
             {
-                sommets = new Sommets[settings.BoardSize * settings.BoardSize]
+                sommets = new Sommets[settings.BoardWidth * settings.BoardHeight]
             };
 
-            for (int v = 0; v < settings.BoardSize; v++)
+            for (int v = 0; v < settings.BoardHeight; v++)
             {
-                for (int u = 0; u < settings.BoardSize; u++)
+                for (int u = 0; u < settings.BoardWidth; u++)
                 {
-                    graph.sommets[v * settings.BoardSize + u] = new Sommets
+                    graph.sommets[v * settings.BoardWidth + u] = new Sommets
                     {
                         arretes = new Arretes[4],
                         couleur = Couleur.Vide
                     };
 
-                    // Define edges for toroidal connectivity
-                    graph.sommets[v * settings.BoardSize + u].arretes[0] = new Arretes { d = v * settings.BoardSize + u, a = v * settings.BoardSize + (u + 1) % settings.BoardSize }; // right
-                    graph.sommets[v * settings.BoardSize + u].arretes[1] = new Arretes { d = v * settings.BoardSize + u, a = v * settings.BoardSize + (u - 1 + settings.BoardSize) % settings.BoardSize }; // left
-                    graph.sommets[v * settings.BoardSize + u].arretes[2] = new Arretes { d = v * settings.BoardSize + u, a = ((v + 1) % settings.BoardSize) * settings.BoardSize + u }; // bottom
-                    graph.sommets[v * settings.BoardSize + u].arretes[3] = new Arretes { d = v * settings.BoardSize + u, a = ((v - 1 + settings.BoardSize) % settings.BoardSize) * settings.BoardSize + u }; // top
                 }
             }
         }
@@ -44,31 +50,114 @@ namespace Torthello
         //ajout d'un pion et retournement des pions adverses
         public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pawnsToFlip)
         {
+            if (couleur == Couleur.Noir)
+            {
+                pawnNoir++;
+            }
+            else
+            {
+                pawnBlanc++;
+            }
+
             // si un coup est valide, on ajoute un pion et on retourne les pions adverses
             if (IsValidMove(idSommets, couleur, pawnsToFlip))
             {
                 graph.sommets[idSommets].couleur = couleur;
-                pawnsToFlip.ForEach(l => l.ForEach(p => graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir));
-                
-                //Peut être pas necessaire: peux-t-on encore se bloquer avec les diagonales ?
-                // Vérifier si l'adversaire a des coups valides
-                Couleur adversaire = (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir;
-                if (NoPlacementAvailable(adversaire))
+                foreach (List<int> pions in pawnsToFlip)
                 {
-                    Debug.Log($"Le joueur {adversaire} ne peut pas jouer. Son tour est passé.");
+                    foreach (int p in pions)
+                    {
+                        graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                        if (couleur == Couleur.Noir)
+                        {
+                            pawnNoir++;
+                            pawnBlanc--;
+                        }
+                        else
+                        {
+                            pawnBlanc++;
+                            pawnNoir--;
+                        }
+                    }
+                }
+
+                if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+
+                foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+                {
+                    if (arrete == null) continue;
+                    if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
+                    {
+                        videAdj.Add(arrete.a);
+                    }
+                }
+
+                if (couleur == Couleur.Noir)
+                {
+                    coupPossibleBlanc = new List<int>();
+                }
+                else
+                {
+                    coupPossibleNoir = new List<int>();
+                }
+
+                foreach (int s in videAdj)
+                {
+                    if (couleur == Couleur.Noir && IsValidMove(s, Couleur.Blanc, new List<List<int>>()))
+                    {
+                        coupPossibleBlanc.Add(s);
+                    }
+                    else if (couleur == Couleur.Blanc && IsValidMove(s, Couleur.Noir, new List<List<int>>()))
+                    {
+                        coupPossibleNoir.Add(s);
+                    }
                 }
                 return true;
             }
             return false;
         }
 
+        public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip)
+        {
+            graph.sommets[idSommets].couleur = Couleur.Vide;
+            foreach (List<int> pions in pawnsToFlip)
+            {
+                foreach (int p in pions)
+                {
+                    graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
+                    if (graph.sommets[p].couleur == Couleur.Noir)
+                    {
+                        pawnNoir++;
+                        pawnBlanc--;
+                    }
+                    else
+                    {
+                        pawnBlanc++;
+                        pawnNoir--;
+                    }
+                }
+            }
+        }
+
         public void SetPawn(int idSommets, Couleur couleur)
         {
             graph.sommets[idSommets].couleur = couleur;
+            if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+            foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+            {
+                if (arrete == null) continue;
+                if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
+                {
+                    videAdj.Add(arrete.a);
+                }
+            }
         }
 
         public void DestroyGraph()
         {
+            videAdj = null;
+            coupPossibleNoir = null;
+            coupPossibleBlanc = null;
             graph = null;
         }
 
@@ -82,7 +171,7 @@ namespace Torthello
 
         public void UpdateGraph()
         {
-            if(previousSize == settings.BoardSize){
+            if(previousSize == settings.BoardWidth){
                     return;
                 }
                 DestroyGraph();
@@ -113,17 +202,17 @@ namespace Torthello
                         continue;
                     
                     List<int> currentFlip = new List<int>();
-                    int x = idSommet % settings.BoardSize;
-                    int y = idSommet / settings.BoardSize;
-                    int nx = (x + dx + settings.BoardSize) % settings.BoardSize;
-                    int ny = (y + dy + settings.BoardSize) % settings.BoardSize;
+                    int x = idSommet % settings.BoardWidth;
+                    int y = idSommet / settings.BoardWidth;
+                    int nx = (x + dx + settings.BoardWidth) % settings.BoardWidth;
+                    int ny = (y + dy + settings.BoardWidth) % settings.BoardWidth;
                     bool hasOpponentBetween = false;
                     int steps = 0;
                     
                     // Parcourir dans la direction jusqu'à la taille maximale du plateau
-                    while (steps < settings.BoardSize)
+                    while (steps < settings.BoardWidth)
                     {
-                        int neighborIndex = ny * settings.BoardSize + nx;
+                        int neighborIndex = ny * settings.BoardWidth + nx;
                         
                         // Si la case est vide, arrêter la recherche dans cette direction
                         if (graph.sommets[neighborIndex].couleur == Couleur.Vide)
@@ -147,8 +236,8 @@ namespace Torthello
                         }
                         
                         // Passer à la case suivante dans la direction
-                        nx = (nx + dx + settings.BoardSize) % settings.BoardSize;
-                        ny = (ny + dy + settings.BoardSize) % settings.BoardSize;
+                        nx = (nx + dx + settings.BoardWidth) % settings.BoardWidth;
+                        ny = (ny + dy + settings.BoardWidth) % settings.BoardWidth;
                         steps++;
                     }
                 }
@@ -157,31 +246,38 @@ namespace Torthello
         }
         public void StartGame()
         {
-            int u = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
-            int v = Mathf.FloorToInt(settings.BoardSize / 2f) - 1;
-            SetPawn(u + v * settings.BoardSize, Couleur.Noir);
-            SetPawn(u + 1 + v * settings.BoardSize, Couleur.Blanc);
-            SetPawn(u + (v + 1) * settings.BoardSize, Couleur.Blanc);
-            SetPawn(u + 1 + (v + 1) * settings.BoardSize, Couleur.Noir);
+            int u = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
+            int v = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
+            SetPawn(u + v * settings.BoardWidth, Couleur.Noir);
+            SetPawn(u + 1 + v * settings.BoardWidth, Couleur.Blanc);
+            SetPawn(u + (v + 1) * settings.BoardWidth, Couleur.Blanc);
+            SetPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
+            pawnBlanc = 2;
+            pawnNoir = 2;
         }
 
         public List<int> GetScore()
         {
-            // Implementation for getting the score
-            return new List<int>();
+            return new List<int> { pawnBlanc, pawnNoir };
         }
 
+        public List<int> GetValidMoves(Couleur couleur)
+        {
+            return couleur == Couleur.Blanc ? coupPossibleBlanc : coupPossibleNoir;
+        }
         public bool NoPlacementAvailable(Couleur couleur)
         {
-            List<List<int>> dummyList = new List<List<int>>();
-            for (int i = 0; i < graph.sommets.Length; i++)
-            {
-            if (IsValidMove(i, couleur, dummyList))
-            {
-                return false;
-            }
-            }
-            return true;
+            return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
+        }
+
+        public int GetBoardSize()
+        {
+            return settings.BoardWidth*settings.BoardWidth;
+        }
+        // HORRIBLE METHODE: A REFAIRE, il faut calculer le nombre de pions de chaque couleur à chaque pion posé / retiré comme dans flatboard. PLACEHOLDER
+        public bool IsGameOver()
+        {
+            return NoPlacementAvailable(Couleur.Noir) && NoPlacementAvailable(Couleur.Blanc);
         }
     }
 }

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bec92b9f11df85468e9bdea46d866f2, type: 3}
+  m_Name: Settings
+  m_EditorClassIdentifier: 
+  sideLength: 1.5
+  PawnModel: 0
+  Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
+  IA: 0
+  Score: 0
+  startCMD: 0
+  turn: Noir
+  BoardWidth: 8
+  BoardHeight: 8
+  isInGame: 1
+  CamSentivity: 0.5
+  pitch: 0
+  yaw: 120
+  zoom: 13
+  rebuildBoardCMD: 0
+  Difficulty: 2
+  PlayerNoir: 0
+  PlayerBlanc: 1

@@ -15,6 +15,15 @@
                     "initialStateCheck": true
                 },
                 {
+                    "name": "Esc",
+                    "type": "Button",
+                    "id": "27bd3e3f-a787-4537-9345-cd3ae1e54d8a",
+                    "expectedControlType": "",
+                    "processors": "Clamp(max=1)",
+                    "interactions": "Press(behavior=1)",
+                    "initialStateCheck": true
+                },
+                {
                     "name": "Reset",
                     "type": "Button",
                     "id": "f6203b8c-91f5-4dae-97d9-3ddf68026f10",
@@ -31,6 +40,15 @@
                     "processors": "",
                     "interactions": "Press",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "b4c3fe03-cfc8-4676-97c0-b3e77efb79d5",
+                    "expectedControlType": "Delta",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -42,6 +60,17 @@
                     "processors": "Clamp(max=1)",
                     "groups": "",
                     "action": "Place",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "fe5fdfd2-522f-494e-ba5c-cc38c28d655c",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "Press(behavior=1)",
+                    "processors": "Clamp(max=1)",
+                    "groups": "",
+                    "action": "Esc",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -64,6 +93,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "View",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce990145-c4db-45e5-9048-7f91dd830c70",
+                    "path": "<Mouse>/scroll",
+                    "interactions": "",
+                    "processors": "NormalizeVector2",
+                    "groups": "",
+                    "action": "Zoom",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

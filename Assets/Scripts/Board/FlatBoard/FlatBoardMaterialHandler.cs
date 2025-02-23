@@ -5,18 +5,17 @@ namespace Torthello
     public class FlatBoardMaterialHandler : IMaterialHandler
     {
 
-        private FlatBoardSettings settings;
+        private Settings settings;
         private int previousWidth;
-
         private int previousHeight;
-        private int hoveredTile;
+        private int hoveredTile = -1;
         private bool hoverChanged = false;
         private bool failedPlacementAnim = false;
         private int failedPlacementTileID = -1;
         private float animTime = 0f;
 
         private Material[] mats;
-        public FlatBoardMaterialHandler(FlatBoardSettings settings)
+        public FlatBoardMaterialHandler(Settings settings)
         {
             this.settings = settings;
         }

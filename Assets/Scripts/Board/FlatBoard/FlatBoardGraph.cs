@@ -10,56 +10,59 @@ namespace Torthello
     public class FlatBoardGraph : IGraph
     {
 
-        private Graph graph;
+        protected Graph graph;
 
-        private int prevWidth;
+        protected int prevWidth;
 
-        private int prevHeight;
+        protected int prevHeight;
 
-        private List<int> videAdj;
-        private List<int> coupPossibleNoir;
-        private List<int> coupPossibleBlanc;
+        protected List<int> videAdj;
+        protected List<int> coupPossibleNoir;
+        protected List<int> coupPossibleBlanc;
 
-        private int pawnBlanc;
-        private int pawnNoir;
+        protected int pawnBlanc;
+        protected int pawnNoir;
 
-        private FlatBoardSettings settings;
+        protected Settings settings;
 
-        public FlatBoardGraph(FlatBoardSettings settings)
+        public FlatBoardGraph(Settings settings)
         {
             this.settings = settings;
         }
-        public bool AddPawn(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
+        public bool AddPawn(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
-            if(couleur == Couleur.Noir){
-                pawnNoir++;
-            }
-            else{
-                pawnBlanc++;
-            }
             // on ajoute un pion selement si le coup est valide
-            if (CoupEstValide(idSommets, couleur, pionsARetournes))
+            if (IsValidMove(idSommet, couleur, pionsARetournes))
             {
-                graph.sommets[idSommets].couleur = couleur;
+                if(couleur == Couleur.Noir){
+                    pawnNoir++;
+                }
+                else{
+                    pawnBlanc++;
+                }
+                graph.sommets[idSommet].couleur = couleur;
 
                 foreach (List<int> pions in pionsARetournes)
                 {
-                    foreach(int p in pions){
+                    foreach (int p in pions)
+                    {
                         graph.sommets[p].couleur = graph.sommets[p].couleur == Couleur.Noir ? Couleur.Blanc : Couleur.Noir;
 
-                        if(couleur == Couleur.Noir){
+                        if (couleur == Couleur.Noir)
+                        {
                             pawnNoir++;
                             pawnBlanc--;
                         }
-                        else{
+                        else
+                        {
                             pawnBlanc++;
                             pawnNoir--;
                         }
                     }
                 }
-                if(videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
+                if(videAdj.Contains(idSommet)) videAdj.Remove(idSommet);
 
-                foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+                foreach (Arretes arrete in graph.sommets[idSommet].arretes)
                 {
                     if (arrete == null) continue;
                     if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
@@ -79,11 +82,11 @@ namespace Torthello
 
                 foreach (int s in videAdj)
                 {
-                    if (couleur == Couleur.Noir && CoupEstValide(s, Couleur.Blanc, new List<List<int>>()))
+                    if (couleur == Couleur.Noir && IsValidMove(s, Couleur.Blanc, new List<List<int>>()))
                     {
                         coupPossibleBlanc.Add(s);
                     }
-                    else if (couleur == Couleur.Blanc && CoupEstValide(s, Couleur.Noir, new List<List<int>>()))
+                    else if (couleur == Couleur.Blanc && IsValidMove(s, Couleur.Noir, new List<List<int>>()))
                     {
                         coupPossibleNoir.Add(s);
                     }
@@ -93,18 +96,82 @@ namespace Torthello
             return false;
         }
 
-        public void SetPawn(int idSommets, Couleur couleur)
+        public void RemovePawn(int idSommet, List<List<int>> pawnsToFlip)
+        {
+            //Réduire le compteur de pions pour le couleur du pion, retiré
+            if (graph.sommets[idSommet].couleur == Couleur.Noir ) pawnNoir--; 
+            else pawnBlanc--;
+
+            // Remettre la case à vide
+            graph.sommets[idSommet].couleur = Couleur.Vide;
+
+            // Remettre les pions retournés à leur couleur d'origine
+            pawnsToFlip.ForEach(l => l.ForEach(p => {if (graph.sommets[p].couleur == Couleur.Noir) {
+                pawnNoir--;
+                pawnBlanc++;
+                graph.sommets[p].couleur = Couleur.Blanc;
+            }
+            else
+            {
+                pawnNoir++;
+                pawnBlanc--;
+                graph.sommets[p].couleur = Couleur.Noir;
+            }}));
+
+            // Repositionner l'id de la case dans les cases adjacentes vides
+            if (!videAdj.Contains(idSommet)) videAdj.Add(idSommet);
+            
+            // Retirer les cases vides qui étaient uniquement adjacentes au pion retiré
+            foreach (Arretes arrete in graph.sommets[idSommet].arretes)
+            {
+                if (arrete == null) continue;
+                int idVide = arrete.a;
+                bool isAdjacentToOther = false;
+                foreach (Arretes adjArrete in graph.sommets[idVide].arretes)
+                {
+                    if (adjArrete == null) continue;
+                    if (graph.sommets[adjArrete.a].couleur != Couleur.Vide)
+                    {
+                        isAdjacentToOther = true;
+                        break;
+                    }
+                }
+                if (!isAdjacentToOther)
+                {
+                    videAdj.Remove(idVide);
+                }
+            }
+
+            // Mettre à jour les listes de coups possibles
+            coupPossibleNoir.Clear();
+            coupPossibleBlanc.Clear();
+
+            foreach (int s in videAdj)
+            {
+                if (IsValidMove(s, Couleur.Blanc, new List<List<int>>()))
+                {
+                    coupPossibleBlanc.Add(s);
+                }
+                if (IsValidMove(s, Couleur.Noir, new List<List<int>>()))
+                {
+                    coupPossibleNoir.Add(s);
+                }
+            }
+        }
+
+        public void SetPawn(int idSommet, Couleur couleur)
         {
             // on initialise un pion
-            graph.sommets[idSommets].couleur = couleur;
-            if (videAdj.Contains(idSommets)) videAdj.Remove(idSommets);
-            foreach (Arretes arrete in graph.sommets[idSommets].arretes)
+            graph.sommets[idSommet].couleur = couleur;
+            if (videAdj.Contains(idSommet)) videAdj.Remove(idSommet);
+            foreach (Arretes arrete in graph.sommets[idSommet].arretes)
             {
                 if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
                 {
                     videAdj.Add(arrete.a);
                 }
             }
+            
         }
 
         public void DestroyGraph()
@@ -117,7 +184,7 @@ namespace Torthello
         }
 
         //initialisation du Graph
-        public void InitGraph()
+        public virtual void InitGraph()
         {
             videAdj = new List<int>();
             coupPossibleNoir = new List<int>();
@@ -244,6 +311,7 @@ namespace Torthello
 
         public void UpdateGraph()
         {
+            if (settings.isInGame) settings.Score = ((float)pawnBlanc) / (float)(pawnNoir + pawnBlanc);
             if (prevHeight == settings.BoardHeight && prevWidth == settings.BoardWidth)
             {
                 return;
@@ -253,10 +321,10 @@ namespace Torthello
         }
 
         // fonction qui retourne si le coup est valide
-        public bool CoupEstValide(int idSommets, Couleur couleur, List<List<int>> pionsARetournes)
+        public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
             bool CoupValide = false;
-            Sommets sommetActuel = graph.sommets[idSommets];
+            Sommets sommetActuel = graph.sommets[idSommet];
 
             // si le sommet (case) est pas vide on ne peut pas jouer
             if (sommetActuel.couleur != Couleur.Vide)
@@ -266,7 +334,7 @@ namespace Torthello
 
             Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
             // (sommetAVisit, dir, pionsARetournes)
-            List<Tuple<int, int, List<int>>> parcours = new List<Tuple<int, int, List<int>>>();
+            List<Tuple<int, int, List<int>>> parcours = new();
             for (int i = 0; i < 8; i++)
             {
                 if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)
@@ -283,24 +351,26 @@ namespace Torthello
                     {
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
                     {
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == couleur)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == couleur)
                     {
                         CoupValide = true;
                         pionsARetournes.Add(parcours[i].Item3);
                         parcours.RemoveAt(i);
                         i--;
-                    } else if (graph.sommets[nAr.a].couleur == inverse)
+                    }
+                    else if (graph.sommets[nAr.a].couleur == inverse)
                     {
                         parcours[i].Item3.Add(nAr.a);
-                        parcours[i] = new (nAr.a, parcours[i].Item2, parcours[i].Item3);
+                        parcours[i] = new(nAr.a, parcours[i].Item2, parcours[i].Item3);
                     }
                 }
             }
-
             return CoupValide;
         }
 
@@ -314,16 +384,210 @@ namespace Torthello
             SetPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
             pawnBlanc = 2;
             pawnNoir = 2;
+            foreach(int p in videAdj)
+            {
+                if (IsValidMove(p, Couleur.Blanc, new())) coupPossibleBlanc.Add(p);
+                if (IsValidMove(p, Couleur.Noir, new())) coupPossibleNoir.Add(p);
+            }
         }
 
         public List<int> GetScore()
         {
-            return new List<int>(){pawnBlanc,pawnNoir};
+            return new List<int>() { pawnBlanc, pawnNoir };
         }
 
         public bool NoPlacementAvailable(Couleur couleur)
         {
             return couleur == Couleur.Blanc ? coupPossibleBlanc.Count == 0 : coupPossibleNoir.Count == 0;
+        }
+
+        public int GetBoardSize()
+        {
+            return settings.BoardWidth * settings.BoardHeight;
+        }
+
+        public List<int> GetValidMoves(Couleur couleur)
+        {
+            return couleur == Couleur.Blanc ? new List<int>(coupPossibleBlanc) : new List<int>(coupPossibleNoir);
+        }
+        public bool IsGameOver()
+        {
+            return NoPlacementAvailable(Couleur.Noir) && NoPlacementAvailable(Couleur.Blanc);
+        }
+
+        public int MINIMAX(int prof)
+        {
+            return Node.MM(graph, prof, videAdj);
+        }
+        private class Node
+        {
+            public int added;
+            public List<int> flipped;
+            public int nbBlanc;
+            public int nbNoir;
+            public List<int> coupPossible = new();
+            public List<int> videAdj;
+            public Couleur tour;
+
+            public Node[] branches;
+            
+
+            public Node(Couleur tour, List<int> videAdj)
+            {
+                this.tour = tour;
+                this.videAdj = new(videAdj);
+                flipped = new();
+                
+            }
+
+            public void PlayBranch(Graph graph, int id)
+            {
+                List<int> flip = new();
+                IsValidMove(graph, id, tour, flip);
+                if (tour == Couleur.Blanc)
+                {
+                    nbBlanc++;
+                } else {
+                    nbNoir++;
+                }
+                added = id;
+                for (int i = 0; i < flip.Count; i++)
+                {
+                    flipped.Add(flip[i]);
+                    if (graph.sommets[flip[i]].couleur == Couleur.Blanc)
+                    {
+                        nbBlanc--;
+                        nbNoir++;
+                        graph.sommets[flip[i]].couleur = Couleur.Noir;
+                    } else {
+                        nbBlanc++;
+                        nbNoir--;
+                        graph.sommets[flip[i]].couleur = Couleur.Blanc;
+                    }
+                }
+                graph.sommets[id].couleur = tour;
+                if (videAdj.Contains(id)) videAdj.Remove(id);
+                foreach(int i in videAdj)
+                {
+                    if (IsValidMove(graph, id, tour == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc, new()))
+                    {
+                        coupPossible.Add(i);
+                    }
+                }
+
+            }
+
+            public static int MM(Graph graph, int p, List<int> videAdj)
+            {
+                Node node = new(Couleur.Noir, videAdj);
+                videAdj.ForEach(i => {
+                    if (node.IsValidMove(graph, i, Couleur.Noir, new())) node.coupPossible.Add(i);
+                });
+                node.branches = new Node[node.coupPossible.Count];
+                int res = node.coupPossible[0];
+                int bestD = 0;
+
+                for (int i = 0; i < node.coupPossible.Count; i++)
+                {
+                    node.branches[i] = new(Couleur.Noir, videAdj);
+                    node.branches[i].PlayBranch(graph, node.coupPossible[i]);
+                    Tuple<int, int> r = node.branches[i].Next(graph, p-1);
+                    if (bestD<r.Item2 - r.Item1)
+                    {
+                        res = node.coupPossible[i];
+                        bestD = node.branches[i].nbNoir - node.branches[i].nbBlanc;
+                    }
+                    node.branches[i].UndoThis(graph);
+                }
+                node = null;
+                return res;
+            }
+            public void UndoThis(Graph graph)
+            {
+                graph.sommets[added].couleur = Couleur.Vide;
+                flipped.ForEach(i => 
+                    graph.sommets[i].couleur = graph.sommets[i].couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc
+                );
+            }
+
+            public Tuple<int, int> Next(Graph graph, int p)
+            {
+                int SSN = nbNoir;
+                int SSB = nbBlanc;
+                branches = new Node[coupPossible.Count];
+                for (int i = 0; i < branches.Length; i++)
+                {
+                    branches[i] = new Node(tour == Couleur.Blanc? Couleur.Noir : Couleur.Blanc, videAdj);
+                    
+
+                    PlayBranch(graph, coupPossible[i]);
+                    if (p > 1)
+                    {
+                        Tuple<int, int> r = branches[i].Next(graph, p - 1);
+                        SSB += r.Item1;
+                        SSN += r.Item2;
+                    } else {
+                        SSN+=branches[i].nbNoir;
+                        SSB+=branches[i].nbBlanc;
+                    }
+                    branches[i].UndoThis(graph);
+                }
+                return new(SSB, SSN);
+            }
+            private bool IsValidMove(Graph graph, int idSommets, Couleur couleur, List<int> pionARetournes)
+            {
+
+                bool CoupValide = false;
+                Sommets sommetActuel = graph.sommets[idSommets];
+
+                // si le sommet (case) est pas vide on ne peut pas jouer
+                if (sommetActuel.couleur != Couleur.Vide)
+                {
+                    return false;
+                }
+
+                Couleur inverse = couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
+                // (sommetAVisit, dir, pionsARetournes)
+                List<Tuple<int, int, List<int>>> parcours = new List<Tuple<int, int, List<int>>>();
+                for (int i = 0; i < 8; i++)
+                {
+                    if (sommetActuel.arretes[i] != null && graph.sommets[sommetActuel.arretes[i].a].couleur == inverse)
+                    {
+                        parcours.Add(new Tuple<int, int, List<int>>(sommetActuel.arretes[i].a, i, new List<int>() { sommetActuel.arretes[i].a }));
+                    }
+                }
+                while (parcours.Count > 0)
+                {
+                    for (int i = 0; i < parcours.Count; i++)
+                    {
+                        Arretes nAr = graph.sommets[parcours[i].Item1].arretes[parcours[i].Item2];
+                        if (nAr == null)
+                        {
+                            parcours.RemoveAt(i);
+                            i--;
+                        }
+                        else if (graph.sommets[nAr.a].couleur == Couleur.Vide)
+                        {
+                            parcours.RemoveAt(i);
+                            i--;
+                        }
+                        else if (graph.sommets[nAr.a].couleur == couleur)
+                        {
+                            CoupValide = true;
+                            pionARetournes.AddRange(parcours[i].Item3);
+                            parcours.RemoveAt(i);
+                            i--;
+                        }
+                        else if (graph.sommets[nAr.a].couleur == inverse)
+                        {
+                            parcours[i].Item3.Add(nAr.a);
+                            parcours[i] = new(nAr.a, parcours[i].Item2, parcours[i].Item3);
+                        }
+                    }
+                }
+
+                return CoupValide;
+            }
         }
     }
 }

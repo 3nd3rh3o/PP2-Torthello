@@ -5,18 +5,18 @@ namespace Torthello
 {
     public class FlatBoardInputSystem : IBoardInputSystem
     {
-        private readonly FlatBoardSettings settings;
-        private Transform boardTransform;
-        private Vector3[][] tileCorners;
-        private int previousHoveredTileID;
-        private int previousWidth;
-        private int previousHeight;
-        private float previousSideLength;
-        private InputActionAsset actionMap;
-        private float yaw = 120f;
-        private float pitch = 0f;
+        protected readonly Settings settings;
+        protected Transform boardTransform;
+        protected Vector3[][] tileCorners;
+        protected int previousHoveredTileID;
+        protected int previousWidth;
+        protected int previousHeight;
+        protected float previousSideLength;
+        protected InputActionAsset actionMap;
+        protected float yaw = 120f;
+        protected float pitch = 0f;
 
-        public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
+        public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
             this.boardTransform = boardTransform;
@@ -29,13 +29,10 @@ namespace Torthello
             actionMap.FindActionMap("InGame", false).Disable();
         }
 
-
-        //TODO
-        public int GetTileHoveredID()
+        public virtual int GetTileHoveredID()
         {
             if (!Camera.main || !Application.isFocused) return previousHoveredTileID;
             Vector2 mousePos = new(Input.mousePosition.x / Screen.width, Input.mousePosition.y / Screen.height);
-            // is prev tile still hovered?
             if (previousHoveredTileID != -1 && IsTileHovered(previousHoveredTileID, mousePos)) return previousHoveredTileID;
             for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
@@ -49,7 +46,7 @@ namespace Torthello
             return -1;
         }
 
-        public void Init()
+        public virtual void Init()
         {
             actionMap.FindActionMap("InGame", false).Enable();
             previousWidth = settings.BoardWidth;
@@ -60,6 +57,7 @@ namespace Torthello
             float offsetZ = (-settings.sideLength * settings.BoardHeight + settings.sideLength) * 0.5f;
             Vector3 offset = new(offsetX, 0f, offsetZ);
             tileCorners = new Vector3[settings.BoardHeight * settings.BoardWidth][];
+            
             for (int v = 0; v < settings.BoardHeight; v++)
             {
                 for (int u = 0; u < settings.BoardWidth; u++)
@@ -74,6 +72,8 @@ namespace Torthello
                     };
                 }
             }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
         }
 
         public bool Place()
@@ -89,14 +89,22 @@ namespace Torthello
         public void Update()
         {
             // Camera controls
-            if (actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
+            if (settings.isInGame && actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
-                yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime;
-                pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime;
-                pitch %= 360f;
-                yaw = Mathf.Clamp(yaw, 100f, 165f);
+                Cursor.lockState = CursorLockMode.Confined;
+                settings.yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
+                settings.pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
+                settings.pitch %= 360f;
+                settings.yaw = Mathf.Clamp(settings.yaw, 100f, 165f);
+            } else {
+                Cursor.lockState = CursorLockMode.None;
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, pitch, 0f) * Quaternion.Euler(0f, 0f, -yaw) * (boardTransform.position - new Vector3(10f, 0f, 0f));
+            if (settings.isInGame)
+            {
+                Vector2 zoom = actionMap.FindActionMap("InGame", false).FindAction("Zoom").ReadValue<Vector2>();
+                settings.zoom = Mathf.Clamp(settings.zoom+zoom.y, 10f, 30f);
+            }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
 
             // need to rebuild board map?
@@ -106,7 +114,7 @@ namespace Torthello
             return;
         }
 
-        private bool IsTileHovered(int id, Vector2 mousePosition)
+        protected bool IsTileHovered(int id, Vector2 mousePosition)
         {
             Vector3[] corners = tileCorners[id];
 
@@ -140,7 +148,7 @@ namespace Torthello
                 Vector2.Dot((A - C).normalized, (mousePosition - C).normalized) >= 0;
             bool BDC = Vector2.Dot((B - D).normalized, (mousePosition - D).normalized) >= 0 &&
                 Vector2.Dot((C - D).normalized, (mousePosition - B).normalized) >= 0;
-            return BAC && ABD && DCA && BDC;
+            return BAC && ABD && DCA&& BDC;
         }
     }
 }
