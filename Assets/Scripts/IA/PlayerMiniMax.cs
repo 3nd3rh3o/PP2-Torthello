@@ -4,16 +4,20 @@ using UnityEngine;
 
 namespace Torthello
 {
+    /// <summary>
+    /// implémentation d'un joueur IA qui utilise l'algorithme minimax pour choisir le meilleur coup.
+    /// </summary>
     public class PlayerMiniMax : IPlayerAI
     {
         private IGraph graph;
         private Couleur couleur;
-        private int maxDepth = 2; // Profondeur maximale de l'exploration
+        private int maxDepth = 5; // Profondeur maximale de l'exploration
 
-        public PlayerMiniMax(IGraph graph, Couleur couleur)
+        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 5)
         {
             this.graph = graph;
             this.couleur = couleur;
+            this.maxDepth = maxDepth;
         }
 
         public int GetBestMove()
