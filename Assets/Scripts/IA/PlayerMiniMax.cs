@@ -45,11 +45,10 @@ namespace Torthello
             {
                 return Evaluate(graph, playerColor);
             }
-
-            List<int> validMoves = graph.GetValidMoves(playerColor);
             if (isMaximizingPlayer)
             {
                 int bestValue = int.MinValue;
+                List<int> validMoves = graph.GetValidMoves(playerColor);
                 foreach (int move in validMoves)
                 {
                     List<List<int>> pawnsToFlip = new List<List<int>>();
@@ -73,6 +72,7 @@ namespace Torthello
             {
                 int bestValue = int.MaxValue;
                 Couleur opponentColor = (playerColor == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir;
+                List<int> validMoves = graph.GetValidMoves(opponentColor);
                 foreach (int move in validMoves)
                 {
                     List<List<int>> pawnsToFlip = new List<List<int>>();
