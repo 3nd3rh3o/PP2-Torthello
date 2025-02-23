@@ -95,7 +95,7 @@ namespace Torthello
                 settings.yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
                 settings.pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
                 settings.pitch %= 360f;
-                settings.yaw = Mathf.Clamp(settings.yaw, 100f, 165f);
+                settings.yaw = Mathf.Clamp(settings.yaw, 100f, 240f); // yaw et pitch sont inversés
             } else {
                 Cursor.lockState = CursorLockMode.None;
             }
