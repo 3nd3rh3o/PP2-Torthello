@@ -29,21 +29,21 @@ namespace Torthello
             float subradius = 1.5f * settings.BoardWidth / (2f * Mathf.PI);
             float radius = (1.5f * settings.BoardHeight / (2f * Mathf.PI)) + subradius;
 
-            return IndexToPos(i,j,settings.BoardWidth,settings.BoardHeight,radius,subradius);
+            return IndexToPos(i,j,settings.BoardHeight,settings.BoardWidth,radius,subradius);
         }
 
         protected override Quaternion TileIDToNormal(int TileID)
         {
-            float subradius = 1.5f * settings.BoardWidth / (2f * Mathf.PI);
-            float radius = (1.5f * settings.BoardHeight / (2f * Mathf.PI)) + subradius;
+            float subradius = 1.5f * settings.BoardHeight / (2f * Mathf.PI);
+            float radius = (1.5f * settings.BoardWidth / (2f * Mathf.PI)) + subradius;
 
             int i = Mathf.FloorToInt(TileID/settings.BoardWidth);
 
             Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
             Vector3 subSectionVector = new Vector3(0, 0, 1) * subradius;
 
-            Vector3 section = Quaternion.Euler(new(0, 360f / settings.BoardWidth * i, 0)) * sectionCenter;
-            Vector3 nextSection = Quaternion.Euler(new(0, 360f / settings.BoardWidth * (i + 1), 0)) * sectionCenter;
+            Vector3 section = Quaternion.Euler(new(0, 360f / settings.BoardHeight * i, 0)) * sectionCenter;
+            Vector3 nextSection = Quaternion.Euler(new(0, 360f / settings.BoardHeight * (i + 1), 0)) * sectionCenter;
 
             Vector3 sectionMed = (section + nextSection)*0.5f;
             Vector3 PawnUpDirection = (TileIDToWP(TileID)-sectionMed).normalized;

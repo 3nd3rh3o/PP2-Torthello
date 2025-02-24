@@ -13,8 +13,6 @@ namespace Torthello
         protected int previousHeight;
         protected float previousSideLength;
         protected InputActionAsset actionMap;
-        protected float pitch = 120f;
-        protected float yaw = 0f;
         public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
@@ -71,6 +69,7 @@ namespace Torthello
                     };
                 }
             }
+
             Camera.main.transform.position = Quaternion.Euler(0f, settings.yaw, 0f) * Quaternion.Euler(0f, 0f, -settings.pitch) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
         }
@@ -91,10 +90,10 @@ namespace Torthello
             if (settings.isInGame && actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
             {
                 Cursor.lockState = CursorLockMode.Confined;
-                settings.yaw += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
-                settings.pitch += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
-                settings.pitch %= 360f;
-                settings.yaw = Mathf.Clamp(settings.yaw, 100f, 240f); // yaw et pitch sont inversés
+                settings.pitch += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
+                settings.yaw += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
+                settings.yaw %= 360f;
+                settings.pitch = Mathf.Clamp(settings.pitch, 100f, 240f); // yaw et pitch sont inversés
             } else {
                 Cursor.lockState = CursorLockMode.None;
             }
@@ -103,7 +102,7 @@ namespace Torthello
                 Vector2 zoom = actionMap.FindActionMap("InGame", false).FindAction("Zoom").ReadValue<Vector2>();
                 settings.zoom = Mathf.Clamp(settings.zoom+zoom.y, 10f, 30f);
             }
-            Camera.main.transform.position = Quaternion.Euler(0f, settings.pitch, 0f) * Quaternion.Euler(0f, 0f, -settings.yaw) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.yaw, 0f) * Quaternion.Euler(0f, 0f, -settings.pitch) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
             Camera.main.transform.LookAt(boardTransform.position);
 
             // need to rebuild board map?

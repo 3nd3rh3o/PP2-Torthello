@@ -16,9 +16,10 @@ namespace Torthello
             previousWidth = settings.BoardWidth;
             previousHeight = settings.BoardHeight;
             previousSideLength = settings.sideLength;
-            
-            
 
+
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.yaw, 0f) * Quaternion.Euler(0f, 0f, -settings.pitch) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
         }
 
         
@@ -32,7 +33,7 @@ namespace Torthello
             float subradius = 1.5f * settings.BoardWidth / (2f * Mathf.PI);
             float radius = (1.5f * settings.BoardHeight / (2f * Mathf.PI)) + subradius;
             
-            previousHoveredTileID = GetTileHovered((Camera.main.transform.position - GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, boardTransform, settings.BoardWidth, settings.BoardHeight, radius, subradius);
+            previousHoveredTileID = GetTileHovered((Camera.main.transform.position - GetLerpedPosOnClipPlaneWS(Camera.main, mousePos)), Camera.main.transform.position, boardTransform, settings.BoardHeight, settings.BoardWidth, radius, subradius);
             
             return previousHoveredTileID;
         }

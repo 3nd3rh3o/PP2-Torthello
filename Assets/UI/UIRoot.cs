@@ -7,6 +7,7 @@ namespace Torthello
 {
     public class UIRoot : MonoBehaviour
     {
+        public GameObject gameBoard;
         public InputActionAsset actions;
         public VisualTreeAsset MenuAsset;
         private TemplateContainer menu;
@@ -109,6 +110,12 @@ namespace Torthello
             if (settings.m_fullscreen.GetValue()) Screen.fullScreen = true;
             else Screen.fullScreen = false;
             settings.m_fullscreen.Proccesed();
+            // creation gameboard
+            gameBoard.SetActive(false);
+            FlatBoard f = gameBoard.AddComponent<FlatBoard>();
+            f.settings = settings;
+            f.actionMap = actions;
+            gameBoard.SetActive(true);
 
             actions.FindActionMap("InGame", false).Enable();
 
@@ -125,6 +132,44 @@ namespace Torthello
                 settings.m_fullscreen.Proccesed();
             }
 
+
+            if (settings.type.IsDirty())
+            {
+                gameBoard.SetActive(false);
+                if (settings.type.GetValue() == BoardType.TwoD)
+                {
+                    try
+                    {
+#if UNITY_EDITOR
+                        DestroyImmediate(gameBoard.GetComponent<ToreBoard>());
+#else
+                        Destroy(gameBoard.GetComponent<ToreBoard>());
+#endif
+                    }
+                    catch { }
+                    FlatBoard f = gameBoard.AddComponent<FlatBoard>();
+                    f.settings = settings;
+                    f.actionMap = actions;
+                }
+                else
+                {
+                    try
+                    {
+#if UNITY_EDITOR
+                        DestroyImmediate(gameBoard.GetComponent<FlatBoard>());
+#else
+                        Destroy(gameBoard.GetComponent<FlatBoard>());
+#endif
+                    }
+                    catch { }
+                    ToreBoard t = gameBoard.AddComponent<ToreBoard>();
+                    t.settings = settings;
+                    t.actionMap = actions;
+                }
+                settings.type.Proccesed();
+                gameBoard.SetActive(true);
+
+            }
 
 
             if (actions.FindActionMap("InGame", false).FindAction("Esc").WasReleasedThisFrame())

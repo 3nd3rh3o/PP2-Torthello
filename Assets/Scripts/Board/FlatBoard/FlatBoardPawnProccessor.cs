@@ -9,11 +9,15 @@ namespace Torthello
         protected Settings settings;
         protected Pawn[] pawns;
         protected Transform parent;
+        protected int previousWidth;
+        protected int previousHeight;
 
         public FlatBoardPawnProccessor(Transform parent, Settings settings)
         {
             this.settings = settings;
             this.parent = parent;
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
         }
 
         public void Destroy()
@@ -86,7 +90,11 @@ namespace Torthello
 
         public void Update()
         {
-
+            if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth) return;
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
+            Destroy();
+            Init();
         }
 
         protected virtual Vector3 TileIDToWP(int TileID)

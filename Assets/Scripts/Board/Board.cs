@@ -43,7 +43,11 @@ namespace Torthello
 
             // on init les composants
             MeshRenderer mR = GetComponent<MeshRenderer>();
+            if (mR == null) mR = gameObject.AddComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
+            if (mF == null) mF = gameObject.AddComponent<MeshFilter>();
+            settings.yaw = 0f;
+            settings.pitch = 120f;
             MeshGenerator.InitMesh(mF);
             MaterialHandler.InitMeshRenderer(mR);
             inputSystem.Init();
@@ -181,6 +185,8 @@ namespace Torthello
             {
                 settings.isInGame = false;
                 settings.rebuildBoardCMD = false;
+                settings.yaw = 0f;
+                settings.pitch = 120f;
                 coolDown = 0f;
                 Graph.RemoveAllPawns();
                 pawnProccessor.RemoveAllPawns();

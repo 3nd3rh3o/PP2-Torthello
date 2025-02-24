@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace Torthello
 {
@@ -22,8 +21,8 @@ namespace Torthello
         public int GetBestMove()
         {
             //placeholder le temps de l'implémentation
-            return graph.GetValidMoves(couleur)[0];
-            //return Node.MM(graph, prof, videAdj);
+            
+            return Node.MM(graph.GetGraph(), prof, graph.GetVideAdj());
         }
         private class Node
         {

@@ -1,3 +1,4 @@
+using System;
 using Unity.Properties;
 using UnityEngine;
 namespace Torthello
@@ -38,7 +39,6 @@ namespace Torthello
             }
         }
 
-
         [CreateProperty]
         public Color color
         {
@@ -46,9 +46,19 @@ namespace Torthello
 
         }
 
-        [Range(1, 20)]
+        [HideInInspector]
+        public Parameter<BoardType> type = new(Torthello.BoardType.TwoD);
+
+        [CreateProperty]
+        public int BoardType
+        {
+            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, _ => throw new NotImplementedException() };
+            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, _ => throw new NotImplementedException() });
+        }
+
+        [Range(4, 20)]
         public int BoardWidth = 8;
-        [Range(1, 20)]
+        [Range(4, 20)]
         public int BoardHeight = 8;
 
         //default: true
@@ -98,6 +108,18 @@ namespace Torthello
         }
         public readonly bool IsDirty() => dirty;
         public void Proccesed() => dirty = false;
+    }
+
+    public enum PlayerType
+    {
+        Human,
+        MiniMax
+    }
+
+    public enum BoardType
+    {
+        TwoD,
+        Torus
     }
 }
 

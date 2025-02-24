@@ -119,7 +119,7 @@ namespace Torthello
             }}));
 
             // Repositionner l'id de la case dans les cases adjacentes vides
-            if (!videAdj.Contains(idSommet)) videAdj.Add(idSommet);
+            videAdj.Add(idSommet);
             
             // Retirer les cases vides qui étaient uniquement adjacentes au pion retiré
             foreach (Arretes arrete in graph.sommets[idSommet].arretes)
@@ -130,7 +130,7 @@ namespace Torthello
                 foreach (Arretes adjArrete in graph.sommets[idVide].arretes)
                 {
                     if (adjArrete == null) continue;
-                    if (graph.sommets[adjArrete.a].couleur != Couleur.Vide)
+                    if (graph.sommets[idVide].couleur != Couleur.Vide)
                     {
                         isAdjacentToOther = true;
                         break;
@@ -413,6 +413,16 @@ namespace Torthello
         public bool IsGameOver()
         {
             return NoPlacementAvailable(Couleur.Noir) && NoPlacementAvailable(Couleur.Blanc);
+        }
+
+        public List<int> GetVideAdj()
+        {
+            return new(videAdj);
+        }
+
+        public Graph GetGraph()
+        {
+            return graph;
         }
     }
 }

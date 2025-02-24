@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 namespace Torthello
 {
@@ -89,7 +90,15 @@ namespace Torthello
         /// <summary>
         /// Retourne si la partie est terminée.
         /// </summary>
-        bool IsGameOver(); 
+        bool IsGameOver();
+
+
+        /// <summary>
+        /// Retourne la liste d'adjacence.
+        /// </summary> 
+        public List<int> GetVideAdj();
+
+        public Graph GetGraph();
     }
     public class Graph
     {
