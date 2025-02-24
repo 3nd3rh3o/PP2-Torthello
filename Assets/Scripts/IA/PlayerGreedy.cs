@@ -21,6 +21,7 @@ namespace Torthello
 
         public async Awaitable<int> GetBestMove()
         {
+            await Awaitable.BackgroundThreadAsync();
             List<int> validMoves = graph.GetValidMoves(couleur);
             int bestMove = -1;
             int bestValue = int.MinValue;

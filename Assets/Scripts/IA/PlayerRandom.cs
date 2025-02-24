@@ -17,6 +17,7 @@ namespace Torthello
 
         public async Awaitable<int> GetBestMove()
         {
+            await Awaitable.BackgroundThreadAsync();
             //retourner un coup aléatoire valide
             List<int> validMoves = graph.GetValidMoves(couleur);
             System.Random random = new System.Random();

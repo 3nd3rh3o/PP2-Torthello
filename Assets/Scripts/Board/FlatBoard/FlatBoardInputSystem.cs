@@ -84,7 +84,7 @@ namespace Torthello
             return actionMap.FindActionMap("InGame", false).FindAction("Reset", false).WasReleasedThisFrame();
         }
 
-        public void Update()
+        public virtual void Update()
         {
             // Camera controls
             if (settings.isInGame && actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
@@ -93,7 +93,7 @@ namespace Torthello
                 settings.pitch += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
                 settings.yaw += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
                 settings.yaw %= 360f;
-                settings.pitch = Mathf.Clamp(settings.pitch, 100f, 240f); // yaw et pitch sont inversés
+                settings.pitch = Mathf.Clamp(settings.pitch, 100f, 165f);
             } else {
                 Cursor.lockState = CursorLockMode.None;
             }

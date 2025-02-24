@@ -23,8 +23,8 @@ namespace Torthello
         public async Awaitable<int> GetBestMove()
         {
             //placeholder le temps de l'implémentation
-            
-            return await Node.MM(graph.GetGraph(), prof, graph.GetVideAdj());
+            await Awaitable.BackgroundThreadAsync();
+            return Node.MM(graph.GetGraph(), prof, graph.GetVideAdj());
         }
         private class Node
         {
@@ -81,7 +81,7 @@ namespace Torthello
                 }
 
             }
-            public static async Awaitable<int> MM(Graph graph, int p, List<int> videAdj)
+            public static int MM(Graph graph, int p, List<int> videAdj)
             {
                 Node node = new(Couleur.Noir, videAdj);
                 videAdj.ForEach(i => {

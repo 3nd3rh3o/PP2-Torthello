@@ -95,6 +95,34 @@ namespace Torthello
             return cand;
         }
 
+        public override void Update()
+        {
+            // Camera controls
+            if (settings.isInGame && actionMap.FindActionMap("InGame", false).FindAction("View").ReadValue<float>() == 1f)
+            {
+                Cursor.lockState = CursorLockMode.Confined;
+                settings.pitch += Input.mousePositionDelta.y * 100f * Time.deltaTime * settings.CamSentivity;
+                settings.yaw += Input.mousePositionDelta.x * 130f * Time.deltaTime * settings.CamSentivity;
+                settings.yaw %= 360f;
+                settings.pitch = Mathf.Clamp(settings.pitch, 100f, 220f); 
+            } else {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            if (settings.isInGame)
+            {
+                Vector2 zoom = actionMap.FindActionMap("InGame", false).FindAction("Zoom").ReadValue<Vector2>();
+                settings.zoom = Mathf.Clamp(settings.zoom+zoom.y, 10f, 30f);
+            }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.yaw, 0f) * Quaternion.Euler(0f, 0f, -settings.pitch) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
+
+            // need to rebuild board map?
+            if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && previousSideLength == settings.sideLength) return;
+            Destroy();
+            Init();
+            return;
+        }
+
         public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
         {
             Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
