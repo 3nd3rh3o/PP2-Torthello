@@ -5,16 +5,16 @@ namespace Torthello
 {
     public class FlatBoardInputSystem : IBoardInputSystem
     {
-        private readonly FlatBoardSettings settings;
-        private Transform boardTransform;
-        private Vector3[][] tileCorners;
-        private int previousHoveredTileID;
-        private int previousWidth;
-        private int previousHeight;
-        private float previousSideLength;
-        private InputActionAsset actionMap;
-        private float yaw = 120f;
-        private float pitch = 0f;
+        protected readonly Settings settings;
+        protected Transform boardTransform;
+        protected Vector3[][] tileCorners;
+        protected int previousHoveredTileID;
+        protected int previousWidth;
+        protected int previousHeight;
+        protected float previousSideLength;
+        protected InputActionAsset actionMap;
+        protected float pitch = 120f;
+        protected float yaw = 0f;
 
         public FlatBoardInputSystem(FlatBoardSettings settings, Transform boardTransform, InputActionAsset actionMap)
         {
@@ -74,6 +74,8 @@ namespace Torthello
                     };
                 }
             }
+            Camera.main.transform.position = Quaternion.Euler(0f, settings.yaw, 0f) * Quaternion.Euler(0f, 0f, -settings.pitch) * (boardTransform.position - new Vector3(settings.zoom, 0f, 0f));
+            Camera.main.transform.LookAt(boardTransform.position);
         }
 
         public bool Place()
