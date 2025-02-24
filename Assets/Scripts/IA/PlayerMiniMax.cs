@@ -13,8 +13,7 @@ namespace Torthello
         private IGraph graph;
         private Couleur couleur;
         private int maxDepth = 5; // Profondeur maximale de l'exploration
-        private int nbEval = 0; // Nombre d'évaluations effectuées
-        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 50)
+        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 5)
         {
             this.graph = graph;
             this.couleur = couleur;
@@ -27,7 +26,6 @@ namespace Torthello
             List<int> validMoves = graph.GetValidMoves(couleur);
             int bestMove = -1;
             int bestValue = int.MinValue;
-            nbEval = 0;
 
             foreach (int move in validMoves)
             {
@@ -45,9 +43,8 @@ namespace Torthello
                 }
                 else {
                     Debug.Log($"Coup invalide tenté par minimax id: {move} pour le joueur {couleur}");
-                };
+                }
             }
-            Debug.Log($"Meilleur coup: {bestMove} avec une valeur de {bestValue} pour le joueur {couleur} avec {nbEval} évaluations");
             return bestMove;
         }
 
@@ -55,10 +52,6 @@ namespace Torthello
         {
            if (depth <= 0 || graph.NoPlacementAvailable(playerColor))
             {
-                if(depth<=0)
-                    Debug.Log($"Fin de la récursion de minimax à la profondeur {maxDepth-depth}");
-                else Debug.Log($"Fin de la récursion de minimax à l'arrêt du jeu");
-                Debug.Log($"Évaluation de la position à la profondeur {maxDepth-depth}, blanc: {graph.GetScore()[0]} noir: {graph.GetScore()[1]}");
                 return Evaluate(graph, playerColor);
             }
             if (isMaximizingPlayer)
@@ -115,10 +108,7 @@ namespace Torthello
             int scoreBlanc = scores[0];
             int scoreNoir = scores[1];
 
-            int score = playerColor == Couleur.Blanc ? scoreBlanc - scoreNoir : scoreNoir - scoreBlanc;
-            //TESTS DEBUG
-            nbEval++;
-            Debug.Log($"Score: {score} Blanc: {scoreBlanc} Noir: {scoreNoir}");
+            int score = playerColor == Couleur.Blanc ? scoreBlanc : scoreNoir;
             // Retourner le score en fonction de la couleur du joueur
             return score;
         }

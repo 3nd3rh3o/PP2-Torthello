@@ -116,7 +116,7 @@ namespace Torthello
                         }
                     }
                 }
-                else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 0.1f && !aiThinking)
+                else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 2f && !aiThinking)
                 {
                     coolDown = 0f;
                     aiThinking = true;
@@ -162,7 +162,7 @@ namespace Torthello
                         }
                     }
                 }
-                else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 0.1f && !aiThinking)
+                else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 2f && !aiThinking)
                 {
                     coolDown = 0f;
                     aiThinking = true;
