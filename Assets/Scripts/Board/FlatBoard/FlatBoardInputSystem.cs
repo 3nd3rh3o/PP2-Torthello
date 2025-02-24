@@ -15,8 +15,6 @@ namespace Torthello
         protected InputActionAsset actionMap;
         protected float pitch = 120f;
         protected float yaw = 0f;
-
-        public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         public FlatBoardInputSystem(Settings settings, Transform boardTransform, InputActionAsset actionMap)
         {
             this.settings = settings;
