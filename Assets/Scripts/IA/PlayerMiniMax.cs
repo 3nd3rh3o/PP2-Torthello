@@ -13,7 +13,7 @@ namespace Torthello
         private Couleur couleur;
         private int maxDepth = 5; // Profondeur maximale de l'exploration
 
-        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 60)
+        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 5)
         {
             this.graph = graph;
             this.couleur = couleur;
