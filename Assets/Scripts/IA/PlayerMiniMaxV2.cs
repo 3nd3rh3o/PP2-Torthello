@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Torthello
 {
@@ -18,11 +20,11 @@ namespace Torthello
             this.couleur = couleur;
             this.prof = prof;
         }
-        public int GetBestMove()
+        public async Awaitable<int> GetBestMove()
         {
             //placeholder le temps de l'implémentation
             
-            return Node.MM(graph.GetGraph(), prof, graph.GetVideAdj());
+            return await Node.MM(graph.GetGraph(), prof, graph.GetVideAdj());
         }
         private class Node
         {
@@ -79,7 +81,7 @@ namespace Torthello
                 }
 
             }
-            public static int MM(Graph graph, int p, List<int> videAdj)
+            public static async Awaitable<int> MM(Graph graph, int p, List<int> videAdj)
             {
                 Node node = new(Couleur.Noir, videAdj);
                 videAdj.ForEach(i => {

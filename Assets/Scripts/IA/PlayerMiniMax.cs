@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Torthello
@@ -20,8 +21,9 @@ namespace Torthello
             this.maxDepth = maxDepth;
         }
 
-        public int GetBestMove()
+        public async Awaitable<int> GetBestMove()
         {
+            await Awaitable.BackgroundThreadAsync();
             List<int> validMoves = graph.GetValidMoves(couleur);
             int bestMove = -1;
             int bestValue = int.MinValue;
@@ -32,7 +34,7 @@ namespace Torthello
                 graph.AddPawn(move, couleur, pawnsToFlip);
                 int moveValue = Minimax(graph, maxDepth, false, (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir, int.MinValue, int.MaxValue);
                 graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
-                
+
                 if (moveValue > bestValue)
                 {
                     bestValue = moveValue;
@@ -45,6 +47,7 @@ namespace Torthello
 
         private int Minimax(IGraph graph, int depth, bool isMaximizingPlayer, Couleur playerColor, int alpha, int beta)
         {
+            
             if (depth <= 0 || graph.NoPlacementAvailable(playerColor))
             {
                 return Evaluate(graph, playerColor);
