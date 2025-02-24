@@ -5,6 +5,6 @@ namespace Torthello
 {
     public interface IPlayerAI 
     { 
-        public int GetBestMove();
+        public Awaitable<int> GetBestMove();
     }
 }

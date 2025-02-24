@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
 
@@ -30,6 +31,7 @@ namespace Torthello
         public Settings settings;
         private IPlayerAI aiPlayerNoir;
         private IPlayerAI aiPlayerBlanc;
+        private bool aiThinking = false;
 
 
         private float coolDown = 0f;
@@ -77,7 +79,7 @@ namespace Torthello
         /// <summary>
         /// Appelé à chaque frame.
         /// </summary>
-        public void Update()
+        public async void Update()
         {
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
@@ -102,7 +104,7 @@ namespace Torthello
                             pawnProccessor.SpawnPawn(hoveredTile, couleur);
                             pawnProccessor.FlipAnimSeq(pionRetourne);
                             couleur = Couleur.Blanc; // Change le joueur actif à l'IA
-                            settings.turn = "Blanc";
+                            settings.turn = settings.PlayerBlanc == PlayerType.Human ? "Blanc" : "Blanc(IA)";
                             if (Graph.NoPlacementAvailable(couleur))
                             {
                                 settings.turn = "FINI!";
@@ -114,10 +116,13 @@ namespace Torthello
                         }
                     }
                 }
-                else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 2f)
+                else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 0.1f && !aiThinking)
                 {
                     coolDown = 0f;
-                    int bestMove = aiPlayerNoir.GetBestMove();
+                    aiThinking = true;
+                    int bestMove = await aiPlayerNoir.GetBestMove();
+                    aiThinking = false;
+
                     if (bestMove != -1)
                     {
                         List<List<int>> pionRetourne = new();
@@ -145,7 +150,7 @@ namespace Torthello
                             pawnProccessor.SpawnPawn(hoveredTile, couleur);
                             pawnProccessor.FlipAnimSeq(pionRetourne);
                             couleur = Couleur.Noir; // Change le joueur actif à l'IA
-                            settings.turn = "Noir";
+                            settings.turn = settings.PlayerNoir == PlayerType.Human ? "Noir" : "Noir(IA)";
                             if (Graph.NoPlacementAvailable(couleur))
                             {
                                 settings.turn = "FINI!";
@@ -157,10 +162,12 @@ namespace Torthello
                         }
                     }
                 }
-                else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 2f)
+                else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 0.1f && !aiThinking)
                 {
                     coolDown = 0f;
-                    int bestMove = aiPlayerBlanc.GetBestMove();
+                    aiThinking = true;
+                    int bestMove = await aiPlayerBlanc.GetBestMove();
+                    aiThinking = false;
                     if (bestMove != -1)
                     {
                         List<List<int>> pionRetourne = new();

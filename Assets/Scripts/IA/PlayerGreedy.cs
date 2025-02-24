@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Torthello
@@ -18,8 +19,9 @@ namespace Torthello
             this.couleur = couleur;
         }
 
-        public int GetBestMove()
+        public async Awaitable<int> GetBestMove()
         {
+            await Awaitable.BackgroundThreadAsync();
             List<int> validMoves = graph.GetValidMoves(couleur);
             int bestMove = -1;
             int bestValue = int.MinValue;
