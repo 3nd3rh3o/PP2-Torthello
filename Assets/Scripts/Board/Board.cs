@@ -177,7 +177,7 @@ namespace Torthello
                         }
                     }
                 }
-
+                if (inputSystem.Reset()) StartGame();
                 MaterialHandler.SetHoveredTile(hoveredTile);
             }
             if (settings.startCMD) StartGame();

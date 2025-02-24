@@ -122,6 +122,7 @@ namespace Torthello
             videAdj.Add(idSommet);
             
             // Retirer les cases vides qui étaient uniquement adjacentes au pion retiré
+            //FIXME wrong reset of videAdj
             foreach (Arretes arrete in graph.sommets[idSommet].arretes)
             {
                 if (arrete == null) continue;
@@ -130,7 +131,7 @@ namespace Torthello
                 foreach (Arretes adjArrete in graph.sommets[idVide].arretes)
                 {
                     if (adjArrete == null) continue;
-                    if (graph.sommets[idVide].couleur != Couleur.Vide)
+                    if (graph.sommets[adjArrete.a].couleur != Couleur.Vide)
                     {
                         isAdjacentToOther = true;
                         break;
@@ -423,6 +424,12 @@ namespace Torthello
         public Graph GetGraph()
         {
             return graph;
+        }
+
+        public void SetValidMoves(List<int> b, List<int> n)
+        {
+            coupPossibleBlanc = b;
+            coupPossibleNoir = n;
         }
     }
 }

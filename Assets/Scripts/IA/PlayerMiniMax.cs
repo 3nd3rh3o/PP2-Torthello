@@ -13,7 +13,7 @@ namespace Torthello
         private Couleur couleur;
         private int maxDepth = 5; // Profondeur maximale de l'exploration
 
-        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 5)
+        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 60)
         {
             this.graph = graph;
             this.couleur = couleur;
@@ -30,9 +30,9 @@ namespace Torthello
             {
                 List<List<int>> pawnsToFlip = new List<List<int>>();
                 graph.AddPawn(move, couleur, pawnsToFlip);
-                int moveValue = Minimax(graph, maxDepth, false, couleur, int.MinValue, int.MaxValue);
+                int moveValue = Minimax(graph, maxDepth, false, (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir, int.MinValue, int.MaxValue);
                 graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
-
+                
                 if (moveValue > bestValue)
                 {
                     bestValue = moveValue;
@@ -45,7 +45,7 @@ namespace Torthello
 
         private int Minimax(IGraph graph, int depth, bool isMaximizingPlayer, Couleur playerColor, int alpha, int beta)
         {
-            if (depth <= 0 || graph.IsGameOver())
+            if (depth <= 0 || graph.NoPlacementAvailable(playerColor))
             {
                 return Evaluate(graph, playerColor);
             }
@@ -57,7 +57,7 @@ namespace Torthello
                 {
                     List<List<int>> pawnsToFlip = new List<List<int>>();
                     if(graph.AddPawn(move, playerColor, pawnsToFlip)){
-                        int value = Minimax(graph, depth - 1, false, playerColor, alpha, beta);
+                        int value = Minimax(graph, depth - 1, false, (playerColor == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir, alpha, beta);
                         graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
                         bestValue = Math.Max(bestValue, value);
                         alpha = Math.Max(alpha, bestValue);
@@ -75,13 +75,12 @@ namespace Torthello
             else
             {
                 int bestValue = int.MaxValue;
-                Couleur opponentColor = (playerColor == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir;
-                List<int> validMoves = graph.GetValidMoves(opponentColor);
+                List<int> validMoves = graph.GetValidMoves(playerColor);
                 foreach (int move in validMoves)
                 {
                     List<List<int>> pawnsToFlip = new List<List<int>>();
-                    if (graph.AddPawn(move, opponentColor, pawnsToFlip)){
-                        int value = Minimax(graph, depth - 1, true, playerColor, alpha, beta);
+                    if (graph.AddPawn(move, playerColor, pawnsToFlip)){
+                        int value = Minimax(graph, depth - 1, true, (playerColor == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir, alpha, beta);
                         graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
                         bestValue = Math.Min(bestValue, value);
                         beta = Math.Min(beta, bestValue);
@@ -91,7 +90,7 @@ namespace Torthello
                         }
                     }
                     else {
-                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {depth} pour le joueur {opponentColor}");
+                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {depth} pour le joueur {playerColor}");
                     };
                 }
                 return bestValue;
@@ -105,7 +104,7 @@ namespace Torthello
             int scoreNoir = scores[1];
 
             // Retourner le score en fonction de la couleur du joueur
-            return playerColor == Couleur.Blanc ? scoreBlanc - scoreNoir : scoreNoir - scoreBlanc;
+            return playerColor == Couleur.Blanc ? scoreBlanc : scoreNoir;
         }
     }
 }

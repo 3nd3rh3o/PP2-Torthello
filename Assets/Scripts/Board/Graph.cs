@@ -92,6 +92,8 @@ namespace Torthello
         /// </summary>
         bool IsGameOver();
 
+        public void SetValidMoves(List<int> b, List<int> n);
+
 
         /// <summary>
         /// Retourne la liste d'adjacence.
