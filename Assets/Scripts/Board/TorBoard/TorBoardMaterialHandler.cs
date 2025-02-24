@@ -4,7 +4,7 @@ namespace Torthello
 {
     public class TorBoardMaterialHandler : IMaterialHandler
     {
-        private TorBoardSettings settings;
+        private Settings settings;
         private int previousWidth;
         private int previousHeight;
         private int hoveredTile;
@@ -14,7 +14,7 @@ namespace Torthello
         private float animTime = 0f;
         private Material[] mats;
 
-        public TorBoardMaterialHandler(TorBoardSettings settings)
+        public TorBoardMaterialHandler(Settings settings)
         {
             this.settings = settings;
         }
@@ -34,14 +34,14 @@ namespace Torthello
 
         public void InitMeshRenderer(MeshRenderer renderer)
         {
-            previousHeight = settings.BoardSize;
-            previousWidth = settings.BoardSize;
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
 
-            mats = new Material[settings.BoardSize * settings.BoardSize];
+            mats = new Material[settings.BoardHeight * settings.BoardWidth];
 
-            for (int i = 0; i < settings.BoardSize * settings.BoardSize; i++)
+            for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
-            mats[i] = settings.TileMaterial;
+            mats[i] = settings.Tilematerial;
             }
             renderer.sharedMaterials = mats;
         }
@@ -54,24 +54,24 @@ namespace Torthello
 
         public void UpdateMeshRenderer(MeshRenderer renderer)
         {
-            if (!failedPlacementAnim && previousHeight == settings.BoardSize && previousWidth == settings.BoardSize && !hoverChanged) return;
+            if (!failedPlacementAnim && previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && !hoverChanged) return;
 
-            previousHeight = settings.BoardSize;
-            previousWidth = settings.BoardSize;
+            previousHeight = settings.BoardHeight;
+            previousWidth = settings.BoardWidth;
 
-            mats = new Material[settings.BoardSize * settings.BoardSize];
+            mats = new Material[settings.BoardHeight * settings.BoardWidth];
 
-            for (int i = 0; i < settings.BoardSize * settings.BoardSize; i++)
+            for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
-            mats[i] = settings.TileMaterial;
+            mats[i] = settings.Tilematerial;
             }
             renderer.sharedMaterials = mats;
             Color hoveredColor = Color.white;
 
-            for (int i = 0; i < settings.BoardSize * settings.BoardSize; i++)
+            for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
             MaterialPropertyBlock mpb = new();
-            mpb.SetColor("_BaseColor", failedPlacementAnim && i == failedPlacementTileID ? RedBlinkColor(i == hoveredTile ? hoveredColor : settings.TileMaterial.color) : i == hoveredTile ? hoveredColor : settings.TileMaterial.color);
+            mpb.SetColor("_BaseColor", failedPlacementAnim && i == failedPlacementTileID ? RedBlinkColor(i == hoveredTile ? hoveredColor : settings.Tilematerial.color) : i == hoveredTile ? hoveredColor : settings.Tilematerial.color);
             renderer.SetPropertyBlock(mpb, i);
             }
             if (failedPlacementAnim) animTime += Time.deltaTime;

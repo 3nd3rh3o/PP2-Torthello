@@ -1,0 +1,7 @@
+<engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <engine:VisualElement style="flex-grow: 1; margin-top: 10%; margin-right: 20%; margin-bottom: 10%; margin-left: 20%; align-self: stretch; align-content: stretch; justify-content: center; align-items: stretch; flex-wrap: nowrap;">
+        <engine:Button text="Resume" name="Pause_Resume_button" style="flex-grow: 0; flex-shrink: 1;" />
+        <engine:Button text="Option" name="Pause_Option_button" style="flex-grow: 0; flex-shrink: 1;" />
+        <engine:Button text="Main menu" name="Pause_Menu_button" style="flex-shrink: 1; flex-grow: 0;" />
+    </engine:VisualElement>
+</engine:UXML>

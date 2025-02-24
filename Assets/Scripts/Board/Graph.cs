@@ -26,6 +26,13 @@ namespace Torthello
         /// <param name="pionsRetournes">La liste des pions retournés par le coup.</param>
         /// <returns>True si le coup est valide, false sinon.</returns>
         public bool AddPawn(int idSommet, Couleur couleur, List<List<int>> pionsRetournes);
+        /// <summary>
+        /// Retire un pion du graphe.<br/>
+        /// Ne vérifie pas si le coup est valide.
+        /// </summary>
+        /// <param name="idSommets">L'identifiant du sommet où retirer le pion.</param>
+        /// <param name="pawnsToFlip">La liste des pions retournés par le coup.</param>
+        public void RemovePawn(int idSommets, List<List<int>> pawnsToFlip);
 
         /// <summary>
         /// Place un pion sur le graphe.<br/>
@@ -61,6 +68,28 @@ namespace Torthello
         /// Supprime le graphe, et libère les ressources.
         /// </summary>
         public void DestroyGraph();
+        /// <summary>
+        /// Vérifie si un coup est valide.
+        /// </summary>
+        /// <param name="idSommet">L'identifiant du sommet où placer le pion.</param>
+        /// <param name="couleur">La couleur du pion à placer.</param>
+        /// <param name="pionsARetournes">La liste des pions retournés par le coup.</param>
+        public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes);
+        /// <summary>
+        /// Retourne les coups valides pour un joueur.
+        /// Attention, renvoie un copie des coups valides.
+        /// </summary>
+        /// <param name="couleur"></param>
+        /// <returns></returns>
+        public List<int> GetValidMoves(Couleur couleur);
+        /// <summary>
+        /// Retourne la taille du plateau.
+        /// </summary>
+        public int GetBoardSize();
+        /// <summary>
+        /// Retourne si la partie est terminée.
+        /// </summary>
+        bool IsGameOver(); 
     }
     public class Graph
     {
@@ -74,8 +103,8 @@ namespace Torthello
     }
     public class Arretes
     {
-        public int d;
-        public int a;
+        public int d; //Id du sommet de départ
+        public int a; //Id du sommet d'arrivée
     }
     public enum Couleur
     {
