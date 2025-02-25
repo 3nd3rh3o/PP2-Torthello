@@ -15,18 +15,18 @@ MonoBehaviour:
   sideLength: 1.5
   PawnModel: 0
   Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
-  IA: 0
-  Score: 0.2
+  IA: 1
+  Score: 0.71428573
   startCMD: 0
-  turn: Blanc
-  BoardWidth: 8
-  BoardHeight: 8
-  isInGame: 0
-  CamSentivity: 0.5
-  pitch: 120
-  yaw: 0
-  zoom: 13
+  turn: Noir
+  BoardWidth: 6
+  BoardHeight: 6
+  isInGame: 1
+  CamSentivity: 0.393
+  pitch: 124.43814
+  yaw: -270.52255
+  zoom: 10
   rebuildBoardCMD: 0
   Difficulty: 2
   PlayerNoir: 0
-  PlayerBlanc: 0
+  PlayerBlanc: 1

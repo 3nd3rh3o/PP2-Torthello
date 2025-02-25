@@ -48,6 +48,7 @@ namespace Torthello
             if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength) return;
 
             Mesh mesh = meshFilter.sharedMesh;
+            
             mesh.Clear();
 
             PreviousHeight = settings.BoardHeight;
@@ -71,10 +72,10 @@ namespace Torthello
         {
 #if UNITY_EDITOR
             combines.ToList().ForEach(c => MonoBehaviour.DestroyImmediate(c.mesh));
-            MonoBehaviour.DestroyImmediate(mF.sharedMesh);
+            mF.sharedMesh.Clear();
 #else
             combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
-            MonoBehaviour.Destroy(mF.sharedMesh);
+            mF.sharedMesh.Clear();
 #endif
             combines = null;
 

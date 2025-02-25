@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Linq;
-using UnityEngine.SocialPlatforms.GameCenter;
+using UnityEngine.CrashReportHandler;
 
 namespace Torthello
 {
@@ -122,7 +122,6 @@ namespace Torthello
         triangles[4] = p2i;
         triangles[5] = p3i;
 
-        highLightMesh.Clear();
         highLightMesh.vertices = points;
         highLightMesh.triangles = triangles;
         highLightMesh.uv = new Vector2[]{new(0,0),new(0,1),new(1,1),new(1,0)};

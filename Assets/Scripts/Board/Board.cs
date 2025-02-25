@@ -79,14 +79,19 @@ namespace Torthello
         /// <summary>
         /// Appelé à chaque frame.
         /// </summary>
-        public async void Update()
+        public void Update()
         {
             MeshRenderer mR = GetComponent<MeshRenderer>();
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
             inputSystem.Update();
             Graph.UpdateGraph();
+            GameLoop();
+            MaterialHandler.UpdateMeshRenderer(mR);
+        }
 
+        private async void GameLoop()
+        {
             int hoveredTile = -1;
             if (settings.isInGame)
             {
@@ -199,7 +204,6 @@ namespace Torthello
                 pawnProccessor.RemoveAllPawns();
                 MaterialHandler.SetHoveredTile(-1);
             }
-            MaterialHandler.UpdateMeshRenderer(mR);
         }
 
         /// <summary>
