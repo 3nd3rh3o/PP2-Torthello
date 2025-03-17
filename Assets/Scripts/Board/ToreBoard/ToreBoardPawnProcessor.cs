@@ -20,7 +20,7 @@ namespace Torthello
                 RepositionPawns();
                 return;
             }
-            Debug.Log("pawnProcessorUpdate");
+            //Debug.Log("pawnProcessorUpdate");
             previousHeight = settings.BoardHeight;
             previousWidth = settings.BoardWidth;
             Destroy();
@@ -86,7 +86,7 @@ namespace Torthello
         //test pour comparer avec la destruction des pions
         public void RepositionPawns()
         {
-            Debug.Log("RepositionPawns");
+            //Debug.Log("RepositionPawns");
             for (int tileID = 0; tileID < settings.BoardHeight * settings.BoardWidth; tileID++)
             {
                 Pawn pawn = pawns[tileID];
@@ -100,7 +100,7 @@ namespace Torthello
                 // Recalculer la position et l'orientation du pion
                 Vector3 newPosition = TileIDToWP(tileID);
                 Quaternion newRotation = TileIDToNormal(tileID);
-                Debug.Log("newPosition: " + newPosition + " newRotation: " + newRotation);
+                //Debug.Log("newPosition: " + newPosition + " newRotation: " + newRotation);
                 // Mettre à jour les propriétés du pion et appliquer au transform
                 pawn.pos = newPosition;
                 pawn.rot = newRotation;
