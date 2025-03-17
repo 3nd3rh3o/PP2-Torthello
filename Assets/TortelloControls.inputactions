@@ -49,6 +49,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Rotate",
+                    "type": "Button",
+                    "id": "54c559d9-6f45-47ca-b1e3-695846560d71",
+                    "expectedControlType": "",
+                    "processors": "Clamp(max=1)",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -104,6 +113,17 @@
                     "processors": "NormalizeVector2",
                     "groups": "",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c4e669cd-8806-4b03-8994-a2c74d038c6e",
+                    "path": "<Keyboard>/pageUp",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "Clamp(max=1)",
+                    "groups": "",
+                    "action": "Rotate",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

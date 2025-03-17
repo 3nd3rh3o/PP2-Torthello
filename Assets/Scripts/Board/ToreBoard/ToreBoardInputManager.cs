@@ -38,6 +38,7 @@ namespace Torthello
             return previousHoveredTileID;
         }
 
+        //Raycasts from the camera to the board to find the tile that is being hovered by the mouse
         public int GetTileHovered(Vector3 rayDir, Vector3 rayOrigin, Transform gameBoardTransform, int numCol, int numLine, float radius, float sectionRadius)
         {
             float dist = 1000f;
@@ -95,6 +96,10 @@ namespace Torthello
             return cand;
         }
 
+        public bool rotate()
+        {
+            return actionMap.FindActionMap("InGame", false).FindAction("Rotate").WasPressedThisFrame();
+        }
         public override void Update()
         {
             // Camera controls
@@ -123,6 +128,7 @@ namespace Torthello
             return;
         }
 
+        //recalculates the position of a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
         public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
         {
             Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
@@ -155,6 +161,7 @@ namespace Torthello
             return (x + y);
         }
 
+        //recalculates the position of (the center?) a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
         public static Vector3 IndexToPos(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
         {
             Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
@@ -168,5 +175,6 @@ namespace Torthello
             return (p0 + p1 + p2 + p3) * 0.25f;
         }
 
+        
     }
 }

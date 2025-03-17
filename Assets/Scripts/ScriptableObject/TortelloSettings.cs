@@ -24,7 +24,7 @@ namespace Torthello
         //Game state for UI.
         public string turn = "";
 
-
+        public float rotationOffset = 0f;
 
         private float _hue = 0.45f;
 

@@ -76,6 +76,13 @@ namespace Torthello
             pawnProccessor.StartGame();
         }
 
+        public void HandleBoardRotation(float rotationInput)
+        {
+            if(MeshGenerator is ToreBoardMeshGenerator toreboard){
+                toreboard.RotateBoard(rotationInput);
+            }
+        }
+
         /// <summary>
         /// Appelé à chaque frame.
         /// </summary>
@@ -91,7 +98,13 @@ namespace Torthello
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();
-
+                if(inputSystem is ToreBoardInputManager toreInputSystem){
+                    //Debug.Log("cast succesful");
+                    if(toreInputSystem.rotate()){
+                        Debug.Log("rotate pressed");
+                        HandleBoardRotation(10f);
+                    }
+                }
                 if (coolDown < 2f) coolDown += Time.deltaTime;
                 if (settings.PlayerNoir == PlayerType.Human && couleur == Couleur.Noir)
                 {
