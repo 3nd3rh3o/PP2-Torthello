@@ -96,9 +96,13 @@ namespace Torthello
             return cand;
         }
 
-        public bool rotate()
+        public bool rotateU()
         {
-            return actionMap.FindActionMap("InGame", false).FindAction("Rotate").ReadValue<float>() == 1f;
+            return actionMap.FindActionMap("InGame", false).FindAction("RotateUp").ReadValue<float>() == 1f;
+        }
+        public bool rotateD()
+        {
+            return actionMap.FindActionMap("InGame", false).FindAction("RotateDown").ReadValue<float>() == 1f;
         }
         public override void Update()
         {
@@ -128,7 +132,6 @@ namespace Torthello
             return;
         }
 
-        // TODO Add offset handling here
         //recalculates the position of a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
         public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius, float rotationOffset)
         {

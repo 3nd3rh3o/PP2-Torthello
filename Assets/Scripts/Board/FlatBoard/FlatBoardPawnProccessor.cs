@@ -88,7 +88,7 @@ namespace Torthello
             SpawnPawn(u + 1 + (v + 1) * settings.BoardWidth, Couleur.Noir);
         }
 
-        public void Update()
+        public virtual void Update()
         {
             if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth) return;
             previousHeight = settings.BoardHeight;

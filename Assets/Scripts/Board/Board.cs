@@ -76,14 +76,6 @@ namespace Torthello
             pawnProccessor.StartGame();
         }
 
-        public void HandleBoardRotation(float rotationInput)
-        {
-            if(MeshGenerator is ToreBoardMeshGenerator toreboard && pawnProccessor is ToreBoardPawnProcessor toreProccessor){
-                toreboard.RotateBoard(rotationInput);
-                toreProccessor.RepositionPawns(); //par défaut dans le update de pawnProccessor on destroy et reconstruit les pions, mais ...
-            }
-        }
-
         /// <summary>
         /// Appelé à chaque frame.
         /// </summary>
@@ -100,11 +92,34 @@ namespace Torthello
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();
-                if(inputSystem is ToreBoardInputManager toreInputSystem){
+                if (inputSystem is ToreBoardInputManager toreInputSystem)
+                {
                     //Debug.Log("cast succesful");
-                    if(toreInputSystem.rotate()){
-                        Debug.Log("rotate pressed");
-                        HandleBoardRotation(1f);
+                    if (!(settings.rotAnimU || settings.rotAnimD) && toreInputSystem.rotateU())
+                    {
+                        settings.rotationOffset += 10f;
+                        settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
+                        settings.rotAnimT = 0f;
+                        settings.rotAnimU = true;
+                    }
+                    else if (!(settings.rotAnimU || settings.rotAnimD) && toreInputSystem.rotateD())
+                    {
+                        settings.rotationOffset -= 10f;
+                        settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
+                        settings.rotAnimT = 0f;
+                        settings.rotAnimD = true;
+                    }
+                    else if (settings.rotAnimU || settings.rotAnimD)
+                    {
+                        if (settings.rotAnimT > 1f)
+                        {
+                            settings.rotAnimU = false;
+                            settings.rotAnimD = false;
+                        }
+                        else
+                        {
+                            settings.rotAnimT += Time.deltaTime * 10f;
+                        }
                     }
                 }
                 if (coolDown < 2f) coolDown += Time.deltaTime;

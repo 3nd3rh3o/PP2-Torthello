@@ -51,9 +51,18 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Rotate",
+                    "name": "RotateUp",
                     "type": "Button",
                     "id": "54c559d9-6f45-47ca-b1e3-695846560d71",
+                    "expectedControlType": "",
+                    "processors": "Clamp(max=1)",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "RotateDown",
+                    "type": "Button",
+                    "id": "100f9f0e-86d4-4c58-a44d-3ce4bd23d265",
                     "expectedControlType": "",
                     "processors": "Clamp(max=1)",
                     "interactions": "Press(behavior=2)",
@@ -123,7 +132,18 @@
                     "interactions": "Press(behavior=2)",
                     "processors": "Clamp(max=1)",
                     "groups": "",
-                    "action": "Rotate",
+                    "action": "RotateUp",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ac3b3ae7-4108-4ed2-8593-e653cb2bda6e",
+                    "path": "<Keyboard>/pageDown",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "Clamp(max=1)",
+                    "groups": "",
+                    "action": "RotateDown",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

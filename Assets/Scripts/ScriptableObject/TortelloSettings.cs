@@ -25,6 +25,9 @@ namespace Torthello
         public string turn = "";
 
         public float rotationOffset = 0f;
+        [HideInInspector] public bool rotAnimU = false;
+        [HideInInspector] public float rotAnimT = 0f;
+        [HideInInspector] public bool rotAnimD = false;
 
         private float _hue = 0.45f;
 
@@ -74,6 +77,7 @@ namespace Torthello
         [HideInInspector]
         public bool isInGame = false;
         public float CamSentivity = 0.5f;
+        
         public float pitch = 0f;
         public float yaw = 120f;
         public float zoom = 15f;

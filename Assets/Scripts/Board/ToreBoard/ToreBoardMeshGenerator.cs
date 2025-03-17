@@ -6,8 +6,6 @@ namespace Torthello
 {
     public class ToreBoardMeshGenerator : FlatBoardMeshGenerator
     {
-
-        protected float PreviousRotationOffset;
         public ToreBoardMeshGenerator(Settings settings) : base(settings)
         {
         }
@@ -24,7 +22,6 @@ namespace Torthello
             PreviousHeight = settings.BoardHeight;
             PreviousWidth = settings.BoardWidth;
             PreviousLength = settings.sideLength;
-            PreviousRotationOffset = settings.rotationOffset;
 
             combines = new CombineInstance[settings.BoardHeight * settings.BoardWidth];
 
@@ -38,8 +35,8 @@ namespace Torthello
         public override void UpdateMesh(MeshFilter meshFilter)
         {
             //on teste si les parametres in changes
-            if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength && PreviousRotationOffset == settings.rotationOffset) return;
-
+            if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength && !(settings.rotAnimD || settings.rotAnimU)) return;
+            
             Mesh mesh = meshFilter.sharedMesh;
             mesh.Clear();
 
@@ -78,9 +75,8 @@ namespace Torthello
                     Mesh mesh = new();
                     float subradius = 1.5f * settings.BoardWidth / (2f * Mathf.PI);
                     float radius = (1.5f * settings.BoardHeight / (2f * Mathf.PI)) + subradius;
-
                     // Appliquer l'offset de rotation
-                    GenMeshOfTileByIndex(mesh, i, j, radius, subradius, settings.BoardHeight, settings.BoardWidth, settings.rotationOffset);
+                    GenMeshOfTileByIndex(mesh, i, j, radius, subradius, settings.BoardHeight, settings.BoardWidth, settings);
                     combines[i * settings.BoardWidth + j].mesh = mesh;
                 }
             }
@@ -88,7 +84,7 @@ namespace Torthello
 
 
 
-        public static Mesh GenMeshOfTileByIndex(Mesh highLightMesh, int i, int j, float radius, float sectionRadius, int numberOfSection, int pointsPerSection, float offset)
+        public static Mesh GenMeshOfTileByIndex(Mesh highLightMesh, int i, int j, float radius, float sectionRadius, int numberOfSection, int pointsPerSection, Settings settings)
         {
             Vector3[] points = new Vector3[4];
             int[] triangles = new int[6];
@@ -104,7 +100,8 @@ namespace Torthello
             Vector3 nextSection = Quaternion.Euler(new(0, (360f / numberOfSection) * (i + 1), 0)) * sectionCenter;
 
             // Appliquer l'offset pour faire rouler les cases sur le petit cercle
-            Quaternion minorCircleRotation = Quaternion.Euler(new(offset, 0, 0));
+            float rotStep = 10f;
+            Quaternion minorCircleRotation = Quaternion.Euler(new(settings.rotAnimD ? Mathf.Lerp(settings.rotationOffset + rotStep, settings.rotationOffset, settings.rotAnimT) : settings.rotAnimU? Mathf.Lerp(settings.rotationOffset - rotStep, settings.rotationOffset, settings.rotAnimT) : settings.rotationOffset, 0, 0));
 
             Vector3 p0 = section + Quaternion.Euler(new(0, (360f / numberOfSection) * i, 0)) * minorCircleRotation * Quaternion.Euler(new((360f / pointsPerSection) * j, 0, 0)) * subSectionVector;
             Vector3 p1 = section + Quaternion.Euler(new(0, (360f / numberOfSection) * i, 0)) * minorCircleRotation * Quaternion.Euler(new((360f / pointsPerSection) * (j + 1), 0, 0)) * subSectionVector;
@@ -133,11 +130,6 @@ namespace Torthello
             highLightMesh.RecalculateTangents();
             highLightMesh.RecalculateBounds();
             return highLightMesh;
-        }
-        public void RotateBoard(float rotationOffset)
-        {
-            settings.rotationOffset += rotationOffset;
-            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
         }
     }
 }
