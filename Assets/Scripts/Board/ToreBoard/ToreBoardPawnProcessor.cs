@@ -14,6 +14,7 @@ namespace Torthello
 
         public new void Update()
         {
+            // TODO si rotationAnim == true => Reposition and increase lerp factor by Time.deltaTime
             if (previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && previousRotationOffset == settings.rotationOffset) return;
             Debug.Log("pawnProcessorUpdate");
             previousHeight = settings.BoardHeight;
@@ -56,7 +57,7 @@ namespace Torthello
             return IndexToPos(i, j, settings.BoardHeight, settings.BoardWidth, radius, subradius, settings.rotationOffset);
         }
 
-        
+
         protected override Quaternion TileIDToNormal(int TileID)
         {
             float subradius = 1.5f * settings.BoardHeight / (2f * Mathf.PI);
@@ -80,24 +81,23 @@ namespace Torthello
         public void RepositionPawns()
         {
             Debug.Log("RepositionPawns");
-            for (int tileID = 0; tileID < settings.BoardHeight*settings.BoardWidth; tileID++)
+            for (int tileID = 0; tileID < settings.BoardHeight * settings.BoardWidth; tileID++)
             {
-            Pawn pawn = pawns[tileID];
+                Pawn pawn = pawns[tileID];
 
-            // Vérifier si la case contient un pion valide
-            if (pawn == null)
-            {
-                continue;
-            }
+                // Vérifier si la case contient un pion valide
+                if (pawn == null)
+                {
+                    continue;
+                }
 
-            // Recalculer la position et l'orientation du pion
-            Vector3 newPosition = TileIDToWP(tileID);
-            Quaternion newRotation = TileIDToNormal(tileID);
-            Debug.Log("newPosition: " + newPosition + " newRotation: " + newRotation);
-            // Mettre à jour les propriétés du pion et appliquer au transform
-            pawn.pos = newPosition;
-            pawn.rot = newRotation;
-            pawn.transform.SetPositionAndRotation(newPosition, newRotation);
+                // Recalculer la position et l'orientation du pion
+                Vector3 newPosition = TileIDToWP(tileID);
+                Quaternion newRotation = TileIDToNormal(tileID);
+                Debug.Log("newPosition: " + newPosition + " newRotation: " + newRotation);
+                // Mettre à jour les propriétés du pion et appliquer au transform
+                pawn.pos = newPosition;
+                pawn.rot = newRotation;
             }
         }
     }
