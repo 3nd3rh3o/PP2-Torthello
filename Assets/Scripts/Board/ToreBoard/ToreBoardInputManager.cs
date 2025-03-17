@@ -47,7 +47,7 @@ namespace Torthello
             {
                 for (int j = 0; j < numLine; j++)
                 {
-                    Vector3[] tileCorners = IndexToTileCorners(i, j, numCol, numLine, radius, sectionRadius);
+                    Vector3[] tileCorners = IndexToTileCorners(i, j, numCol, numLine, radius, sectionRadius,settings.rotationOffset);
                     Vector3 A = tileCorners[0];
                     Vector3 B = tileCorners[1];
                     Vector3 C = tileCorners[2];
@@ -83,7 +83,7 @@ namespace Torthello
                         )
                     )
                     {
-                        float cD = (IndexToPos(i, j, numCol, numLine, radius, sectionRadius) - rayOrigin).sqrMagnitude;
+                        float cD = (IndexToPos(i, j, numCol, numLine, radius, sectionRadius, settings.rotationOffset) - rayOrigin).sqrMagnitude;
                         if (cD < dist)
                         {
                             cand = i * settings.BoardWidth + j;
@@ -129,16 +129,21 @@ namespace Torthello
         }
 
         //recalculates the position of a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
-        public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
+        public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius, float rotationOffset)
         {
             Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
             Vector3 subSectionVector = new Vector3(0, 0, 1) * sectionRadius;
             Vector3 section = Quaternion.Euler(new(0, 360f / maxI * i, 0)) * sectionCenter;
             Vector3 nextSection = Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * sectionCenter;
-            Vector3 p0 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
-            Vector3 p1 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
-            Vector3 p2 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
-            Vector3 p3 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+
+            // Appliquer l'offset pour faire rouler les cases sur le petit cercle
+            Quaternion minorCircleRotation = Quaternion.Euler(new(rotationOffset, 0, 0));
+
+            Vector3 p0 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * minorCircleRotation * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+            Vector3 p1 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * minorCircleRotation * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p2 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * minorCircleRotation * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p3 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * minorCircleRotation * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+
             return new Vector3[] { p0, p1, p2, p3 };
         }
 
@@ -162,16 +167,23 @@ namespace Torthello
         }
 
         //recalculates the position of (the center?) a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
-        public static Vector3 IndexToPos(int i, int j, int maxI, int maxJ, float radius, float sectionRadius)
+        public static Vector3 IndexToPos(int i, int j, int maxI, int maxJ, float radius, float sectionRadius, float rotationOffset)
         {
             Vector3 sectionCenter = new Vector3(0, 0, 1) * radius;
             Vector3 subSectionVector = new Vector3(0, 0, 1) * sectionRadius;
-            Vector3 section = Quaternion.Euler(new(0, 360f / maxI * i, 0)) * sectionCenter;
-            Vector3 nextSection = Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * sectionCenter;
-            Vector3 p0 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
-            Vector3 p1 = section + Quaternion.Euler(new(0, 360f / maxI * i, 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
-            Vector3 p2 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * (j + 1), 0, 0)) * subSectionVector;
-            Vector3 p3 = nextSection + Quaternion.Euler(new(0, 360f / maxI * (i + 1), 0)) * Quaternion.Euler(new(360f / maxJ * j, 0, 0)) * subSectionVector;
+
+            // Calcul de la position de la section sur le grand cercle
+            Vector3 section = Quaternion.Euler(new(0, (360f / maxI) * i, 0)) * sectionCenter;
+            Vector3 nextSection = Quaternion.Euler(new(0, (360f / maxI) * (i + 1), 0)) * sectionCenter;
+
+            // Appliquer l'offset pour faire rouler les cases sur le petit cercle
+            Quaternion minorCircleRotation = Quaternion.Euler(new(rotationOffset, 0, 0));
+
+            Vector3 p0 = section + Quaternion.Euler(new(0, (360f / maxI) * i, 0)) * minorCircleRotation * Quaternion.Euler(new((360f / maxJ) * j, 0, 0)) * subSectionVector;
+            Vector3 p1 = section + Quaternion.Euler(new(0, (360f / maxI) * i, 0)) * minorCircleRotation * Quaternion.Euler(new((360f / maxJ) * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p2 = nextSection + Quaternion.Euler(new(0, (360f / maxI) * (i + 1), 0)) * minorCircleRotation * Quaternion.Euler(new((360f / maxJ) * (j + 1), 0, 0)) * subSectionVector;
+            Vector3 p3 = nextSection + Quaternion.Euler(new(0, (360f / maxI) * (i + 1), 0)) * minorCircleRotation * Quaternion.Euler(new((360f / maxJ) * j, 0, 0)) * subSectionVector;
+
             return (p0 + p1 + p2 + p3) * 0.25f;
         }
 
