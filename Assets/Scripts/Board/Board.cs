@@ -92,24 +92,10 @@ namespace Torthello
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();
+                // Torus rotation handling.
                 if (inputSystem is ToreBoardInputManager toreInputSystem)
                 {
-                    //Debug.Log("cast succesful");
-                    if (!(settings.rotAnimU || settings.rotAnimD) && toreInputSystem.rotateU())
-                    {
-                        settings.rotationOffset += 10f;
-                        settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
-                        settings.rotAnimT = 0f;
-                        settings.rotAnimU = true;
-                    }
-                    else if (!(settings.rotAnimU || settings.rotAnimD) && toreInputSystem.rotateD())
-                    {
-                        settings.rotationOffset -= 10f;
-                        settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
-                        settings.rotAnimT = 0f;
-                        settings.rotAnimD = true;
-                    }
-                    else if (settings.rotAnimU || settings.rotAnimD)
+                    if (settings.rotAnimU || settings.rotAnimD)
                     {
                         if (settings.rotAnimT > 1f)
                         {
@@ -121,97 +107,56 @@ namespace Torthello
                             settings.rotAnimT += Time.deltaTime * 10f;
                         }
                     }
+                    else
+                    {
+                        if (toreInputSystem.rotateU())
+                        {
+                            settings.rotationOffset += 10f;
+                            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
+                            settings.rotAnimT = 0f;
+                            settings.rotAnimU = true;
+                        }
+                        else if (toreInputSystem.rotateD())
+                        {
+                            settings.rotationOffset -= 10f;
+                            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
+                            settings.rotAnimT = 0f;
+                            settings.rotAnimD = true;
+                        }
+                    }
                 }
                 if (coolDown < 2f) coolDown += Time.deltaTime;
-                if (settings.PlayerNoir == PlayerType.Human && couleur == Couleur.Noir)
+                if (!aiThinking)
                 {
-                    coolDown = 0f;
-                    if (inputSystem.Place())
+                    if ((HumanTurn() && inputSystem.Place()) || (!HumanTurn() && coolDown > 2f))
                     {
-                        List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
+                        if (!HumanTurn() && coolDown > 2f)
                         {
-                            pawnProccessor.SpawnPawn(hoveredTile, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Blanc; // Change le joueur actif à l'IA
-                            settings.turn = settings.PlayerBlanc == PlayerType.Human ? "Blanc" : "Blanc(IA)";
-                            if (Graph.NoPlacementAvailable(couleur))
-                            {
-                                settings.turn = "FINI!";
-                            }
+                            aiThinking = true;
+                            hoveredTile = couleur == Couleur.Noir ? 
+                                await aiPlayerNoir.GetBestMove() : 
+                                await aiPlayerBlanc.GetBestMove();
+                            aiThinking = false;
                         }
-                        else
-                        {
-                            MaterialHandler.FailedPlacement();
-                        }
-                    }
-                }
-                else if (settings.PlayerNoir == PlayerType.MiniMax && couleur == Couleur.Noir && coolDown > 2f && !aiThinking)
-                {
-                    coolDown = 0f;
-                    aiThinking = true;
-                    int bestMove = await aiPlayerNoir.GetBestMove();
-                    aiThinking = false;
 
-                    if (bestMove != -1)
-                    {
                         List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(bestMove, couleur, pionRetourne))
-                        {
-                            pawnProccessor.SpawnPawn(bestMove, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Blanc; // Change le joueur actif à l'humain
-                            settings.turn = "Blanc";
-                            if (Graph.NoPlacementAvailable(couleur))
-                            {
-                                settings.turn = "FINI!";
-                            }
-                        }
-                    }
-                }
-                else if (settings.PlayerBlanc == PlayerType.Human && couleur == Couleur.Blanc)
-                {
-                    coolDown = 0f;
-                    if (inputSystem.Place())
-                    {
-                        List<List<int>> pionRetourne = new();
+
                         if (Graph.AddPawn(hoveredTile, couleur, pionRetourne))
                         {
                             pawnProccessor.SpawnPawn(hoveredTile, couleur);
                             pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Noir; // Change le joueur actif à l'IA
-                            settings.turn = settings.PlayerNoir == PlayerType.Human ? "Noir" : "Noir(IA)";
-                            if (Graph.NoPlacementAvailable(couleur))
-                            {
-                                settings.turn = "FINI!";
-                            }
+                            couleur = couleur.Inverse();
+                            settings.turn = couleur == Couleur.Blanc ?
+                                  (settings.PlayerBlanc == PlayerType.Human ? "Blanc" : "Blanc(IA)") :
+                                  (settings.PlayerNoir == PlayerType.Human ? "Noir" : "Noir(IA)");
+                            if (Graph.NoPlacementAvailable(couleur)) settings.turn = "FINI!" + " Gagnant: "
+                                                        + (Graph.GetScore()[0] > Graph.GetScore()[1] ? "Blanc" : 
+                                                           Graph.GetScore()[0] < Graph.GetScore()[1] ? "Noir" : 
+                                                           "Egalité");
                         }
-                        else
-                        {
-                            MaterialHandler.FailedPlacement();
-                        }
-                    }
-                }
-                else if (settings.PlayerBlanc == PlayerType.MiniMax && couleur == Couleur.Blanc && coolDown > 2f && !aiThinking)
-                {
-                    coolDown = 0f;
-                    aiThinking = true;
-                    int bestMove = await aiPlayerBlanc.GetBestMove();
-                    aiThinking = false;
-                    if (bestMove != -1)
-                    {
-                        List<List<int>> pionRetourne = new();
-                        if (Graph.AddPawn(bestMove, couleur, pionRetourne))
-                        {
-                            pawnProccessor.SpawnPawn(bestMove, couleur);
-                            pawnProccessor.FlipAnimSeq(pionRetourne);
-                            couleur = Couleur.Noir; // Change le joueur actif à l'humain
-                            settings.turn = "Noir";
-                            if (Graph.NoPlacementAvailable(couleur))
-                            {
-                                settings.turn = "FINI!";
-                            }
-                        }
+                        else MaterialHandler.FailedPlacement();
+                        
+                        coolDown = 0f;
                     }
                 }
                 if (inputSystem.Reset()) StartGame();
@@ -251,6 +196,12 @@ namespace Torthello
             MaterialHandler.Destroy(mR);
             inputSystem.Destroy();
             pawnProccessor.Destroy();
+        }
+
+
+        bool HumanTurn()
+        {
+            return (couleur == Couleur.Noir && settings.PlayerNoir == PlayerType.Human) || (couleur == Couleur.Blanc && settings.PlayerBlanc == PlayerType.Human);
         }
     }
 }

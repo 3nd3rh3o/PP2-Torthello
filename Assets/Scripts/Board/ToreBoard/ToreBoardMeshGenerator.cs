@@ -44,11 +44,7 @@ namespace Torthello
             PreviousWidth = settings.BoardWidth;
             PreviousLength = settings.sideLength;
 
-#if UNITY_EDITOR
             combines.ToList().ForEach(c => MonoBehaviour.DestroyImmediate(c.mesh));
-#else
-            combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
-#endif
 
             combines = new CombineInstance[settings.BoardHeight * settings.BoardWidth];
 

@@ -123,4 +123,12 @@ namespace Torthello
         Blanc,
         Noir
     }
+
+    public static class CouleurExtensions
+    {
+        public static Couleur Inverse(this Couleur couleur)
+        {
+            return couleur == Couleur.Vide ? Couleur.Vide : couleur == Couleur.Blanc ? Couleur.Noir : Couleur.Blanc;
+        }
+    }
 }
