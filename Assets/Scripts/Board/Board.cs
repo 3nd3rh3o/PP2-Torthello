@@ -78,8 +78,9 @@ namespace Torthello
 
         public void HandleBoardRotation(float rotationInput)
         {
-            if(MeshGenerator is ToreBoardMeshGenerator toreboard){
+            if(MeshGenerator is ToreBoardMeshGenerator toreboard && pawnProccessor is ToreBoardPawnProcessor toreProccessor){
                 toreboard.RotateBoard(rotationInput);
+                toreProccessor.RepositionPawns(); //par défaut dans le update de pawnProccessor on destroy et reconstruit les pions, mais ...
             }
         }
 
@@ -92,6 +93,7 @@ namespace Torthello
             MeshFilter mF = GetComponent<MeshFilter>();
             MeshGenerator.UpdateMesh(mF);
             inputSystem.Update();
+            pawnProccessor.Update();
             Graph.UpdateGraph();
 
             int hoveredTile = -1;
@@ -102,7 +104,7 @@ namespace Torthello
                     //Debug.Log("cast succesful");
                     if(toreInputSystem.rotate()){
                         Debug.Log("rotate pressed");
-                        HandleBoardRotation(10f);
+                        HandleBoardRotation(1f);
                     }
                 }
                 if (coolDown < 2f) coolDown += Time.deltaTime;

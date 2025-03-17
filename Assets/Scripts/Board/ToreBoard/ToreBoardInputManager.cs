@@ -98,7 +98,7 @@ namespace Torthello
 
         public bool rotate()
         {
-            return actionMap.FindActionMap("InGame", false).FindAction("Rotate").WasPressedThisFrame();
+            return actionMap.FindActionMap("InGame", false).FindAction("Rotate").ReadValue<float>() == 1f;
         }
         public override void Update()
         {
