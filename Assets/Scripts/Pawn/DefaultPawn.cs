@@ -49,6 +49,7 @@ namespace Torthello
             {
                 SpawnAnimT += Time.deltaTime * 1f;
                 transform.localPosition = Vector3.Lerp(pos + (rot * new Vector3(0f, 1f, 0f)), pos, SpawnAnimT);
+                 transform.localRotation = couleur == Couleur.Noir ? rot * Quaternion.Euler(180f, 0f, 0f) : rot * Quaternion.Euler(0f, 0f, 0f);
                 if (SpawnAnimT > 1f) EndSpawnAnim();
             }
             else if (FlipAnim)
