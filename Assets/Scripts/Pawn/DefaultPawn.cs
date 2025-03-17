@@ -40,8 +40,7 @@ namespace Torthello
         {
             FlipAnim = false;
             FlipAnimT = 0f;
-            transform.localPosition = pos;
-            transform.localRotation = couleur == Couleur.Noir ? rot * Quaternion.Euler(180f, 0f, 0f) : rot * Quaternion.Euler(0f, 0f, 0f);
+            
         }
 
         new void Update()
@@ -72,6 +71,11 @@ namespace Torthello
                                                 : Vector3.Lerp(pos + (rot * new Vector3(0f, 1.5f, 0f)), pos, Mathf.Pow(2f*FlipAnimT - 1f, 2))
                                             ;
                 if (FlipAnimT > 1f) EndFlipAnim();
+            }
+            else
+            {
+                transform.localPosition = pos;
+                transform.localRotation = couleur == Couleur.Noir ? rot * Quaternion.Euler(180f, 0f, 0f) : rot * Quaternion.Euler(0f, 0f, 0f);
             }
         }
     }

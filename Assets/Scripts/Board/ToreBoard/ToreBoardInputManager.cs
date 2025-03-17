@@ -128,6 +128,7 @@ namespace Torthello
             return;
         }
 
+        // TODO Add offset handling here
         //recalculates the position of a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
         public static Vector3[] IndexToTileCorners(int i, int j, int maxI, int maxJ, float radius, float sectionRadius, float rotationOffset)
         {
@@ -166,6 +167,8 @@ namespace Torthello
             return (x + y);
         }
 
+
+        
         //recalculates the position of (the center?) a tile based on its index: this is already calculated in the mesh generator, maybe we can reuse it instead?
         public static Vector3 IndexToPos(int i, int j, int maxI, int maxJ, float radius, float sectionRadius, float rotationOffset)
         {
