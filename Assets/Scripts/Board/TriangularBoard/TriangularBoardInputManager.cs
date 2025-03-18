@@ -7,20 +7,5 @@ namespace Torthello
         public TriangularBoardInputManager(Settings settings, Transform boardTransform, InputActionAsset actionMap) : base(settings, boardTransform, actionMap)
         {
         }
-
-        public override void Init()
-        {
-            actionMap.FindActionMap("InGame", false).Enable();
-            previousWidth = settings.BoardWidth;
-            previousHeight = settings.BoardHeight;
-            previousSideLength = settings.sideLength;
-            
-            
-        }
-
-        
-
-        public override int GetTileHoveredID()
-        {
-        }
+    }
 }

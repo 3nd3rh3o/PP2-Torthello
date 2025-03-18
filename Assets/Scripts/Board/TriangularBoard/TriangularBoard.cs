@@ -7,11 +7,11 @@ namespace Torthello
         public InputActionAsset actionMap;
         new void OnEnable()
         {
-            MeshGenerator = new ToreBoardMeshGenerator(settings);
+            MeshGenerator = new TriangularBoardMeshGenerator(settings);
             MaterialHandler = new FlatBoardMaterialHandler(settings);
-            Graph = new ToreBoardGraph(settings);
-            inputSystem = new ToreBoardInputManager(settings, transform, actionMap);
-            pawnProccessor = new ToreBoardPawnProcessor(transform, settings);
+            Graph = new TriangularBoardGraph(settings);
+            inputSystem = new TriangularBoardInputManager(settings, transform, actionMap);
+            pawnProccessor = new TriangularBoardPawnProcessor(transform, settings);
             base.OnEnable();
         }
     }
