@@ -138,31 +138,22 @@ namespace Torthello
                 gameBoard.SetActive(false);
                 if (settings.type.GetValue() == BoardType.TwoD)
                 {
-                    try
-                    {
-#if UNITY_EDITOR
-                        DestroyImmediate(gameBoard.GetComponent<ToreBoard>());
-#else
-                        Destroy(gameBoard.GetComponent<ToreBoard>());
-#endif
-                    }
-                    catch { }
+                    RemoveBoard();
                     FlatBoard f = gameBoard.AddComponent<FlatBoard>();
                     f.settings = settings;
                     f.actionMap = actions;
                 }
+                else if (settings.type.GetValue() == BoardType.Torus)
+                {
+                    RemoveBoard();
+                    ToreBoard t = gameBoard.AddComponent<ToreBoard>();
+                    t.settings = settings;
+                    t.actionMap = actions;
+                }
                 else
                 {
-                    try
-                    {
-#if UNITY_EDITOR
-                        DestroyImmediate(gameBoard.GetComponent<FlatBoard>());
-#else
-                        Destroy(gameBoard.GetComponent<FlatBoard>());
-#endif
-                    }
-                    catch { }
-                    ToreBoard t = gameBoard.AddComponent<ToreBoard>();
+                    RemoveBoard();
+                    TriangularBoard t = gameBoard.AddComponent<TriangularBoard>();
                     t.settings = settings;
                     t.actionMap = actions;
                 }
@@ -358,6 +349,38 @@ namespace Torthello
             VisualElement root = uiDocument.rootVisualElement;
             root.Q<Button>("Option_Pause_button").clicked -= pause_option_back;
             root.Remove(pauseOptionUI);
+        }
+
+
+        void RemoveBoard()
+        {
+            try
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(gameBoard.GetComponent<FlatBoard>());
+#else
+                Destroy(gameBoard.GetComponent<FlatBoard>());
+#endif
+            }
+            catch { }
+            try
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(gameBoard.GetComponent<ToreBoard>());
+#else
+                Destroy(gameBoard.GetComponent<ToreBoard>());
+#endif
+            }
+            catch { }
+            try
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(gameBoard.GetComponent<TriangularBoard>());
+#else
+                Destroy(gameBoard.GetComponent<TriangularBoard>());
+#endif
+            }
+            catch { }
         }
     }
 }

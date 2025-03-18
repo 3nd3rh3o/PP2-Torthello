@@ -121,6 +121,7 @@ namespace Torthello
     public enum BoardType
     {
         TwoD,
+        TriangularBoard,
         Torus
     }
 }
