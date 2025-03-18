@@ -56,6 +56,6 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "PP2-torthello.sln",
+    "dotnet.defaultSolution": "PP2-Torthello.sln",
     "git.ignoreLimitWarning": true
 }

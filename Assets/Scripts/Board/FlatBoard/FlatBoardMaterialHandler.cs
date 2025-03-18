@@ -5,16 +5,16 @@ namespace Torthello
     public class FlatBoardMaterialHandler : IMaterialHandler
     {
 
-        private Settings settings;
-        private int previousWidth;
-        private int previousHeight;
-        private int hoveredTile = -1;
-        private bool hoverChanged = false;
-        private bool failedPlacementAnim = false;
-        private int failedPlacementTileID = -1;
-        private float animTime = 0f;
+        protected Settings settings;
+        protected int previousWidth;
+        protected int previousHeight;
+        protected int hoveredTile = -1;
+        protected bool hoverChanged = false;
+        protected bool failedPlacementAnim = false;
+        protected int failedPlacementTileID = -1;
+        protected float animTime = 0f;
 
-        private Material[] mats;
+        protected Material[] mats;
         public FlatBoardMaterialHandler(Settings settings)
         {
             this.settings = settings;
@@ -33,7 +33,7 @@ namespace Torthello
             failedPlacementAnim = true;
         }
 
-        public void InitMeshRenderer(MeshRenderer renderer)
+        public virtual void InitMeshRenderer(MeshRenderer renderer)
         {
             previousHeight = settings.BoardHeight;
             previousWidth = settings.BoardWidth;
@@ -53,7 +53,7 @@ namespace Torthello
             hoveredTile = id;
         }
 
-        public void UpdateMeshRenderer(MeshRenderer renderer)
+        public virtual void UpdateMeshRenderer(MeshRenderer renderer)
         {
             if (!failedPlacementAnim && previousHeight == settings.BoardHeight && previousWidth == settings.BoardWidth && !hoverChanged) return;
 

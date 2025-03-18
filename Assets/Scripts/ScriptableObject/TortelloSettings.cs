@@ -11,6 +11,8 @@ namespace Torthello
 
         public Material Tilematerial;
 
+        public Material HexTilematerial;
+
 
         [HideInInspector]
         public bool IA = true;
