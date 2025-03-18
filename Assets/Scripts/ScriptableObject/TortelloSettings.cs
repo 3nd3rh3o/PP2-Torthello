@@ -54,8 +54,8 @@ namespace Torthello
         [CreateProperty]
         public int BoardType
         {
-            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, _ => throw new NotImplementedException() };
-            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, _ => throw new NotImplementedException() });
+            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, Torthello.BoardType.TriangularBoard => 2, _ => throw new NotImplementedException() };
+            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, 2 => Torthello.BoardType.TriangularBoard, _ => throw new NotImplementedException() });
         }
 
         [Range(4, 20)]
