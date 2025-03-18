@@ -1,6 +1,5 @@
 using UnityEngine;
 using System.Linq;
-using UnityEngine.CrashReportHandler;
 
 namespace Torthello
 {

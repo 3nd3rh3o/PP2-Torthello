@@ -1,7 +1,5 @@
 using UnityEngine;
 using System.Linq;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 
 namespace Torthello
 {
