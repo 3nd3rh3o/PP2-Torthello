@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Torthello
 {
@@ -336,7 +334,7 @@ namespace Torthello
         }
 
         // fonction qui retourne si le coup est valide
-        public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
+        public virtual bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
             bool CoupValide = false;
             Sommets sommetActuel = graph.sommets[idSommet];
