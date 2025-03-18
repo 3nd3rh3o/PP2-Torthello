@@ -31,6 +31,32 @@ namespace Torthello
             mesh.CombineMeshes(combines, false, false, false);
         }
 
+        public override void UpdateMesh(MeshFilter meshFilter)
+        {
+            //on teste si les parametres in changes
+            if (PreviousHeight == settings.BoardHeight && PreviousWidth == settings.BoardWidth && PreviousLength == settings.sideLength) return;
+
+            Mesh mesh = meshFilter.sharedMesh;
+
+            mesh.Clear();
+
+            PreviousHeight = settings.BoardHeight;
+            PreviousWidth = settings.BoardWidth;
+            PreviousLength = settings.sideLength;
+
+#if UNITY_EDITOR
+            combines.ToList().ForEach(c => MonoBehaviour.DestroyImmediate(c.mesh));
+#else
+            combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
+#endif
+
+            combines = new CombineInstance[settings.BoardHeight * settings.BoardWidth];
+
+            CreateBoardMesh();
+
+            mesh.CombineMeshes(combines, false, false, false);
+        }
+
         private void CreateBoardMesh()
         {
             //Calcul du centre de la premiere case
@@ -54,15 +80,15 @@ namespace Torthello
 
         private static void CreateHexagonMesh(Vector3 center, float sideLength, Mesh mesh)
         {
-            Vector3 v = new Vector3(0f,0f,sideLength*0.5f);
+            Vector3 v = new Vector3(0f, 0f, sideLength * 0.5f);
             Vector3[] points = new Vector3[]{
                 center,
-                center + (Quaternion.Euler(0f,0f,0f) * v),
-                center + (Quaternion.Euler(0f,0f,60f) * v),
-                center + (Quaternion.Euler(0f,0f,120f) * v),
-                center + (Quaternion.Euler(0f,0f,180f) * v),
-                center + (Quaternion.Euler(0f,0f,240f) * v),
-                center + (Quaternion.Euler(0f,0f,300f) * v),
+                center + (Quaternion.Euler(0f, 0f, 0f) * v),
+                center + (Quaternion.Euler(0f, 60f, 0f) * v),
+                center + (Quaternion.Euler(0f, 120f, 0f) * v),
+                center + (Quaternion.Euler(0f, 180f, 0f) * v),
+                center + (Quaternion.Euler(0f, 240f, 0f) * v),
+                center + (Quaternion.Euler(0f, 300f, 0f) * v),
             };
 
 
@@ -75,18 +101,17 @@ namespace Torthello
                 0, 6, 1
             };
 
-            float tex = 0.5f;
-            Vector2 texD = new(0, tex);
-            
+            float tex = 0.45f;
+            Vector2 texD = new(tex, 0f);
 
             Vector2[] uv = new Vector2[]{
                 new(0.5f, 0.5f),
-                rotate(texD, 0f),
-                rotate(texD, Mathf.PI / 3f),
-                rotate(texD, 2f * Mathf.PI / 3f),
-                rotate(texD, Mathf.PI),
-                rotate(texD, 4f * Mathf.PI / 3f),
-                rotate(texD, 5f * Mathf.PI / 3f)
+                new Vector2(0.5f, 0.5f) + rotate(texD, 0f),
+                new Vector2(0.5f, 0.5f) + rotate(texD, Mathf.PI / 3f),
+                new Vector2(0.5f, 0.5f) + rotate(texD, 2f * Mathf.PI / 3f),
+                new Vector2(0.5f, 0.5f) + rotate(texD, Mathf.PI),
+                new Vector2(0.5f, 0.5f) + rotate(texD, 4f * Mathf.PI / 3f),
+                new Vector2(0.5f, 0.5f) + rotate(texD, 5f * Mathf.PI / 3f)
             };
 
             mesh.vertices = points;
@@ -98,7 +123,8 @@ namespace Torthello
         }
 
         //RADIANS !!!
-        private static Vector2 rotate(Vector2 v, float delta){
+        private static Vector2 rotate(Vector2 v, float delta)
+        {
             return new Vector2(
                 v.x * Mathf.Cos(delta) - v.y * Mathf.Sin(delta),
                 v.x * Mathf.Sin(delta) + v.y * Mathf.Cos(delta)

@@ -10,6 +10,9 @@ namespace Torthello
             this.settings = settings;
         }
         //initialisation du Graph
+
+        //TODO LOIC!
+        //FIXME
         public override void InitGraph()
         {
             videAdj = new List<int>();

@@ -38,6 +38,7 @@ namespace Torthello
             {
                 _hue = value;
                 Tilematerial.color = Color.HSVToRGB(_hue, 0.7f, 0.7f);
+                HexTilematerial.color = Color.HSVToRGB(_hue, 0.7f, 0.7f);
             }
         }
 

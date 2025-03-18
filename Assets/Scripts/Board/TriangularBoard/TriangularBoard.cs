@@ -8,7 +8,7 @@ namespace Torthello
         new void OnEnable()
         {
             MeshGenerator = new TriangularBoardMeshGenerator(settings);
-            MaterialHandler = new FlatBoardMaterialHandler(settings);
+            MaterialHandler = new TriangularBoardMatHandler(settings);
             Graph = new TriangularBoardGraph(settings);
             inputSystem = new TriangularBoardInputManager(settings, transform, actionMap);
             pawnProccessor = new TriangularBoardPawnProcessor(transform, settings);

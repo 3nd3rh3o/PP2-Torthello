@@ -22,7 +22,7 @@ namespace Torthello
 
             for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
-                mats[i] = settings.Tilematerial;
+                mats[i] = settings.HexTilematerial;
             }
             renderer.sharedMaterials = mats;
             Color hoveredColor = Color.white;
@@ -31,7 +31,7 @@ namespace Torthello
             {
                 MaterialPropertyBlock mpb = new();
                 
-                mpb.SetColor("_BaseColor", failedPlacementAnim && i == failedPlacementTileID ? RedBlinkColor(i == hoveredTile ? hoveredColor : settings.Tilematerial.color) : i == hoveredTile ? hoveredColor : settings.Tilematerial.color);
+                mpb.SetColor("_BaseColor", failedPlacementAnim && i == failedPlacementTileID ? RedBlinkColor(i == hoveredTile ? hoveredColor : settings.HexTilematerial.color) : i == hoveredTile ? hoveredColor : settings.HexTilematerial.color);
                 renderer.SetPropertyBlock(mpb, i);
             }
             if (failedPlacementAnim) animTime += Time.deltaTime;
@@ -46,7 +46,7 @@ namespace Torthello
 
             for (int i = 0; i < settings.BoardHeight * settings.BoardWidth; i++)
             {
-                mats[i] = settings.Tilematerial;
+                mats[i] = settings.HexTilematerial;
             }
             renderer.sharedMaterials = mats;
         }
