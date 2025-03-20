@@ -192,12 +192,7 @@ namespace Torthello
 
 
         public int Somme(int v){
-            int somme = 0;
-            while(v > 0){
-                somme += v;
-                v--;
-            }
-            return somme;
+            return v*(v+1)/2;
         }
     }
 
