@@ -150,10 +150,16 @@ namespace Torthello
                     t.settings = settings;
                     t.actionMap = actions;
                 }
-                else
+                else if(settings.type.GetValue() == BoardType.TriangularBoard)
                 {
                     RemoveBoard();
                     TriangularBoard t = gameBoard.AddComponent<TriangularBoard>();
+                    t.settings = settings;
+                    t.actionMap = actions;
+                }
+                else{
+                    RemoveBoard();
+                    TriangularSimpleBoard t = gameBoard.AddComponent<TriangularSimpleBoard>();
                     t.settings = settings;
                     t.actionMap = actions;
                 }

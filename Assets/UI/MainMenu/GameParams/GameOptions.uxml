@@ -1,7 +1,7 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 3%; margin-right: 5%; margin-bottom: 10%; margin-left: 5%;">
         <engine:GroupBox name="BoardOptions" text="Board Options" style="flex-shrink: 1; flex-grow: 1;">
-            <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus,Flat Hex" index="0" focusable="false">
+            <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus,Flat Hex,Flat TriHex" index="0" focusable="false">
                 <Bindings>
                     <engine:DataBinding property="index" data-source-path="BoardType" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="TwoWay" />
                 </Bindings>
