@@ -51,6 +51,54 @@ namespace Torthello
                             d = idSommet
                         };
                     }
+                    else if(v==settings.BoardHeight){
+                        if(idSommet==Somme(v-1)){
+                            graph.sommets[idSommet].arretes[1] = new Arretes
+                            {
+                                a = idSommet - (v-1),
+                                d = idSommet
+                            };
+                            graph.sommets[idSommet].arretes[2] = new Arretes
+                            {
+                                a = idSommet + 1,
+                                d = idSommet
+                            };
+                        }
+                        else if(idSommet==Somme(v-1)+v-1){
+                            graph.sommets[idSommet].arretes[0] = new Arretes
+                            {
+                                a = idSommet - v,
+                                d = idSommet
+                            };
+                            graph.sommets[idSommet].arretes[5] = new Arretes
+                            {
+                                a = idSommet - 1,
+                                d = idSommet
+                            };
+                        }
+                        else{
+                            graph.sommets[idSommet].arretes[0] = new Arretes
+                            {
+                                a = idSommet - v,
+                                d = idSommet
+                            };
+                            graph.sommets[idSommet].arretes[1] = new Arretes
+                            {
+                                a = idSommet - (v-1),
+                                d = idSommet
+                            };
+                            graph.sommets[idSommet].arretes[2] = new Arretes
+                            {
+                                a = idSommet + 1,
+                                d = idSommet
+                            };
+                            graph.sommets[idSommet].arretes[5] = new Arretes
+                            {
+                                a = idSommet - 1,
+                                d = idSommet
+                            };
+                        }
+                    }
                     else{
                         if(idSommet==Somme(v-1)){
                             graph.sommets[idSommet].arretes[1] = new Arretes

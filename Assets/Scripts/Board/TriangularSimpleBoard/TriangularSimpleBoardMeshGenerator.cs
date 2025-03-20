@@ -8,5 +8,10 @@ namespace Torthello
         public TriangularSimpleBoardMeshGenerator(Settings settings) : base(settings)
         {
         }
+
+        
+
+
+
     }
 }
