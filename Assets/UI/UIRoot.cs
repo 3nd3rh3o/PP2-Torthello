@@ -387,6 +387,15 @@ namespace Torthello
 #endif
             }
             catch { }
+            try
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(gameBoard.GetComponent<TriangularSimpleBoard>());
+#else
+                Destroy(gameBoard.GetComponent<TriangularSimpleBoard>());
+#endif
+            }
+            catch { }
         }
     }
 }
