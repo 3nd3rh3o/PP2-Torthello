@@ -147,10 +147,8 @@ namespace Torthello
                     }
                     //regarde si toutes les arretes sont null
                     int fait = 0;
-                    for(int i=0; i<6; i++){
-                        if(graph.sommets[idSommet].arretes[i] != null){
-                            fait = 1;
-                        }
+                    foreach(Arretes arrete in graph.sommets[idSommet].arretes){
+                        if(arrete != null) fait = 1;
                     }
                     if(fait==0){
                         graph.sommets[idSommet].arretes[0] = new Arretes
