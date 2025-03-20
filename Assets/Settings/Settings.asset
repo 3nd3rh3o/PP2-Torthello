@@ -15,6 +15,7 @@ MonoBehaviour:
   sideLength: 1.5
   PawnModel: 0
   Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
+  HexTilematerial: {fileID: 2100000, guid: 5224ecf1afbcaa94ea8256e676f33dc8, type: 2}
   IA: 1
   Score: 0.625
   startCMD: 0

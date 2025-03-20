@@ -11,6 +11,8 @@ namespace Torthello
 
         public Material Tilematerial;
 
+        public Material HexTilematerial;
+
 
         [HideInInspector]
         public bool IA = true;
@@ -39,6 +41,7 @@ namespace Torthello
             {
                 _hue = value;
                 Tilematerial.color = Color.HSVToRGB(_hue, 0.7f, 0.7f);
+                HexTilematerial.color = Color.HSVToRGB(_hue, 0.7f, 0.7f);
             }
         }
 
@@ -55,8 +58,8 @@ namespace Torthello
         [CreateProperty]
         public int BoardType
         {
-            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, _ => throw new NotImplementedException() };
-            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, _ => throw new NotImplementedException() });
+            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, Torthello.BoardType.TriangularBoard => 2, Torthello.BoardType.TriangularSimpleBoard => 3, _ => throw new NotImplementedException() };
+            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, 2 => Torthello.BoardType.TriangularBoard, 3 => Torthello.BoardType.TriangularSimpleBoard, _ => throw new NotImplementedException() });
         }
 
         [Range(4, 20)]
@@ -123,7 +126,9 @@ namespace Torthello
     public enum BoardType
     {
         TwoD,
-        Torus
+        TriangularBoard,
+        Torus,
+        TriangularSimpleBoard
     }
 }
 

@@ -43,7 +43,7 @@ namespace Torthello
             }
         }
 
-        public void Init()
+        public virtual void Init()
         {
             pawns = new Pawn[settings.BoardHeight * settings.BoardWidth];
         }
@@ -78,7 +78,7 @@ namespace Torthello
             }
         }
 
-        public void StartGame()
+        public virtual void StartGame()
         {
             int u = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
             int v = Mathf.FloorToInt(settings.BoardHeight / 2f) - 1;

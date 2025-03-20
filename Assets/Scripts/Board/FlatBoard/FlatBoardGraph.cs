@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace Torthello
 {
@@ -181,12 +179,12 @@ namespace Torthello
             if (videAdj.Contains(idSommet)) videAdj.Remove(idSommet);
             foreach (Arretes arrete in graph.sommets[idSommet].arretes)
             {
+                if (arrete == null) continue;
                 if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
                 {
                     videAdj.Add(arrete.a);
                 }
             }
-
         }
 
         public void DestroyGraph()
@@ -336,7 +334,7 @@ namespace Torthello
         }
 
         // fonction qui retourne si le coup est valide
-        public bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
+        public virtual bool IsValidMove(int idSommet, Couleur couleur, List<List<int>> pionsARetournes)
         {
             bool CoupValide = false;
             Sommets sommetActuel = graph.sommets[idSommet];
@@ -389,7 +387,7 @@ namespace Torthello
             return CoupValide;
         }
 
-        public void StartGame()
+        public virtual void StartGame()
         {
             int u = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
             int v = Mathf.FloorToInt(settings.BoardHeight / 2f) - 1;
