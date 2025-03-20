@@ -1,5 +1,6 @@
-using System;
+
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Torthello
 {
@@ -9,6 +10,20 @@ namespace Torthello
         public TriangularSimpleBoardGraph(Settings settings) : base(settings)
         {
             this.settings = settings;
+        }
+
+        public override void StartGame()
+        {
+           int r0 = settings.BoardHeight / 2;
+            int r1 = settings.BoardHeight / 2 - 1;
+            int c0 = r0 * (r0 + 1) / 2 + (r0 / 2);
+            int c1 = c0 + 1;
+            int c2 = r1 * (r1 + 1) / 2 + (r1 / 2);
+            int c3 = c2 + 1;
+            SetPawn(c0, Couleur.Blanc);
+            SetPawn(c1, Couleur.Noir);
+            SetPawn(c2, Couleur.Noir);
+            SetPawn(c3, Couleur.Blanc);
         }
         //initialisation du Graph  
         public override void InitGraph(){

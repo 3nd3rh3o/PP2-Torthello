@@ -179,12 +179,12 @@ namespace Torthello
             if (videAdj.Contains(idSommet)) videAdj.Remove(idSommet);
             foreach (Arretes arrete in graph.sommets[idSommet].arretes)
             {
+                if (arrete == null) continue;
                 if (graph.sommets[arrete.a].couleur == Couleur.Vide && !videAdj.Contains(arrete.a))
                 {
                     videAdj.Add(arrete.a);
                 }
             }
-
         }
 
         public void DestroyGraph()
@@ -387,7 +387,7 @@ namespace Torthello
             return CoupValide;
         }
 
-        public void StartGame()
+        public virtual void StartGame()
         {
             int u = Mathf.FloorToInt(settings.BoardWidth / 2f) - 1;
             int v = Mathf.FloorToInt(settings.BoardHeight / 2f) - 1;

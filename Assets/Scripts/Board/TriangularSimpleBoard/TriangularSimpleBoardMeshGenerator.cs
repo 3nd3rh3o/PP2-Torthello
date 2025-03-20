@@ -48,7 +48,7 @@ namespace Torthello
             combines.ToList().ForEach(c => MonoBehaviour.Destroy(c.mesh));
 #endif
 
-            combines = new CombineInstance[settings.BoardHeight * settings.BoardWidth];
+            combines = new CombineInstance[settings.BoardHeight*(settings.BoardHeight+1)/2];
 
             CreateBoardMesh();
 
@@ -60,15 +60,16 @@ namespace Torthello
             //Calcul du centre de la premiere case
             Vector3 U = new(2f * Mathf.Sqrt(Mathf.Pow(settings.sideLength * 0.5f, 2) - Mathf.Pow(settings.sideLength * 0.25f, 2)), 0f, 0f);
             Vector3 V = Quaternion.Euler(0f, 120f, 0f) * U;
-            Vector3 oV = (settings.BoardHeight - 1) * 0.5f * -V;
-            Vector3 oU = Mathf.Floor(settings.BoardHeight * 0.5f) * -U;
+            Vector3 vO = (V * (settings.BoardHeight - 1));
+            Vector3 uO = vO + (U * (settings.BoardHeight - 1));
+            Vector3 o = (Vector3.zero  + vO + uO) / 3f;
             //generation des mesh en fonction de l'offset
             int co = 0;
             for (int i = 0; i < settings.BoardHeight; i++)
             {
                 for (int j = 0; j <= i; j++)
                 {
-                    Vector3 c = oU + oV + (j * U) + (i * V);
+                    Vector3 c = - o + (j * U) + (i * V);
                     Mesh mesh = new();
                     CreateHexagonMesh(c, settings.sideLength, mesh);
                     combines[co].mesh = mesh;
@@ -128,7 +129,5 @@ namespace Torthello
                 v.x * Mathf.Sin(delta) + v.y * Mathf.Cos(delta)
             );
         }
-
-
     }
 }
