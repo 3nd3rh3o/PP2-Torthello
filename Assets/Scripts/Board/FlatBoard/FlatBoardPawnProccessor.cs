@@ -33,7 +33,7 @@ namespace Torthello
 #endif
         }
 
-        public void FlipAnimSeq(List<List<int>> pawnFlipped)
+        public virtual void FlipAnimSeq(List<List<int>> pawnFlipped)
         {
             switch (settings.PawnModel)
             {

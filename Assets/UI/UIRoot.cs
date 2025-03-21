@@ -104,6 +104,8 @@ namespace Torthello
             menuOption = MenuOptionAsset.Instantiate();
             newGame = NewGameAsset.Instantiate();
             inGameOverlay = InGameOverlayAsset.Instantiate();
+            
+            
             pauseUI = PauseUIAsset.Instantiate();
             pauseOptionUI = PauseOptionUIAsset.Instantiate();
             Screen.SetResolution(Display.main.systemWidth, Display.main.systemHeight, FullScreenMode.FullScreenWindow);
@@ -148,6 +150,7 @@ namespace Torthello
                     RemoveBoard();
                     // TODO add to UI minimap container.
                     ToreBoard t = gameBoard.AddComponent<ToreBoard>();
+                    VisualElement root = uiDocument.rootVisualElement;
                     t.settings = settings;
                     t.actionMap = actions;
                 }
@@ -315,8 +318,12 @@ namespace Torthello
             state = 3;
 
             VisualElement root = uiDocument.rootVisualElement;
+            
 
             root.Add(inGameOverlay);
+            
+            root.Q<VisualElement>("MINIMAP").visible = (settings.type.GetValue() == BoardType.Torus && settings.m_MinimapTorus.GetValue());
+            
         }
 
         void DisableInGameOverlay()
@@ -378,9 +385,9 @@ namespace Torthello
                 Destroy(gameBoard.GetComponent<ToreBoard>());
 #endif
                 VisualElement root = uiDocument.rootVisualElement;
+                root.Q<VisualElement>("MINIMAP").SetEnabled(false);
                 // TODO destroy tex
                 settings.minimapRT.Release();
-                settings.minimapRT = null;
             }
             catch { }
             try

@@ -128,7 +128,7 @@
                 {
                     "name": "",
                     "id": "c4e669cd-8806-4b03-8994-a2c74d038c6e",
-                    "path": "<Keyboard>/pageUp",
+                    "path": "<Keyboard>/downArrow",
                     "interactions": "Press(behavior=2)",
                     "processors": "Clamp(max=1)",
                     "groups": "",
@@ -139,7 +139,7 @@
                 {
                     "name": "",
                     "id": "ac3b3ae7-4108-4ed2-8593-e653cb2bda6e",
-                    "path": "<Keyboard>/pageDown",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "Press(behavior=2)",
                     "processors": "Clamp(max=1)",
                     "groups": "",

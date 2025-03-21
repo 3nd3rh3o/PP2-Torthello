@@ -16,7 +16,7 @@ namespace Torthello
 
 
         [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
-        public RenderTexture minimapRT;
+        [CreateProperty]public RenderTexture minimapRT;
 
 
         [HideInInspector]
@@ -71,6 +71,14 @@ namespace Torthello
         public int BoardWidth = 8;
         [Range(4, 20)]
         public int BoardHeight = 8;
+
+        public Parameter<bool> m_MinimapTorus = new(false);
+
+        [CreateProperty] public bool MinimapTorus
+        {
+            get => m_MinimapTorus.GetValue();
+            set => m_MinimapTorus.SetValue(value);
+        }
 
         //default: true
         

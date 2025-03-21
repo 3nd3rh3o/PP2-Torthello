@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Torthello
@@ -13,6 +14,13 @@ namespace Torthello
         {
             base.SpawnPawn(TileID, couleur);
             // TODO compute call
+            UpdateMap();
+        }
+
+        public override void FlipAnimSeq(List<List<int>> pawnFlipped)
+        {
+            base.FlipAnimSeq(pawnFlipped);
+
             UpdateMap();
         }
 
@@ -150,6 +158,7 @@ namespace Torthello
             cs.SetTexture(0, "Result", settings.minimapRT);
             cs.SetInt("width", settings.BoardWidth);
             cs.SetInt("height", settings.BoardHeight);
+            cs.SetVector("BGColor", settings.color);
 
             cs.Dispatch(0, 256 / 8, 256 / 8, 1);
 

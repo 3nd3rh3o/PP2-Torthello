@@ -1,21 +1,25 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BaseStyle.uss?fileID=7433441132597879392&amp;guid=9d535d730a5b7d8449c11693b36e2bda&amp;type=3#BaseStyle" />
     <engine:VisualElement name="VisualElement" style="flex-grow: 0; align-items: auto; align-content: auto; justify-content: flex-start; flex-direction: column;">
         <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-self: stretch; align-items: center; justify-content: center; align-content: auto;">
-            <engine:Label text="Blanc" />
-            <engine:ProgressBar value="0" title="Score" high-value="1" style="flex-grow: 1; flex-shrink: 1; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; max-width: 81%;">
+            <engine:Label text="Blanc" style="background-color: rgba(255, 255, 255, 0.22);" />
+            <engine:ProgressBar value="0" title="Score" high-value="1" style="flex-grow: 1; flex-shrink: 1; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; max-width: 81%; background-color: rgb(0, 0, 0); -unity-background-image-tint-color: rgb(0, 0, 0); color: rgb(0, 0, 0);">
                 <Bindings>
                     <engine:DataBinding property="value" data-source-path="Score" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="ToTarget" />
                 </Bindings>
             </engine:ProgressBar>
-            <engine:Label text="Noir" />
+            <engine:Label text="Noir" style="background-color: rgba(255, 255, 255, 0.29);" />
         </engine:VisualElement>
     </engine:VisualElement>
-    <engine:VisualElement style="flex-grow: 1; flex-direction: row; align-items: auto; justify-content: flex-start; align-self: stretch;">
-        <engine:Label text="Tour du joueur :" style="color: rgb(11, 206, 243);" />
-        <engine:Label text="Label" name="JoueurActuel" style="color: rgb(11, 206, 243); background-color: rgba(0, 0, 0, 0);">
+    <engine:VisualElement name="VisualElement" style="flex-grow: 1; flex-direction: row; align-items: auto; justify-content: flex-start; align-self: stretch;">
+        <engine:Label text="Tour du joueur :" style="color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0.28);" />
+        <engine:Label text="Label" name="JoueurActuel" style="color: rgb(0, 0, 0); background-color: rgba(255, 255, 255, 0.39);">
             <Bindings>
                 <engine:DataBinding property="text" data-source-path="turn" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="ToTarget" />
             </Bindings>
         </engine:Label>
+        <engine:VisualElement name="MINIMAP" style="flex-grow: 1; align-self: stretch; justify-content: space-between; align-content: auto; align-items: flex-end; flex-direction: row-reverse; right: 0; bottom: 0; flex-wrap: wrap-reverse;">
+            <engine:VisualElement enabled="true" style="flex-grow: 1; background-image: url(&quot;project://database/Assets/Textures/minimap.renderTexture?fileID=8400000&amp;guid=afd27643b3321d748a0ee142a58eee04&amp;type=2#minimap&quot;); background-color: rgba(255, 255, 255, 0); width: auto; height: 33%; align-content: flex-end; align-self: flex-start; align-items: auto; justify-content: flex-start; max-width: 30%; right: 0; bottom: 0; flex-direction: row-reverse;" />
+        </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>

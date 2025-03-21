@@ -3,5 +3,11 @@
         <engine:Button text="Resume" name="Pause_Resume_button" style="flex-grow: 0; flex-shrink: 1;" />
         <engine:Button text="Option" name="Pause_Option_button" style="flex-grow: 0; flex-shrink: 1;" />
         <engine:Button text="Main menu" name="Pause_Menu_button" style="flex-shrink: 1; flex-grow: 0;" />
+        <engine:VisualElement style="flex-grow: 0; align-content: auto; justify-content: space-evenly; align-items: stretch; align-self: center; flex-wrap: wrap; background-color: rgba(255, 255, 255, 0.15);">
+            <engine:Label text="Right click (Hold) : Camera orbit" />
+            <engine:Label text="Left click : Place pawn" />
+            <engine:Label text="Up / Down (Torus) : Roll board" />
+            <engine:Label text="R : Quick restart" />
+        </engine:VisualElement>
     </engine:VisualElement>
 </engine:UXML>
