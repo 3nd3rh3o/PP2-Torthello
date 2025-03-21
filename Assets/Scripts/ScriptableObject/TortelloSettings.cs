@@ -16,7 +16,7 @@ namespace Torthello
 
 
         [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
-        [HideInInspector] public RenderTexture minimapRT;
+        public RenderTexture minimapRT;
 
 
         [HideInInspector]

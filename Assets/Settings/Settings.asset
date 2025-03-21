@@ -16,17 +16,19 @@ MonoBehaviour:
   PawnModel: 0
   Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
   HexTilematerial: {fileID: 2100000, guid: 5224ecf1afbcaa94ea8256e676f33dc8, type: 2}
-  IA: 1
-  Score: 0.33333334
+  minimapCS: {fileID: 7200000, guid: 85bfab8d11cbb594599210a217c6c8e6, type: 3}
+  minimapRT: {fileID: 0}
+  IA: 0
+  Score: 0.5
   startCMD: 0
-  turn: Blanc(IA)
+  turn: Noir
   rotationOffset: 180
   rotAnimU: 0
   rotAnimT: 1.0183179
   rotAnimD: 0
-  BoardWidth: 6
-  BoardHeight: 6
-  isInGame: 0
+  BoardWidth: 8
+  BoardHeight: 8
+  isInGame: 1
   CamSentivity: 0.393
   pitch: 120
   yaw: 0
@@ -34,4 +36,4 @@ MonoBehaviour:
   rebuildBoardCMD: 0
   Difficulty: 2
   PlayerNoir: 0
-  PlayerBlanc: 1
+  PlayerBlanc: 0

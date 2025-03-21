@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace Torthello
 {
@@ -14,8 +13,7 @@ namespace Torthello
         {
             base.SpawnPawn(TileID, couleur);
             // TODO compute call
-
-            
+            UpdateMap();
         }
 
         public override void Update()
