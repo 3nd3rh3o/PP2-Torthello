@@ -378,7 +378,7 @@ namespace Torthello
                 Destroy(gameBoard.GetComponent<ToreBoard>());
 #endif
                 VisualElement root = uiDocument.rootVisualElement;
-                // TODO destroy minimap container
+                // TODO destroy tex
             }
             catch { }
             try

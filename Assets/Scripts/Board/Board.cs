@@ -71,6 +71,10 @@ namespace Torthello
             settings.turn = "Noir";
             settings.PlayerBlanc = settings.IA ? PlayerType.MiniMax : PlayerType.Human;
             Graph.StartGame();
+            if (pawnProccessor is ToreBoardPawnProcessor torePawnProccessorSystem) 
+            {
+                //TODO create tex if null;
+            }
             pawnProccessor.StartGame();
         }
 
