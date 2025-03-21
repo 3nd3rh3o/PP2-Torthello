@@ -10,6 +10,13 @@ namespace Torthello
         {
         }
 
+        public override void SpawnPawn(int TileID, Couleur couleur)
+        {
+            base.SpawnPawn(TileID, couleur);
+            // TODO compute call
+            
+        }
+
         public override void Update()
         {
             // TODO si rotationAnim == true => Reposition and increase lerp factor by Time.deltaTime
@@ -104,6 +111,8 @@ namespace Torthello
                 pawn.pos = newPosition;
                 pawn.rot = newRotation;
             }
+
+            //TODO Compute call
         }
 
 

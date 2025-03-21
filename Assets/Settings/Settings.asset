@@ -17,12 +17,12 @@ MonoBehaviour:
   Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
   HexTilematerial: {fileID: 2100000, guid: 5224ecf1afbcaa94ea8256e676f33dc8, type: 2}
   IA: 1
-  Score: 0.625
+  Score: 0.33333334
   startCMD: 0
-  turn: Noir
-  rotationOffset: 200
+  turn: Blanc(IA)
+  rotationOffset: 180
   rotAnimU: 0
-  rotAnimT: 1.0046052
+  rotAnimT: 1.0183179
   rotAnimD: 0
   BoardWidth: 6
   BoardHeight: 6

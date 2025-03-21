@@ -20,7 +20,7 @@ namespace Torthello
             previousWidth = settings.BoardWidth;
         }
 
-        public void Destroy()
+        public virtual void Destroy()
         {
 #if UNITY_EDITOR
             pawns.ToList().ForEach(p => { if (p != null) MonoBehaviour.DestroyImmediate(p.gameObject); });
@@ -62,7 +62,7 @@ namespace Torthello
 
         }
 
-        public void SpawnPawn(int TileID, Couleur couleur)
+        public virtual void SpawnPawn(int TileID, Couleur couleur)
         {
             switch (settings.PawnModel)
             {

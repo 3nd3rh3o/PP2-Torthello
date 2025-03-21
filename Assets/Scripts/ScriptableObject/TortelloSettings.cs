@@ -14,6 +14,11 @@ namespace Torthello
         public Material HexTilematerial;
 
 
+
+        [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
+        [HideInInspector] public RenderTexture minimapRT;
+
+
         [HideInInspector]
         public bool IA = true;
         //used by UI.

@@ -146,6 +146,7 @@ namespace Torthello
                 else if (settings.type.GetValue() == BoardType.Torus)
                 {
                     RemoveBoard();
+                    // TODO add to UI minimap container.
                     ToreBoard t = gameBoard.AddComponent<ToreBoard>();
                     t.settings = settings;
                     t.actionMap = actions;
@@ -376,6 +377,8 @@ namespace Torthello
 #else
                 Destroy(gameBoard.GetComponent<ToreBoard>());
 #endif
+                VisualElement root = uiDocument.rootVisualElement;
+                // TODO destroy minimap container
             }
             catch { }
             try
