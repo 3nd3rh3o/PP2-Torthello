@@ -1,0 +1,19 @@
+// Each #kernel tells which function to compile; you can have many kernels
+#pragma kernel CSMain
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+
+StructuredBuffer<int> pawns;
+RWTexture2D<float4> Result;
+int width;
+int height;
+
+[numthreads(8,8,1)]
+void CSMain (uint2 id : SV_DispatchThreadID)
+{
+    // TODO: insert actual code here!
+    int2 case = int2((id.x / 256) * width, (id.y / 256) * height);
+    int c = case.x % 2 + case.y % 2;
+    Result[id.xy] = float4(c, c, c, 1);
+}

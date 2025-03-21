@@ -74,6 +74,14 @@ namespace Torthello
             if (pawnProccessor is ToreBoardPawnProcessor torePawnProccessorSystem) 
             {
                 //TODO create tex if null;
+                if(settings.minimapRT == null)
+                {
+                    settings.minimapRT = new(256, 256, 0, RenderTextureFormat.ARGB32);
+                    settings.minimapRT.dimension = UnityEngine.Rendering.TextureDimension.Tex2D;
+                    settings.minimapRT.enableRandomWrite = true;
+                    settings.minimapRT.Create();
+                }
+                
             }
             pawnProccessor.StartGame();
         }

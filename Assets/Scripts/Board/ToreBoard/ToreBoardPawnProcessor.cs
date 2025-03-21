@@ -14,6 +14,7 @@ namespace Torthello
         {
             base.SpawnPawn(TileID, couleur);
             // TODO compute call
+
             
         }
 
@@ -134,5 +135,28 @@ namespace Torthello
 
             return new Vector3[] { p0, p1, p2, p3 };
         }
+        
+        private void UpdateMap()
+        {
+            ComputeShader cs = settings.minimapCS;
+
+            ComputeBuffer pawsBuffer = new ComputeBuffer(settings.BoardWidth * settings.BoardHeight, sizeof(int));
+            int[] p = new int[settings.BoardWidth * settings.BoardHeight];
+            for(int i = 0; i < settings.BoardWidth * settings.BoardHeight; i++)
+            {
+                p[i] = pawns[i] == null ? 0 : pawns[i].couleur==Couleur.Noir ? 1 : 2;
+            }
+            pawsBuffer.SetData(p);
+
+            cs.SetBuffer(0, "pawns", pawsBuffer);
+            cs.SetTexture(0, "Result", settings.minimapRT);
+            cs.SetInt("width", settings.BoardWidth);
+            cs.SetInt("height", settings.BoardHeight);
+
+            cs.Dispatch(0, 256 / 8, 256 / 8, 1);
+
+            pawsBuffer.Release();
+        }
     }
+
 }

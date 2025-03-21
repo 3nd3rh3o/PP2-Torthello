@@ -379,6 +379,8 @@ namespace Torthello
 #endif
                 VisualElement root = uiDocument.rootVisualElement;
                 // TODO destroy tex
+                settings.minimapRT.Release();
+                settings.minimapRT = null;
             }
             catch { }
             try
