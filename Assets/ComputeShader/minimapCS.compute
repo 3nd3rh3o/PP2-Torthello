@@ -13,7 +13,7 @@ int height;
 void CSMain (uint2 id : SV_DispatchThreadID)
 {
     // TODO: insert actual code here!
-    int2 Case = int2((id.x / 256) * width, (id.y / 256) * height);
-    int c = Case.x % 2 + Case.y % 2;
+    int2 Case = int2((((float)id.x) / 256) * width, (((float)id.y) / 256) * height);
+    int c = (Case.x % 2 + Case.y % 2) != 1 ? 1 : 0;
     Result[id.xy] = float4(c, c, c, 1);
 }
