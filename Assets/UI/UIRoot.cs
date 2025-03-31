@@ -35,7 +35,10 @@ namespace Torthello
         private Action pause_Menu;
         private Action pause_Option;
         private Action pause_option_back;
-
+        private Action InGameOverlay_up;
+        private Action InGameOverlay_right;
+        private Action InGameOverlay_down;
+        private Action InGameOverlay_left;
         private int state = 0;
 
 
@@ -97,6 +100,30 @@ namespace Torthello
             {
                 Disable(state);
                 EnablePauseMenu();
+            };
+            InGameOverlay_up = () =>
+            {
+                settings.offset_Minimap_height ++;
+                settings.offset_Minimap_height += settings.BoardHeight;
+                settings.offset_Minimap_height %= settings.BoardHeight;
+            };
+            InGameOverlay_right = () =>
+            {
+                settings.offset_Minimap_width ++;
+                settings.offset_Minimap_width += settings.BoardWidth;
+                settings.offset_Minimap_width %= settings.BoardWidth;
+            };
+            InGameOverlay_down = () =>
+            {
+                settings.offset_Minimap_height --;
+                settings.offset_Minimap_height += settings.BoardHeight;
+                settings.offset_Minimap_height %= settings.BoardHeight;
+            };
+            InGameOverlay_left = () =>
+            {
+                settings.offset_Minimap_width --;
+                settings.offset_Minimap_width += settings.BoardWidth;
+                settings.offset_Minimap_width %= settings.BoardWidth;
             };
 
             uiDocument = GetComponent<UIDocument>();
@@ -323,12 +350,21 @@ namespace Torthello
             root.Add(inGameOverlay);
             
             root.Q<VisualElement>("MINIMAP").visible = (settings.type.GetValue() == BoardType.Torus && settings.m_MinimapTorus.GetValue());
+            root.Q<Button>("InGameOverlay_up").clicked += InGameOverlay_up;
+            root.Q<Button>("InGameOverlay_right").clicked += InGameOverlay_right;
+            root.Q<Button>("InGameOverlay_down").clicked += InGameOverlay_down;
+            root.Q<Button>("InGameOverlay_left").clicked += InGameOverlay_left;
             
         }
 
         void DisableInGameOverlay()
         {
             VisualElement root = uiDocument.rootVisualElement;
+
+            root.Q<Button>("InGameOverlay_up").clicked -= InGameOverlay_up;
+            root.Q<Button>("InGameOverlay_right").clicked -= InGameOverlay_right;
+            root.Q<Button>("InGameOverlay_down").clicked -= InGameOverlay_down;
+            root.Q<Button>("InGameOverlay_left").clicked -= InGameOverlay_left;
 
             root.Remove(inGameOverlay);
         }

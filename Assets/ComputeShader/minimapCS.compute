@@ -8,19 +8,30 @@ StructuredBuffer<int> pawns;
 RWTexture2D<float4> Result;
 int width;
 int height;
+int offsetWidth;
+int offsetHeight;
 float4 BGColor;
 
 [numthreads(8,8,1)]
 void CSMain (uint2 id : SV_DispatchThreadID)
 {
     int2 Case = int2((((float)id.x) / 256) * width, (((float)id.y) / 256) * height);
+
+    Case.x += offsetWidth;
+    Case.y += offsetHeight;
+
+    Case.x += width;
+    Case.x %= width; 
+
+    Case.y += height;
+    Case.y %= height; 
     
     int p = pawns[Case.y * width + Case.x];
 
     float cW = 256. / width;
     float cH = 256. / height;
 
-    
+
     float X = (((float)id.x) / ((float)cW)) % 1.;
     float Y = (((float)id.y) / ((float)cH)) % 1.;
     

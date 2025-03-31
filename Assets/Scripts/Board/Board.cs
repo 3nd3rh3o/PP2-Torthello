@@ -64,6 +64,8 @@ namespace Torthello
         {
             settings.startCMD = false;
             settings.isInGame = true;
+            settings.offset_Minimap_height = 0;
+            settings.offset_Minimap_width = 0;
             coolDown = 0f;
             Graph.RemoveAllPawns();
             pawnProccessor.RemoveAllPawns();
@@ -93,6 +95,7 @@ namespace Torthello
                 // Torus rotation handling.
                 if (inputSystem is ToreBoardInputManager toreInputSystem)
                 {
+                    ((ToreBoardPawnProcessor) pawnProccessor).UpdateMap();
                     if (settings.rotAnimU || settings.rotAnimD)
                     {
                         if (settings.rotAnimT > 1f)
