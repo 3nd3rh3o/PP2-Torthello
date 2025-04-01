@@ -34,12 +34,13 @@ Shader "Tortello/RendererFeature/GraphRender"
 
             float projDist(float2 v, float2 w, float2 p)
             {
-                l2 = pointDist(v, w); 
-                if(l2 == 0. && projDist(p,v)){
-                    t = max(0., min(1., dot(p-v, w-v)/l2));
-                    proj = v + t * (w - v);
-                    return pointDist(p, proj);
-                }
+                float l2 = pointDist(v, w);
+                if(l2 == 0.) return pointDist(p,v);
+
+                float t = max(0., min(1., dot(p-v, w-v)/l2));
+                float2 proj = v + t * (w - v);
+                return pointDist(p, proj);
+
                 return 0.;
             }
             // return dist between p and v.
