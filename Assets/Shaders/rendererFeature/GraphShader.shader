@@ -29,8 +29,20 @@ Shader "Tortello/RendererFeature/GraphRender"
             #include "fullscreenPassSetup.hlsl"
 
             // TODO declare properties here. (ASK ME)
+            uniform StructuredBuffer<float3> _nodes;
+            uniform int _numNodes;
+            uniform StructuredBuffer<int> _edges;
+            uniform int _numEdges;
+            uniform StructuredBuffer<float3> _edgesColors;
+            uniform float _nodesRadius;
+            uniform float _edgesRadius;
+            uniform float3 _nodesColor;
 
-
+            // return dist between p and v.
+            float pointDist(float2 p, float2 v)
+            {
+                return length(v-p);
+            }
 
             float projDist(float2 v, float2 w, float2 p)
             {
@@ -41,13 +53,8 @@ Shader "Tortello/RendererFeature/GraphRender"
                 float2 proj = v + t * (w - v);
                 return pointDist(p, proj);
 
-                return 0.;
             }
-            // return dist between p and v.
-            float pointDist(float2 p, float2 v)
-            {
-                return length(v-p);
-            }
+            
 
             SurfaceDescription SurfaceDescriptionFunction(SurfaceDescriptionInputs IN)
             {
@@ -58,16 +65,16 @@ Shader "Tortello/RendererFeature/GraphRender"
                 float2 fragPos = IN.ScreenPosition.xy;
 
                 for(int i = 0; i < _numNodes; i++ ){
-                    if(pointDist(fragPos,_nodes[i].xy) <= _nodesRaduis ){
+                    if(pointDist(fragPos,_nodes[i].xy) <= _nodesRadius ){
                         surface.BaseColor = _nodes[i].z == 0? _nodesColor : _nodes[i].z == 1? float3(0. ,0. ,0.) : float3(1., 1., 1.);
                         surface.Alpha = 1.;
                         return surface;
                     }
                 }
-                for(int i = 0; i < _numEdges; i++){
-                    if( pointDist(fragPos, _nodes[_edges[2*i]].xy) <= _edgesRadius || pointDist(fragPos, _nodes[_edges[2*i+1]].xy) <= _edgesRadius || 
-                    ( projDist(_nodes[_edges[2*i]].xy, _nodes[_edges[2*i+1]].xy, fragPos) <= _edgesRadius && projDist(_nodes[_edges[2*i+1]].xy, _nodes[_edges[2*i]].xy, fragPos) <= _edgesRadius ) ){
-                        surface.BaseColor = _edgesColors[i];
+                for(int j = 0; j < _numEdges; j++){
+                    if( pointDist(fragPos, _nodes[_edges[2*j]].xy) <= _edgesRadius || pointDist(fragPos, _nodes[_edges[2*j+1]].xy) <= _edgesRadius || 
+                    ( projDist(_nodes[_edges[2*j]].xy, _nodes[_edges[2*j+1]].xy, fragPos) <= _edgesRadius && projDist(_nodes[_edges[2*j+1]].xy, _nodes[_edges[2*j]].xy, fragPos) <= _edgesRadius ) ){
+                        surface.BaseColor = _edgesColors[j];
                         surface.Alpha = 1.;
                         return surface;
                     }
