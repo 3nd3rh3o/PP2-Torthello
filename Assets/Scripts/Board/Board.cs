@@ -95,7 +95,7 @@ namespace Torthello
                 // Torus rotation handling.
                 if (inputSystem is ToreBoardInputManager toreInputSystem)
                 {
-                    ((ToreBoardPawnProcessor) pawnProccessor).UpdateMap();
+                    //TODO hoveredTile sonner a setting => updatemap puisse lire                   ((ToreBoardPawnProcessor) pawnProccessor).UpdateMap();
                     if (settings.rotAnimU || settings.rotAnimD)
                     {
                         if (settings.rotAnimT > 1f)
