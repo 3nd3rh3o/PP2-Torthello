@@ -10,7 +10,7 @@ int width;
 int height;
 int offsetWidth;
 int offsetHeight;
-int hoveredTileposition;
+int hoveredTile;
 float4 BGColor;
 
 [numthreads(8,8,1)]
@@ -38,7 +38,7 @@ void CSMain (uint2 id : SV_DispatchThreadID)
     
     float M = 0.05;
 
-    float4 c = length(float2(X - .5, Y - .5)) < 0.4 && !(p == 0)? (p == 1 ? float4(0., 0., 0., 1.) : float4(1., 1., 1., 1.)) : X < M || X > (1. - M) || Y < M || Y > (1. - M) ? float4(.2, .2, .2, 1.) : BGColor;
+    float4 c = length(float2(X - .5, Y - .5)) < 0.4 && !(p == 0)? (p == 1 ? float4(0., 0., 0., 1.) : float4(1., 1., 1., 1.)) : X < M || X > (1. - M) || Y < M || Y > (1. - M) ? float4(.2, .2, .2, 1.) : hoveredTile == (Case.y * width + Case.x) ? float4(1., 0., 0., 1.) : BGColor;
 
     Result[id.xy] = c;
 }
