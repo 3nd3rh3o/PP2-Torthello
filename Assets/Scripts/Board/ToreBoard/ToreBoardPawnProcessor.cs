@@ -33,7 +33,6 @@ namespace Torthello
                 RepositionPawns();
                 return;
             }
-            //Debug.Log("pawnProcessorUpdate");
             previousHeight = settings.BoardHeight;
             previousWidth = settings.BoardWidth;
             Destroy();
@@ -160,8 +159,8 @@ namespace Torthello
             cs.SetInt("height", settings.BoardHeight);
             cs.SetInt("offsetWidth", settings.offset_Minimap_width);
             cs.SetInt("offsetHeight", settings.offset_Minimap_height);
+            cs.SetInt("hoveredTile", settings.hoveredTile);
             cs.SetVector("BGColor", settings.color);
-
             cs.Dispatch(0, 256 / 8, 256 / 8, 1);
 
             pawsBuffer.Release();

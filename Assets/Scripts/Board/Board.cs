@@ -57,7 +57,6 @@ namespace Torthello
             settings.startCMD = false;
             aiPlayerNoir = new PlayerMiniMax(Graph, Couleur.Noir);
             aiPlayerBlanc = new PlayerMiniMax(Graph, Couleur.Blanc);
-            //StartGame();
         }
 
         public void StartGame()
@@ -95,7 +94,8 @@ namespace Torthello
                 // Torus rotation handling.
                 if (inputSystem is ToreBoardInputManager toreInputSystem)
                 {
-                    //TODO hoveredTile sonner a setting => updatemap puisse lire                   ((ToreBoardPawnProcessor) pawnProccessor).UpdateMap();
+                    settings.hoveredTile = hoveredTile;
+                    ((ToreBoardPawnProcessor) pawnProccessor).UpdateMap();
                     if (settings.rotAnimU || settings.rotAnimD)
                     {
                         if (settings.rotAnimT > 1f)

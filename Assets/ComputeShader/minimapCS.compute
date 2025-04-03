@@ -10,6 +10,7 @@ int width;
 int height;
 int offsetWidth;
 int offsetHeight;
+int hoveredTileposition;
 float4 BGColor;
 
 [numthreads(8,8,1)]
