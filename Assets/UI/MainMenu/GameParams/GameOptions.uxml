@@ -1,5 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
-    <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 3%; margin-right: 5%; margin-bottom: 10%; margin-left: 5%;">
+    <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 3%; margin-right: 2%; margin-bottom: 10%; margin-left: 5%; align-self: stretch; align-items: stretch;">
         <engine:GroupBox name="BoardOptions" text="Board Options" style="flex-shrink: 1; flex-grow: 1;">
             <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus,Flat Hex,Flat TriHex" index="0" focusable="false">
                 <Bindings>
@@ -19,10 +19,24 @@
                 </engine:SliderInt>
             </engine:VisualElement>
         </engine:GroupBox>
-        <engine:VisualElement name="StartMode" style="flex-grow: 1; flex-direction: row; justify-content: space-around; align-items: center; align-self: stretch; align-content: stretch; flex-wrap: wrap;">
-            <engine:Button text="Two player mode" focusable="true" name="NewGame_TwoPlayer_button" style="flex-shrink: 1; flex-grow: 1;" />
-            <engine:Button text="Against AI" name="NewGame_BOT_button" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center;" />
+        <engine:VisualElement name="StartMode" style="flex-grow: 1; flex-direction: column; justify-content: flex-start; align-items: center; align-self: stretch; align-content: stretch; flex-wrap: wrap; width: auto; margin-right: 4px;">
+            <engine:Button text="Two player mode" focusable="true" name="NewGame_TwoPlayer_button" style="flex-shrink: 1; flex-grow: 1; flex-basis: auto; width: 50%; min-width: 125px;" />
+            <engine:VisualElement name="AIMode" style="flex-grow: 1; flex-direction: row-reverse; width: 50%; min-width: 125px; justify-content: flex-start; align-self: auto; flex-wrap: nowrap; margin-left: 0; padding-left: 0;">
+                <engine:DropdownField index="0" choices="MiniMax,Random,Greedy" enabled="true" name="NewGame_BOT_choice" usage-hints="None" focusable="false" style="flex-direction: column; width: 50%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; height: 100%; font-size: 14px; opacity: 1; -unity-background-scale-mode: stretch-to-fill; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
+                    <Bindings>
+                        <engine:DataBinding property="index" data-source-path="AIType" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="TwoWay" />
+                    </Bindings>
+                </engine:DropdownField>
+                <engine:VisualElement name="AIMode" style="flex-grow: 1; flex-direction: column; width: 50%; min-width: 75px; justify-content: flex-start; align-self: auto; flex-wrap: nowrap; margin-right: 4px;">
+                    <engine:Button text="Player vs AI" name="NewGame_BOT_button" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center; flex-basis: auto; width: 100%; min-width: 50px; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 12px; padding-bottom: 5px; padding-left: 12px;" />
+                    <engine:Button text="AI vs AI" name="NewGame_BOT_VS_BOT_button" style="flex-shrink: 1; flex-grow: 1; align-content: flex-start; align-self: center; flex-basis: auto; width: 100%; min-width: 50px; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 12px; padding-bottom: 5px; padding-left: 12px;" />
+                </engine:VisualElement>
+            </engine:VisualElement>
+            <engine:VisualElement name="MultiplayerContainer" style="flex-grow: 1; flex-direction: row; width: 50%; min-width: 125px; margin-top: 2px; flex-wrap: nowrap; margin-right: 4px; margin-bottom: 2px; margin-left: 4px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; background-color: rgba(150, 150, 150, 0);">
+                <engine:Button text="Host Game" name="NewGame_Host_button" enable-rich-text="false" enabled="false" double-click-selects-word="true" style="min-width: 62.5px; width: 50%; flex-shrink: 1; flex-grow: 1; margin-top: 0; margin-right: 4px; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 12px; padding-bottom: 10px; padding-left: 12px;" />
+                <engine:Button text="Join Game" name="NewGame_Join_button" enable-rich-text="false" enabled="false" style="min-width: 62.5px; width: 50%; flex-shrink: 1; flex-grow: 1; padding-top: 10px; padding-right: 12px; padding-bottom: 10px; padding-left: 12px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 4px; height: auto;" />
+            </engine:VisualElement>
         </engine:VisualElement>
-        <engine:Button text="Back" name="NewGame_Menu_button" />
+        <engine:Button text="Back" name="NewGame_Menu_button" style="margin-top: 20px; width: 50%; white-space: pre; margin-left: 25%; min-width: 125px;" />
     </engine:VisualElement>
 </engine:UXML>

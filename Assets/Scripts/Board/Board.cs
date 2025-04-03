@@ -55,6 +55,7 @@ namespace Torthello
             pawnProccessor.Init();
             settings.isInGame = false;
             settings.startCMD = false;
+            // TODO: AI is always minimax, it should reflect the settings. (PlayerType)
             aiPlayerNoir = new PlayerMiniMax(Graph, Couleur.Noir);
             aiPlayerBlanc = new PlayerMiniMax(Graph, Couleur.Blanc);
             //StartGame();
@@ -69,7 +70,8 @@ namespace Torthello
             pawnProccessor.RemoveAllPawns();
             couleur = Couleur.Noir;
             settings.turn = "Noir";
-            settings.PlayerBlanc = settings.IA ? PlayerType.MiniMax : PlayerType.Human;
+            //settings.PlayerBlanc = settings.IA ? PlayerType.MiniMax : PlayerType.Human;
+            //settings.PlayerNoir = settings.IA ? PlayerType.MiniMax : PlayerType.Human;
             Graph.StartGame();
             pawnProccessor.StartGame();
         }
@@ -90,39 +92,10 @@ namespace Torthello
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();
+
                 // Torus rotation handling.
-                if (inputSystem is ToreBoardInputManager toreInputSystem)
-                {
-                    if (settings.rotAnimU || settings.rotAnimD)
-                    {
-                        if (settings.rotAnimT > 1f)
-                        {
-                            settings.rotAnimU = false;
-                            settings.rotAnimD = false;
-                        }
-                        else
-                        {
-                            settings.rotAnimT += Time.deltaTime * 10f;
-                        }
-                    }
-                    else
-                    {
-                        if (toreInputSystem.rotateU())
-                        {
-                            settings.rotationOffset += 10f;
-                            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
-                            settings.rotAnimT = 0f;
-                            settings.rotAnimU = true;
-                        }
-                        else if (toreInputSystem.rotateD())
-                        {
-                            settings.rotationOffset -= 10f;
-                            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
-                            settings.rotAnimT = 0f;
-                            settings.rotAnimD = true;
-                        }
-                    }
-                }
+                HandleRotation();
+                
                 if (coolDown < 2f) coolDown += Time.deltaTime;
                 if (!aiThinking)
                 {
@@ -145,8 +118,8 @@ namespace Torthello
                             pawnProccessor.FlipAnimSeq(pionRetourne);
                             couleur = couleur.Inverse();
                             settings.turn = couleur == Couleur.Blanc ?
-                                  (settings.PlayerBlanc == PlayerType.Human ? "Blanc" : "Blanc(IA)") :
-                                  (settings.PlayerNoir == PlayerType.Human ? "Noir" : "Noir(IA)");
+                                  (!settings.IA_P2 ? "Blanc" : "Blanc(IA)") :
+                                  (!settings.IA_P1 ? "Noir" : "Noir(IA)");
                             if (Graph.NoPlacementAvailable(couleur)) settings.turn = "FINI!" + " Gagnant: "
                                                         + (Graph.GetScore()[0] > Graph.GetScore()[1] ? "Blanc" : 
                                                            Graph.GetScore()[0] < Graph.GetScore()[1] ? "Noir" : 
@@ -199,7 +172,42 @@ namespace Torthello
 
         bool HumanTurn()
         {
-            return (couleur == Couleur.Noir && settings.PlayerNoir == PlayerType.Human) || (couleur == Couleur.Blanc && settings.PlayerBlanc == PlayerType.Human);
+            return (couleur == Couleur.Noir && !settings.IA_P1) || (couleur == Couleur.Blanc && !settings.IA_P2);
+        }
+
+        void HandleRotation(){
+            if (inputSystem is ToreBoardInputManager toreInputSystem)
+                {
+                    if (settings.rotAnimU || settings.rotAnimD)
+                    {
+                        if (settings.rotAnimT > 1f)
+                        {
+                            settings.rotAnimU = false;
+                            settings.rotAnimD = false;
+                        }
+                        else
+                        {
+                            settings.rotAnimT += Time.deltaTime * 10f;
+                        }
+                    }
+                    else
+                    {
+                        if (toreInputSystem.rotateU())
+                        {
+                            settings.rotationOffset += 10f;
+                            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
+                            settings.rotAnimT = 0f;
+                            settings.rotAnimU = true;
+                        }
+                        else if (toreInputSystem.rotateD())
+                        {
+                            settings.rotationOffset -= 10f;
+                            settings.rotationOffset %= 360f; // S'assurer que l'offset reste dans [0, 360]
+                            settings.rotAnimT = 0f;
+                            settings.rotAnimD = true;
+                        }
+                    }
+                }
         }
     }
 }

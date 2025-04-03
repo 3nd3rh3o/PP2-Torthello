@@ -31,6 +31,7 @@ namespace Torthello
         private Action menu_newGame;
         private Action newGame_twoPlayer;
         private Action newGame_BOT;
+        private Action newGame_BOTBOT;
         private Action pause_Resume;
         private Action pause_Menu;
         private Action pause_Option;
@@ -64,7 +65,8 @@ namespace Torthello
             {
                 Disable(state);
                 EnableInGameOverlay();
-                settings.IA = false;
+                settings.IA_P2 = false;
+                settings.IA_P1 = false;
                 settings.startCMD = true;
 
             };
@@ -72,7 +74,16 @@ namespace Torthello
             {
                 Disable(state);
                 EnableInGameOverlay();
-                settings.IA = true;
+                settings.IA_P2 = true;
+                settings.IA_P1 = false;
+                settings.startCMD = true;
+            };
+            newGame_BOTBOT = () =>
+            {
+                Disable(state);
+                EnableInGameOverlay();
+                settings.IA_P2 = true;
+                settings.IA_P1 = true;
                 settings.startCMD = true;
             };
             pause_Resume = () =>
@@ -300,6 +311,7 @@ namespace Torthello
             root.Q<Button>("NewGame_Menu_button").clicked += back_to_menu;
             root.Q<Button>("NewGame_TwoPlayer_button").clicked += newGame_twoPlayer;
             root.Q<Button>("NewGame_BOT_button").clicked += newGame_BOT;
+            root.Q<Button>("NewGame_BOT_VS_BOT_button").clicked += newGame_BOTBOT;
         }
 
         void DisableNewGame()

@@ -18,10 +18,11 @@ namespace Torthello
         [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
         [CreateProperty]public RenderTexture minimapRT;
 
-
-        [HideInInspector]
-        public bool IA = true;
-        //used by UI.
+        
+        //[HideInInspector]
+        public bool IA_P2 = true;
+        //[HideInInspector]
+        public bool IA_P1 = false;
         public float Score = 0f;
 
         //UI asked for game start.
@@ -102,7 +103,14 @@ namespace Torthello
         public int Difficulty = 2;
 
         //NOTE : Need checks
+        public Parameter<PlayerType> m_PlayerType = new(0);
 
+        [CreateProperty]
+        public int AIType
+        {
+            get => m_PlayerType.GetValue() switch { PlayerType.MiniMax => 0, PlayerType.Random => 1, PlayerType.Greedy => 2, PlayerType.Human => 3, _ => throw new NotImplementedException() };
+            set => m_PlayerType.SetValue(value switch { 0 => PlayerType.MiniMax, 1 => PlayerType.Random, 2 => PlayerType.Greedy, 3 => PlayerType.Human, _ => throw new NotImplementedException() });
+        }
         public PlayerType PlayerNoir = PlayerType.Human;
 
         public PlayerType PlayerBlanc = PlayerType.MiniMax;
@@ -133,7 +141,9 @@ namespace Torthello
     public enum PlayerType
     {
         Human,
-        MiniMax
+        MiniMax,
+        Greedy,
+        Random
     }
 
     public enum BoardType
