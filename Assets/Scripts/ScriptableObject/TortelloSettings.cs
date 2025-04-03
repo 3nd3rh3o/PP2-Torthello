@@ -16,6 +16,8 @@ namespace Torthello
 
 
         [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
+
+        [Tooltip("Used to generate visialisation of Cycle and Any board")] public Shader visualizationShader;
         [CreateProperty]public RenderTexture minimapRT;
 
 
