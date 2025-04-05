@@ -14,7 +14,10 @@ namespace Torthello
 
         public Material HexTilematerial;
 
+        public int offset_Minimap_width = 0;
+        public int offset_Minimap_height = 0;
 
+        public int hoveredTile = 0;
 
         [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
 

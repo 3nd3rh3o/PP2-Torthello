@@ -33,7 +33,6 @@ namespace Torthello
                 RepositionPawns();
                 return;
             }
-            //Debug.Log("pawnProcessorUpdate");
             previousHeight = settings.BoardHeight;
             previousWidth = settings.BoardWidth;
             Destroy();
@@ -142,7 +141,7 @@ namespace Torthello
             return new Vector3[] { p0, p1, p2, p3 };
         }
         
-        private void UpdateMap()
+        public void UpdateMap()
         {
             ComputeShader cs = settings.minimapCS;
 
@@ -158,8 +157,10 @@ namespace Torthello
             cs.SetTexture(0, "Result", settings.minimapRT);
             cs.SetInt("width", settings.BoardWidth);
             cs.SetInt("height", settings.BoardHeight);
+            cs.SetInt("offsetWidth", settings.offset_Minimap_width);
+            cs.SetInt("offsetHeight", settings.offset_Minimap_height);
+            cs.SetInt("hoveredTile", settings.hoveredTile);
             cs.SetVector("BGColor", settings.color);
-
             cs.Dispatch(0, 256 / 8, 256 / 8, 1);
 
             pawsBuffer.Release();
