@@ -23,25 +23,6 @@ namespace Torthello
             this.settings = settings;
         }
 
-        private void UpdateMap()
-        {
-            //TODO: update map with the new values of the graph
-                Shader s = settings.visualizationShader;
-
-                ComputeBuffer nodesBuffer = new ComputeBuffer(settings.BoardWidth * settings.BoardHeight, sizeof(float) * 4);
-                ComputeBuffer edgesBuffer = new ComputeBuffer(settings.BoardWidth * settings.BoardHeight, sizeof(float) * 4);
-                ComputeBuffer edgesColorsBuffer = new ComputeBuffer(settings.BoardWidth * settings.BoardHeight, sizeof(float) * 4);
-     
-                
-                //float3[] p = new float3[settings.BoardWidth * settings.BoardHeight];
-                //int[] p1 = new int[settings.BoardWidth * settings.BoardHeight];
-                //int[] p2 = new int[settings.BoardWidth * settings.BoardHeight];
-
-                //nodesBuffer.SetData(p);
-
-                //nodesBuffer.Release();
-        }
-
         public void InitMeshRenderer(MeshRenderer renderer)
         {
             //TODO: Finir l'initialisation du renderer
@@ -63,6 +44,7 @@ namespace Torthello
         public void UpdateMeshRenderer(MeshRenderer renderer)
         {
             throw new NotImplementedException();
+            //TODO: faire tous les setData ici
         }
 
         public void SetHoveredTile(int id)
