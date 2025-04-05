@@ -23,7 +23,16 @@ namespace Torthello
 
         public void FlipAnimSeq(List<List<int>> pawnFlipped)
         {
+            List<int> pawnFlippedList = new List<int>();
+            pawnFlipped.ForEach(l => l.ForEach(p =>
+            {
+                if (!pawnFlippedList.Contains(p))
+                {
+                    pawnFlippedList.Add(p);
+                    boardState[p] = boardState[p] == 1 ? 2 : 1;
+                }
 
+            }));
         }
 
         public void Init()
@@ -56,7 +65,7 @@ namespace Torthello
             boardState[1] = 2;
             boardState[2] = 1;
             boardState[3] = 2;
-            
+
         }
 
         public void Update()
@@ -75,4 +84,4 @@ namespace Torthello
 
         }
     }
-} 
+}

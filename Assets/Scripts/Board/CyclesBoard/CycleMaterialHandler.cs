@@ -73,6 +73,9 @@ namespace Torthello
             settings.graphMaterial.SetFloat("_nodesRadius", 0.02f);
             settings.graphMaterial.SetFloat("_edgesRadius", 0.01f);
             settings.graphMaterial.SetColor("_nodesColor", Color.HSVToRGB(settings.hue, 0.7f, 0.7f));
+            
+            settings.graphMaterial.SetInt("_hoveredTile", settings.hoveredTile);
+            settings.graphMaterial.SetVector("_hoverColor", new Vector3(1f, 1f, 1f));
         }
 
         public override void Destroy(MeshRenderer renderer)

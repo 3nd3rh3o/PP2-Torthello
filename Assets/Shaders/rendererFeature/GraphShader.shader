@@ -37,6 +37,8 @@ Shader "Tortello/RendererFeature/GraphRender"
             uniform float _nodesRadius;
             uniform float _edgesRadius;
             uniform float3 _nodesColor;
+            uniform int _hoveredTile;
+            uniform float3 _hoverColor;
 
             // return dist between p and v.
             float pointDist(float2 p, float2 v)
@@ -73,7 +75,7 @@ Shader "Tortello/RendererFeature/GraphRender"
 
                 for(int i = 0; i < _numNodes; i++ ){
                     if(pointDist(fragPos,_nodes[i].xy) <= _nodesRadius ){
-                        surface.BaseColor = _nodes[i].z == 0 || pointDist(fragPos, _nodes[i].xy) > _nodesRadius - 0.005? _nodesColor : _nodes[i].z == 1 ? float3(0.2 ,0.2 ,0.2) : float3(1., 1., 1.);
+                        surface.BaseColor = _nodes[i].z == 0 || pointDist(fragPos, _nodes[i].xy) > _nodesRadius - 0.005? (i == _hoveredTile ? _hoverColor : _nodesColor) : _nodes[i].z == 1 ? float3(0.03 ,0.03 ,0.03) : float3(0.97, 0.97, 0.97);
                         surface.Alpha = 1.;
                         return surface;
                     }

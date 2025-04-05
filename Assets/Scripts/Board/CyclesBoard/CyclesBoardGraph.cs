@@ -65,8 +65,8 @@ namespace Torthello
         {
             SetPawn(0, Couleur.Noir);
             SetPawn(1, Couleur.Blanc);
-            SetPawn(2, Couleur.Blanc);
-            SetPawn(3, Couleur.Noir);
+            SetPawn(2, Couleur.Noir);
+            SetPawn(3, Couleur.Blanc);
             pawnBlanc = 2;
             pawnNoir = 2;
             foreach (int p in videAdj)

@@ -10,7 +10,7 @@ namespace Torthello
             MeshGenerator = new CyclesMeshGenerator(settings);
             MaterialHandler = new CycleMaterialHandler(settings);
             Graph = new CyclesBoardGraph(settings);
-            inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
+            inputSystem = new CyclesInputSystem(settings, transform, actionMap);
             pawnProccessor = new CyclesPawnProcessor(transform, settings);
 
             base.OnEnable();

@@ -91,10 +91,10 @@ namespace Torthello
             if (settings.isInGame)
             {
                 hoveredTile = inputSystem.GetTileHoveredID();
+                settings.hoveredTile = hoveredTile;
                 // Torus rotation handling.
                 if (inputSystem is ToreBoardInputManager toreInputSystem)
                 {
-                    settings.hoveredTile = hoveredTile;
                     ((ToreBoardPawnProcessor) pawnProccessor).UpdateMap();
                     if (settings.rotAnimU || settings.rotAnimD)
                     {
@@ -129,7 +129,7 @@ namespace Torthello
                 if (coolDown < 2f) coolDown += Time.deltaTime;
                 if (!aiThinking)
                 {
-                    if ((HumanTurn() && inputSystem.Place()) || (!HumanTurn() && coolDown > 2f))
+                    if (((HumanTurn() && inputSystem.Place()) || (!HumanTurn() && coolDown > 2f)) && !Graph.NoPlacementAvailable(couleur))
                     {
                         if (!HumanTurn() && coolDown > 2f)
                         {
