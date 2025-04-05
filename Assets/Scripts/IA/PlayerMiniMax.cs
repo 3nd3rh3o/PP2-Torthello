@@ -12,12 +12,12 @@ namespace Torthello
     {
         private IGraph graph;
         private Couleur couleur;
-        private int maxDepth = 5; // Profondeur maximale de l'exploration
-        public PlayerMiniMax(IGraph graph, Couleur couleur, int maxDepth = 5)
+        private Settings settings;
+        public PlayerMiniMax(IGraph graph, Couleur couleur, Settings settings)
         {
             this.graph = graph;
             this.couleur = couleur;
-            this.maxDepth = maxDepth;
+            this.settings = settings;
         }
 
         public async Awaitable<int> GetBestMove()
@@ -32,7 +32,7 @@ namespace Torthello
                 List<List<int>> pawnsToFlip = new List<List<int>>();
                 if(graph.AddPawn(move, couleur, pawnsToFlip))
                 {
-                    int moveValue = Minimax(graph, maxDepth, false, (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir, int.MinValue, int.MaxValue);
+                    int moveValue = Minimax(graph, settings.Difficulty, false, (couleur == Couleur.Noir) ? Couleur.Blanc : Couleur.Noir, int.MinValue, int.MaxValue);
                     graph.RemovePawn(move, pawnsToFlip); // Remettre le graphe en ordre
                     
                     if (moveValue > bestValue)
@@ -72,7 +72,7 @@ namespace Torthello
                         }
                     }
                     else {
-                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {maxDepth-depth} pour le joueur {playerColor}");
+                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {settings.Difficulty-depth} pour le joueur {playerColor}");
                     };
                 }
                 return bestValue;
@@ -95,7 +95,7 @@ namespace Torthello
                         }
                     }
                     else {
-                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {maxDepth-depth} pour le joueur {playerColor}");
+                        Debug.Log($"Coup invalide tenté par minimax id: {move} profondeur: {settings.Difficulty-depth} pour le joueur {playerColor}");
                     };
                 }
                 return bestValue;

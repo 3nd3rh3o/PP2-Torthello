@@ -1,4 +1,5 @@
 <engine:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:engine="UnityEngine.UIElements" xmlns:editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI/BaseStyle.uss?fileID=7433441132597879392&amp;guid=9d535d730a5b7d8449c11693b36e2bda&amp;type=3#BaseStyle" />
     <engine:VisualElement name="GameOptions" style="flex-grow: 1; margin-top: 3%; margin-right: 5%; margin-bottom: 10%; margin-left: 5%;">
         <engine:GroupBox name="BoardOptions" text="Board Options" style="flex-shrink: 1; flex-grow: 1;">
             <engine:DropdownField label="Board type" name="DropdownField" choices="Classical 2D,Torus,Flat Hex,Flat TriHex,Cycle(NUL !!! )" index="0" focusable="false">
@@ -15,6 +16,11 @@
                 <engine:SliderInt label="Board height" value="42" high-value="20" focusable="false" fill="true" show-input-field="true" low-value="4" style="flex-shrink: 1; flex-grow: 1;">
                     <Bindings>
                         <engine:DataBinding property="value" data-source-path="BoardHeight" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="TwoWay" />
+                    </Bindings>
+                </engine:SliderInt>
+                <engine:SliderInt label="IA Strength" value="42" high-value="6" focusable="false" fill="true" show-input-field="true" low-value="1" style="flex-shrink: 1; flex-grow: 1;">
+                    <Bindings>
+                        <engine:DataBinding property="value" data-source-path="Difficulty" data-source="project://database/Assets/Settings/Settings.asset?fileID=11400000&amp;guid=bf87f3f9f4f5995488da73d20981c615&amp;type=2#Settings" binding-mode="TwoWay" />
                     </Bindings>
                 </engine:SliderInt>
             </engine:VisualElement>

@@ -55,8 +55,8 @@ namespace Torthello
             pawnProccessor.Init();
             settings.isInGame = false;
             settings.startCMD = false;
-            aiPlayerNoir = new PlayerMiniMax(Graph, Couleur.Noir);
-            aiPlayerBlanc = new PlayerMiniMax(Graph, Couleur.Blanc);
+            aiPlayerNoir = new PlayerMiniMax(Graph, Couleur.Noir, settings);
+            aiPlayerBlanc = new PlayerMiniMax(Graph, Couleur.Blanc, settings);
         }
 
         public void StartGame()
