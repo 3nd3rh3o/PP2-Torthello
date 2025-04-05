@@ -8,7 +8,7 @@ namespace Torthello
     public class CycleMaterialHandler : IMaterialHandler
     {
         protected Settings settings;
-
+        protected CyclesBoardGraph graph;
         protected ComputeBuffer nodesBuffer ;
         protected ComputeBuffer edgesBuffer ;
         protected ComputeBuffer edgesColorsBuffer ;
@@ -18,7 +18,7 @@ namespace Torthello
         protected int nodesRadius = 2;
         protected int edgesRadius = 2;
         protected Couleur nodesColor;
-        public CycleMaterialHandler(Transform parent, Settings settings)
+        public CycleMaterialHandler(Settings settings)
         {
             this.settings = settings;
         }
@@ -33,13 +33,13 @@ namespace Torthello
                 ComputeBuffer edgesColorsBuffer = new ComputeBuffer(settings.BoardWidth * settings.BoardHeight, sizeof(float) * 4);
      
                 
-                float3[] p = new float3[settings.BoardWidth * settings.BoardHeight];
-                int[] p1 = new int[settings.BoardWidth * settings.BoardHeight];
-                int[] p2 = new int[settings.BoardWidth * settings.BoardHeight];
+                //float3[] p = new float3[settings.BoardWidth * settings.BoardHeight];
+                //int[] p1 = new int[settings.BoardWidth * settings.BoardHeight];
+                //int[] p2 = new int[settings.BoardWidth * settings.BoardHeight];
 
-                nodesBuffer.SetData(p);
+                //nodesBuffer.SetData(p);
 
-                nodesBuffer.Release();
+                //nodesBuffer.Release();
         }
 
         public void InitMeshRenderer(MeshRenderer renderer)
@@ -50,14 +50,14 @@ namespace Torthello
             edgesBuffer = new ComputeBuffer(settings.BoardHeight * 2, sizeof(int));
             edgesColorsBuffer = new ComputeBuffer(settings.BoardHeight * 2, sizeof(float) * 3);
 
-            for(int i = 0; i < settings.BoardHeight; i++)
-            {
-                nodes[i] = new float3(0, 0, 0); // a modifier
-                edges[i] =  0; // a modifier
-                edgesColors[i] =  new float3(0, 0, 0); // a modifier
-            }
+            graph = new CyclesBoardGraph(settings);
+            edges = graph.GetEdges();
+            edgesColors = graph.GetEdgesColors();
+            nodes = new float3[settings.BoardHeight];
+            
 
         }
+
         //TODO: Finir ce qu'il y a en dessous
 
         public void UpdateMeshRenderer(MeshRenderer renderer)
@@ -78,6 +78,8 @@ namespace Torthello
         public void Destroy(MeshRenderer renderer)
         {
             throw new NotImplementedException();
+
+            //faire les release a la fin de destroy
         }
     }
 }
