@@ -17,6 +17,7 @@ MonoBehaviour:
   Tilematerial: {fileID: 2100000, guid: 026e05a80defad74b8baf06612e07e71, type: 2}
   HexTilematerial: {fileID: 2100000, guid: 5224ecf1afbcaa94ea8256e676f33dc8, type: 2}
   minimapCS: {fileID: 7200000, guid: 85bfab8d11cbb594599210a217c6c8e6, type: 3}
+  visualizationShader: {fileID: 0}
   minimapRT: {fileID: 8400000, guid: afd27643b3321d748a0ee142a58eee04, type: 2}
   IA: 1
   Score: 0.5
@@ -37,3 +38,7 @@ MonoBehaviour:
   Difficulty: 2
   PlayerNoir: 0
   PlayerBlanc: 1
+  edges: 
+  edgesColors: []
+  graphRendererFeature: {fileID: -3842597162941159091, guid: f288ae1f4751b564a96ac7587541f7a2, type: 2}
+  graphMaterial: {fileID: 2100000, guid: a0d294f6dc6eb814682e3072436c28ab, type: 2}

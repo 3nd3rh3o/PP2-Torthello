@@ -20,7 +20,7 @@ namespace Torthello
             this.settings = settings;
         }
 
-        public void Destroy(MeshRenderer renderer)
+        public virtual void Destroy(MeshRenderer renderer)
         {
             mats = null;
             renderer.sharedMaterials = new Material[0];

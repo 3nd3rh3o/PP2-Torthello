@@ -1,4 +1,5 @@
 using System;
+using Unity.Mathematics;
 using Unity.Properties;
 using UnityEngine;
 namespace Torthello
@@ -17,7 +18,6 @@ namespace Torthello
 
         [Tooltip("Used to generate minimap on torus board")] public ComputeShader minimapCS;
 
-        [Tooltip("Used to generate visialisation of Cycle and Any board")] public Shader visualizationShader;
         [CreateProperty]public RenderTexture minimapRT;
 
 
@@ -65,8 +65,8 @@ namespace Torthello
         [CreateProperty]
         public int BoardType
         {
-            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, Torthello.BoardType.TriangularBoard => 2, Torthello.BoardType.TriangularSimpleBoard => 3, _ => throw new NotImplementedException() };
-            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, 2 => Torthello.BoardType.TriangularBoard, 3 => Torthello.BoardType.TriangularSimpleBoard, _ => throw new NotImplementedException() });
+            get => type.GetValue() switch { Torthello.BoardType.TwoD => 0, Torthello.BoardType.Torus => 1, Torthello.BoardType.TriangularBoard => 2, Torthello.BoardType.TriangularSimpleBoard => 3, Torthello.BoardType.CyclesBoard => 4, _ => throw new NotImplementedException() };
+            set => type.SetValue(value switch { 0 => Torthello.BoardType.TwoD, 1 => Torthello.BoardType.Torus, 2 => Torthello.BoardType.TriangularBoard, 3 => Torthello.BoardType.TriangularSimpleBoard, 4 => Torthello.BoardType.CyclesBoard, _ => throw new NotImplementedException() });
         }
 
         [Range(4, 20)]
@@ -110,6 +110,43 @@ namespace Torthello
         public PlayerType PlayerBlanc = PlayerType.MiniMax;
 
 
+
+        // USED FOR GRAPH RENDERING
+        [HideInInspector] public Nodes nodes;
+        [HideInInspector] public int[] edges;
+        [HideInInspector] public float3[] edgesColors;
+
+        public FullScreenPassRendererFeature graphRendererFeature;
+        public Material graphMaterial;
+    }
+
+    public struct Nodes
+    {
+        private float3[] data;
+        public Nodes(int size)
+        {
+            data = new float3[size];
+        }
+
+        public void SetNodes(float2[] nodes)
+        {
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                data[i].x = nodes[i].x;
+                data[i].y = nodes[i].y;
+            }
+        }
+        public void SetNodes(int[] nodes)
+        {
+            for (int i = 0; i < nodes.Length; i++)
+            {
+                data[i].z = nodes[i];
+            }
+        }
+        public float3[] GetNodes()
+        {
+            return data;
+        }
     }
     public struct Parameter<T>
     {
@@ -143,7 +180,8 @@ namespace Torthello
         TwoD,
         TriangularBoard,
         Torus,
-        TriangularSimpleBoard
+        TriangularSimpleBoard,
+        CyclesBoard
     }
 }
 

@@ -7,11 +7,11 @@ namespace Torthello
         public InputActionAsset actionMap;
         new void OnEnable()
         {
-            MeshGenerator = new FlatBoardMeshGenerator(settings);
+            MeshGenerator = new CyclesMeshGenerator(settings);
             MaterialHandler = new CycleMaterialHandler(settings);
             Graph = new CyclesBoardGraph(settings);
             inputSystem = new FlatBoardInputSystem(settings, transform, actionMap);
-            pawnProccessor = new FlatBoardPawnProccessor(transform, settings);
+            pawnProccessor = new CyclesPawnProcessor(transform, settings);
 
             base.OnEnable();
         }

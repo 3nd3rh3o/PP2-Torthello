@@ -126,7 +126,10 @@ namespace Torthello
         }
         void Update()
         {
-
+            if (settings.type.GetValue() == BoardType.CyclesBoard)
+            {
+                newGame.Q<SliderInt>("NewGame_width").highValue = settings.BoardHeight / 2;
+            }
             if (settings.m_fullscreen.IsDirty())
             {
                 if (settings.m_fullscreen.GetValue()) Screen.fullScreen = true;
@@ -137,6 +140,7 @@ namespace Torthello
 
             if (settings.type.IsDirty())
             {
+                newGame.Q<SliderInt>("NewGame_width").lowValue = 4;
                 gameBoard.SetActive(false);
                 if (settings.type.GetValue() == BoardType.TwoD)
                 {
@@ -161,12 +165,21 @@ namespace Torthello
                     t.settings = settings;
                     t.actionMap = actions;
                 }
-                else{
+                else if(settings.type.GetValue() == BoardType.TriangularSimpleBoard){
                     RemoveBoard();
                     TriangularSimpleBoard t = gameBoard.AddComponent<TriangularSimpleBoard>();
                     t.settings = settings;
                     t.actionMap = actions;
                 }
+                else
+                {
+                    RemoveBoard();
+                    CyclesBoard t = gameBoard.AddComponent<CyclesBoard>();
+                    newGame.Q<SliderInt>("NewGame_width").lowValue = 1;
+                    t.settings = settings;
+                    t.actionMap = actions;
+                }
+                
                 settings.type.Proccesed();
                 gameBoard.SetActive(true);
 
@@ -405,6 +418,15 @@ namespace Torthello
                 DestroyImmediate(gameBoard.GetComponent<TriangularSimpleBoard>());
 #else
                 Destroy(gameBoard.GetComponent<TriangularSimpleBoard>());
+#endif
+            }
+            catch { }
+            try
+            {
+#if UNITY_EDITOR
+                DestroyImmediate(gameBoard.GetComponent<CyclesBoard>());
+#else
+                Destroy(gameBoard.GetComponent<CyclesBoard>());
 #endif
             }
             catch { }
