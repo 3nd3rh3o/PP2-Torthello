@@ -1,6 +1,9 @@
+.unity-button {
+    font-size: 260%;
+}
+
 TemplateContainer {
     flex-grow: 1;
-    font-size: 24px;
 }
 
 #VisualElement > VisualElement > .unity-progress-bar > #unity-progress-bar > .unity-progress-bar__background > .unity-progress-bar__progress {
