@@ -76,7 +76,11 @@ SurfaceDescriptionInputs BuildSurfaceDescriptionInputs(Varyings input)
     
     
     output.WorldSpacePosition = positionWS;
+#if UNITY_UV_STARTS_AT_TOP
     output.ScreenPosition = float4(input.texCoord0.xy, 0, 1);
+#else
+    output.ScreenPosition = float4(input.texCoord0.x, 1.-input.texCoord0.y, 0, 1);
+#endif
     output.ray = viewDirWS;
     return output;
 }
