@@ -24,6 +24,13 @@ namespace Torthello
             SetPawn(c1, Couleur.Noir);
             SetPawn(c2, Couleur.Noir);
             SetPawn(c3, Couleur.Blanc);
+            pawnBlanc = 2;
+            pawnNoir = 2;
+            foreach (int p in videAdj)
+            {
+                if (IsValidMove(p, Couleur.Blanc, new())) coupPossibleBlanc.Add(p);
+                if (IsValidMove(p, Couleur.Noir, new())) coupPossibleNoir.Add(p);
+            }
         }
         //initialisation du Graph  
         public override void InitGraph(){
